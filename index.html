@@ -2503,18 +2503,168 @@
      Chile Arrival — Explorer Cards
      ============================================ -->
 
-<!-- HEADER DE SECCIÓN -->
-<div class="px-4 pt-4 pb-2">
-  <h2 class="text-lg font-black text-gray-900 dark:text-white">
-    🧳 Servicios para tu viaje
-  </h2>
-  <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-    Todo lo que necesitas antes y después de cruzar
-  </p>
-</div>
+    </section>
 
-<!-- ============ 1. ESIM — CONECTIVIDAD ============ -->
-<div class="px-4 mb-3">
+    <!-- TAB: TRÁMITES -->
+    <section id="docs" class="tab-content">
+      <div class="title-group">
+        <h2 class="main-section-title" data-i18n="procedures-title">Trámites de Ingreso</h2>
+        <p class="small-text-enhanced" data-i18n="procedures-subtitle">Todo lo que necesitas saber</p>
+      </div>
+      <div class="space-y-5">
+        <!-- PDI -->
+        <div class="card-glass p-6 border-l-8 border-blue-600">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center">
+              <i class="fas fa-passport text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-blue-800 text-base" data-i18n="pdi-title">1. PDI - Control Migratorio</h4>
+              <p class="text-xs text-blue-600 font-semibold" data-i18n="pdi-subtitle">Policía de Investigaciones</p>
+            </div>
+          </div>
+          <div class="space-y-3 text-sm text-slate-700 font-medium">
+            <div class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+              <p><span data-i18n="pdi-item1">Presentar <strong>Pasaporte o DNI vigente</strong></span></p>
+            </div>
+            <div class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+              <p><span data-i18n="pdi-item2">Recibirás tu <strong>PNA (Tarjeta de Turismo)</strong> digital o
+                  física</span></p>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-400">
+              <p class="text-blue-800 font-bold text-xs" data-i18n="pdi-note">✓ Válida por 90 días prorrogables • No
+                pierdas tu PNA</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADUANA -->
+        <div class="card-glass p-6 border-l-8 border-red-600">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-red-100 text-red-700 rounded-xl flex items-center justify-center">
+              <i class="fas fa-car text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-red-800 text-base" data-i18n="customs-title">2. ADUANA - Vehículo y Equipaje
+              </h4>
+              <p class="text-xs text-red-600 font-semibold" data-i18n="customs-subtitle">Control de ingreso temporal</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-red-50 p-5 rounded-xl border border-red-200">
+              <p class="font-black text-red-800 mb-3 text-sm flex items-center gap-2">
+                <i class="fas fa-file-alt"></i>
+                <span data-i18n="customs-documents">Documentos del Vehículo</span>
+              </p>
+              <div class="space-y-2 text-sm text-slate-700 font-medium">
+                <div class="flex items-start gap-2">
+                  <i class="fas fa-circle text-red-400 text-[6px] mt-2"></i>
+                  <p><span data-i18n="customs-doc1"><strong>Título/Padrón:</strong> Documento original de
+                      propiedad</span></p>
+                </div>
+                <div class="flex items-start gap-2">
+                  <i class="fas fa-circle text-red-400 text-[6px] mt-2"></i>
+                  <p><span data-i18n="customs-doc2"><strong>Poder Notarial:</strong> Obligatorio si el dueño NO viaja en
+                      el auto</span></p>
+                </div>
+                <div class="flex items-start gap-2">
+                  <i class="fas fa-circle text-red-400 text-[6px] mt-2"></i>
+                  <p><span data-i18n="customs-doc3"><strong>SOAP:</strong> Seguro obligatorio de accidentes
+                      personales</span></p>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gradient-to-r from-red-600 to-red-700 p-4 rounded-xl text-white">
+              <p class="font-bold text-sm text-center" data-i18n="customs-note">⚠️ Importación temporal: 90 días
+                corridos máximo</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAG -->
+        <div class="card-glass p-6 border-l-8 border-green-600">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-green-100 text-green-700 rounded-xl flex items-center justify-center">
+              <i class="fas fa-leaf text-xl"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-green-800 text-base" data-i18n="sag-title">3. SAG - Control Sanitario</h4>
+              <p class="text-xs text-green-600 font-semibold" data-i18n="sag-subtitle">Servicio Agrícola Ganadero</p>
+            </div>
+          </div>
+          <div class="space-y-4 text-sm text-slate-700 font-medium">
+            <div class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-green-500 mt-1"></i>
+              <p><span data-i18n="sag-item1">Completar <strong>declaración jurada de ingreso</strong> (digital o
+                  papel)</span></p>
+            </div>
+            <div class="flex items-start gap-2">
+              <i class="fas fa-times-circle text-red-500 mt-1"></i>
+              <p><span data-i18n="sag-item2">Prohibido: frutas frescas, semillas, carnes sin procesar, miel,
+                  lácteos</span></p>
+            </div>
+            <div class="bg-gradient-to-r from-red-600 to-red-700 p-5 rounded-xl text-white text-center">
+              <p class="font-black text-base mb-2" data-i18n="sag-important">🚨 MUY IMPORTANTE</p>
+              <p class="text-sm font-bold leading-relaxed" data-i18n="sag-warning">
+                Si traes alimentos, <u>DECLARA SIEMPRE</u>.<br>
+                Si declaras, no hay multa (solo se elimina el producto).<br>
+                Si NO declaras: <strong>Multa de hasta $300.000 CLP</strong>
+              </p>
+            </div>
+            <div class="bg-green-50 p-4 rounded-xl">
+              <p class="text-green-800 font-bold text-xs text-center" data-i18n="sag-allowed">✓ Permitidos: Alimentos
+                envasados industrialmente y cerrados</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: INFO -->
+    <section id="info" class="tab-content">
+      <div class="title-group">
+        <h2 class="main-section-title" data-i18n="culture-title">Cultura Chilena 🇨🇱</h2>
+        <p class="small-text-enhanced" data-i18n="culture-subtitle">Guía de supervivencia cultural</p>
+      </div>
+      <div class="space-y-4 mb-8" id="cultureInfo"></div>
+      <div class="bg-gradient-to-r from-red-600 to-blue-600 p-6 rounded-2xl text-white mb-6 shadow-xl">
+        <h3 class="text-2xl font-black text-center mb-2 tracking-tight" data-i18n="slang-title">📖 Diccionario Chilensis
+        </h3>
+        <p class="text-center text-sm opacity-95 font-bold" data-i18n="slang-subtitle">Modismos que debes conocer</p>
+      </div>
+      <div id="slangContainer" class="grid grid-cols-2 gap-4"></div>
+    </section>
+        <!-- TAB: KIT VIAJERO -->
+    <section id="kit" class="tab-content space-y-4 px-4 pt-6 pb-8">
+      <!-- HERO DEL KIT -->
+      <div class="card-glass p-6 mb-2 glass-blue">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl">
+            🧳
+          </div>
+          <div>
+            <h2 class="main-section-title mb-1">Kit Viajero</h2>
+            <p class="small-text-enhanced">
+              Servicios recomendados para ahorrar tiempo y dinero en tu cruce.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PEGAMOS AQUÍ TODA LA SECCIÓN MONETIZACIÓN QUE ESTABA EN ÚTILES -->
+      <!-- HEADER DE SECCIÓN -->
+      <div class="px-1 pt-2 pb-2">
+        <h2 class="text-lg font-black text-gray-900 dark:text-white">
+          🧳 Servicios para tu viaje
+        </h2>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+          Todo lo que necesitas antes y después de cruzar
+        </p>
+      </div>
+
+      <div class="px-4 mb-3">
   <a href="TU_LINK_AIRALO" target="_blank" rel="noopener sponsored"
      class="block relative overflow-hidden rounded-2xl shadow-md active:scale-95 transition-transform">
     <div class="absolute inset-0 bg-gradient-to-br from-violet-600 to-indigo-700"></div>
@@ -2665,218 +2815,14 @@
     </a>
   </div>
 </div>
-
-<!-- DISCLAIMER LEGAL -->
-<div class="px-4 mb-6">
-  <p class="text-xs text-gray-400 dark:text-gray-600 text-center">
-    * Algunos enlaces son de afiliados. Al reservar a través de ellos
-    apoyás el desarrollo gratuito de esta app. 🙏
-  </p>
-</div>
-
-    </section>
-
-    <!-- TAB: TRÁMITES -->
-    <section id="docs" class="tab-content">
-      <div class="title-group">
-        <h2 class="main-section-title" data-i18n="procedures-title">Trámites de Ingreso</h2>
-        <p class="small-text-enhanced" data-i18n="procedures-subtitle">Todo lo que necesitas saber</p>
-      </div>
-      <div class="space-y-5">
-        <!-- PDI -->
-        <div class="card-glass p-6 border-l-8 border-blue-600">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center">
-              <i class="fas fa-passport text-xl"></i>
-            </div>
-            <div>
-              <h4 class="font-black text-blue-800 text-base" data-i18n="pdi-title">1. PDI - Control Migratorio</h4>
-              <p class="text-xs text-blue-600 font-semibold" data-i18n="pdi-subtitle">Policía de Investigaciones</p>
-            </div>
-          </div>
-          <div class="space-y-3 text-sm text-slate-700 font-medium">
-            <div class="flex items-start gap-2">
-              <i class="fas fa-check-circle text-blue-500 mt-1"></i>
-              <p><span data-i18n="pdi-item1">Presentar <strong>Pasaporte o DNI vigente</strong></span></p>
-            </div>
-            <div class="flex items-start gap-2">
-              <i class="fas fa-check-circle text-blue-500 mt-1"></i>
-              <p><span data-i18n="pdi-item2">Recibirás tu <strong>PNA (Tarjeta de Turismo)</strong> digital o
-                  física</span></p>
-            </div>
-            <div class="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-400">
-              <p class="text-blue-800 font-bold text-xs" data-i18n="pdi-note">✓ Válida por 90 días prorrogables • No
-                pierdas tu PNA</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- ADUANA -->
-        <div class="card-glass p-6 border-l-8 border-red-600">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 bg-red-100 text-red-700 rounded-xl flex items-center justify-center">
-              <i class="fas fa-car text-xl"></i>
-            </div>
-            <div>
-              <h4 class="font-black text-red-800 text-base" data-i18n="customs-title">2. ADUANA - Vehículo y Equipaje
-              </h4>
-              <p class="text-xs text-red-600 font-semibold" data-i18n="customs-subtitle">Control de ingreso temporal</p>
-            </div>
-          </div>
-          <div class="space-y-4">
-            <div class="bg-red-50 p-5 rounded-xl border border-red-200">
-              <p class="font-black text-red-800 mb-3 text-sm flex items-center gap-2">
-                <i class="fas fa-file-alt"></i>
-                <span data-i18n="customs-documents">Documentos del Vehículo</span>
-              </p>
-              <div class="space-y-2 text-sm text-slate-700 font-medium">
-                <div class="flex items-start gap-2">
-                  <i class="fas fa-circle text-red-400 text-[6px] mt-2"></i>
-                  <p><span data-i18n="customs-doc1"><strong>Título/Padrón:</strong> Documento original de
-                      propiedad</span></p>
-                </div>
-                <div class="flex items-start gap-2">
-                  <i class="fas fa-circle text-red-400 text-[6px] mt-2"></i>
-                  <p><span data-i18n="customs-doc2"><strong>Poder Notarial:</strong> Obligatorio si el dueño NO viaja en
-                      el auto</span></p>
-                </div>
-                <div class="flex items-start gap-2">
-                  <i class="fas fa-circle text-red-400 text-[6px] mt-2"></i>
-                  <p><span data-i18n="customs-doc3"><strong>SOAP:</strong> Seguro obligatorio de accidentes
-                      personales</span></p>
-                </div>
-              </div>
-            </div>
-            <div class="bg-gradient-to-r from-red-600 to-red-700 p-4 rounded-xl text-white">
-              <p class="font-bold text-sm text-center" data-i18n="customs-note">⚠️ Importación temporal: 90 días
-                corridos máximo</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- SAG -->
-        <div class="card-glass p-6 border-l-8 border-green-600">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 bg-green-100 text-green-700 rounded-xl flex items-center justify-center">
-              <i class="fas fa-leaf text-xl"></i>
-            </div>
-            <div>
-              <h4 class="font-black text-green-800 text-base" data-i18n="sag-title">3. SAG - Control Sanitario</h4>
-              <p class="text-xs text-green-600 font-semibold" data-i18n="sag-subtitle">Servicio Agrícola Ganadero</p>
-            </div>
-          </div>
-          <div class="space-y-4 text-sm text-slate-700 font-medium">
-            <div class="flex items-start gap-2">
-              <i class="fas fa-check-circle text-green-500 mt-1"></i>
-              <p><span data-i18n="sag-item1">Completar <strong>declaración jurada de ingreso</strong> (digital o
-                  papel)</span></p>
-            </div>
-            <div class="flex items-start gap-2">
-              <i class="fas fa-times-circle text-red-500 mt-1"></i>
-              <p><span data-i18n="sag-item2">Prohibido: frutas frescas, semillas, carnes sin procesar, miel,
-                  lácteos</span></p>
-            </div>
-            <div class="bg-gradient-to-r from-red-600 to-red-700 p-5 rounded-xl text-white text-center">
-              <p class="font-black text-base mb-2" data-i18n="sag-important">🚨 MUY IMPORTANTE</p>
-              <p class="text-sm font-bold leading-relaxed" data-i18n="sag-warning">
-                Si traes alimentos, <u>DECLARA SIEMPRE</u>.<br>
-                Si declaras, no hay multa (solo se elimina el producto).<br>
-                Si NO declaras: <strong>Multa de hasta $300.000 CLP</strong>
-              </p>
-            </div>
-            <div class="bg-green-50 p-4 rounded-xl">
-              <p class="text-green-800 font-bold text-xs text-center" data-i18n="sag-allowed">✓ Permitidos: Alimentos
-                envasados industrialmente y cerrados</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB: INFO -->
-    <section id="info" class="tab-content">
-      <div class="title-group">
-        <h2 class="main-section-title" data-i18n="culture-title">Cultura Chilena 🇨🇱</h2>
-        <p class="small-text-enhanced" data-i18n="culture-subtitle">Guía de supervivencia cultural</p>
-      </div>
-      <div class="space-y-4 mb-8" id="cultureInfo"></div>
-      <div class="bg-gradient-to-r from-red-600 to-blue-600 p-6 rounded-2xl text-white mb-6 shadow-xl">
-        <h3 class="text-2xl font-black text-center mb-2 tracking-tight" data-i18n="slang-title">📖 Diccionario Chilensis
-        </h3>
-        <p class="text-center text-sm opacity-95 font-bold" data-i18n="slang-subtitle">Modismos que debes conocer</p>
-      </div>
-      <div id="slangContainer" class="grid grid-cols-2 gap-4"></div>
-    </section>
-
-    <!-- TAB: ACERCA -->
-    <section id="acerca" class="tab-content space-y-4 px-4 pt-6 pb-8">
-      <div class="card-glass p-6 mb-4">
-        <div class="flex items-center gap-4 mb-4">
-          <div
-            class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center text-3xl">
-            🇨🇱
-          </div>
-          <div>
-            <h3 class="font-black text-xl" style="color: var(--text-primary)">Chile Arrival</h3>
-            <p class="text-sm font-semibold small-text-enhanced">Versión 1.0.0</p>
-          </div>
-        </div>
-        <p class="text-sm font-medium leading-relaxed small-text-enhanced">
-          Tu compañero confiable para ingresar a Chile. Información actualizada de pasos fronterizos,
-          tipo de cambio en tiempo real y guías completas de trámites.
+      <div class="px-4 mb-6">
+        <p class="text-xs text-gray-400 dark:text-gray-600 text-center">
+          * Algunos enlaces son de afiliados. Al reservar a través de ellos
+          apoyás el desarrollo gratuito de esta app. 🙏
         </p>
       </div>
-
-      <div class="card-glass p-6 mb-4">
-        <h3 class="font-black text-base mb-3" style="color: var(--text-primary)">📄 Documentos Legales</h3>
-        <div class="space-y-3">
-          <a href="https://sites.google.com/view/chilearrivalpolitica-privacida/p%C3%A1gina-principal" target="_blank"
-            rel="noopener" class="block p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-all">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <i class="fas fa-shield-alt text-blue-600"></i>
-                <span class="font-bold text-sm" style="color: var(--text-primary)">Política de Privacidad</span>
-              </div>
-              <i class="fas fa-external-link-alt text-slate-400 text-xs"></i>
-            </div>
-          </a>
-          <a href="https://sites.google.com/view/chilearrival-terminos/p%C3%A1gina-principal" target="_blank"
-            rel="noopener" class="block p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-all">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <i class="fas fa-file-contract text-blue-600"></i>
-                <span class="font-bold text-sm" style="color: var(--text-primary)">Términos de Uso</span>
-              </div>
-              <i class="fas fa-external-link-alt text-slate-400 text-xs"></i>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <div class="card-glass p-6 mb-4">
-        <h3 class="font-black text-base mb-3" style="color: var(--text-primary)">👨‍💻 Desarrollador</h3>
-        <p class="text-sm font-semibold mb-3 small-text-enhanced">CHILE ARRIVAL</p>
-        <a href="mailto:chilearrival@gmail.com" class="text-sm text-blue-600 font-bold">
-          <i class="fas fa-envelope mr-2"></i>chilearrival@gmail.com
-        </a>
-      </div>
-
-      <div class="card-glass p-6 mb-4">
-        <h3 class="font-black text-base mb-3" style="color: var(--text-primary)">🔔 Fuentes de Información</h3>
-        <ul class="space-y-2 text-sm font-medium small-text-enhanced">
-          <li>• Información oficial de pasos: PDI Chile</li>
-          <li>• Tipo de cambio: Banco Central de Chile</li>
-          <li>• Reportes comunitarios de viajeros</li>
-        </ul>
-      </div>
-
-      <div class="text-center py-6">
-        <p class="text-xs font-semibold small-text-enhanced">
-          © 2026 Chile Arrival. Todos los derechos reservados.
-        </p>
-
-      </div>
     </section>
+    
   </main>
   <!-- Navigation -->
   <div class="nav-wrapper">
