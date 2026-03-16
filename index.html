@@ -4151,15 +4151,7 @@ document.getElementById('reportModal').addEventListener('click', (e) => {
 document.getElementById('notificationHistoryModal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('notificationHistoryModal')) closeNotificationHistory();
 });
-
 // Click fuera del contenido cierra el modal
-document.getElementById('reportModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('reportModal')) closeReportModal();
-});
-document.getElementById('notificationHistoryModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('notificationHistoryModal')) closeNotificationHistory();
-});
-
     });
 
         window.addEventListener('error', (e) => { console.error('Error capturado:', e.message); });
