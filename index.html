@@ -4121,10 +4121,6 @@ fetchExchangeRates();
 fetchBorderPassesFromSheet();
 fetchReportsFromSheet();
 
-      fetchExchangeRates();
-      fetchBorderPassesFromSheet();
-      fetchReportsFromSheet();
-
       updateIntervalId = setInterval(() => {
   if (!document.hidden) {
     fetchExchangeRates();
@@ -4174,6 +4170,4 @@ document.getElementById('notificationHistoryModal').addEventListener('click', (e
   <script type="module" src="firebase-config.js"></script>
 
 </body>
-</html>
-
 </html>
