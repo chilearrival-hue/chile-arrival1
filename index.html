@@ -2502,6 +2502,24 @@
      SECCIÓN MONETIZACIÓN — TAB ÚTILES
      Chile Arrival — Explorer Cards
      ============================================ -->
+<div class="px-4 pb-6">
+  <div class="card-glass glass-yellow p-4 flex items-center justify-between">
+    <div>
+      <p class="text-xs font-bold text-orange-800 mb-1">
+        ¿Ya tienes listos tus servicios?
+      </p>
+      <p class="text-xs text-orange-700 font-semibold">
+        eSIM, seguros, transporte y alojamientos en el Kit Viajero.
+      </p>
+    </div>
+    <button
+      class="text-xs bg-orange-600 text-white px-3 py-2 rounded-lg font-bold hover:bg-orange-700 transition-all"
+      onclick="showTab('kit', document.querySelectorAll('.nav-btn')[5])"
+    >
+      Abrir Kit Viajero
+    </button>
+  </div>
+</div>
 
     </section>
 
@@ -2639,19 +2657,27 @@
         <!-- TAB: KIT VIAJERO -->
     <section id="kit" class="tab-content space-y-4 px-4 pt-6 pb-8">
       <!-- HERO DEL KIT -->
-      <div class="card-glass p-6 mb-2 glass-blue">
-        <div class="flex items-start gap-4">
-          <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl">
-            🧳
-          </div>
-          <div>
-            <h2 class="main-section-title mb-1">Kit Viajero</h2>
-            <p class="small-text-enhanced">
-              Servicios recomendados para ahorrar tiempo y dinero en tu cruce.
-            </p>
-          </div>
-        </div>
-      </div>
+      <div class="card-glass p-5 mb-3 glass-blue relative overflow-hidden">
+  <div class="flex items-start gap-3">
+    <div class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center text-2xl">
+      🧳
+    </div>
+    <div>
+      <p class="text-[11px] font-black uppercase tracking-wide text-blue-100 mb-1">
+        KIT VIAJERO CHILE ARRIVAL
+      </p>
+      <h2 class="text-xl font-black text-white leading-tight mb-1">
+        Ahorra en datos, seguros y plata al cruzar
+      </h2>
+      <p class="text-xs text-blue-100/90 font-semibold">
+        Selección de servicios que yo usaría para entrar a Chile y Argentina sin sorpresas.
+      </p>
+    </div>
+  </div>
+  <div class="absolute -right-6 -bottom-6 opacity-20 text-6xl">
+    ✈️
+  </div>
+</div>
 
       <!-- PEGAMOS AQUÍ TODA LA SECCIÓN MONETIZACIÓN QUE ESTABA EN ÚTILES -->
       <!-- HEADER DE SECCIÓN -->
@@ -2680,7 +2706,7 @@
           <span class="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">POPULAR</span>
         </div>
         <p class="text-indigo-200 text-xs">Datos en Chile y Argentina sin cambiar tu SIM</p>
-        <p class="text-white/80 text-xs mt-1">Desde $8 USD · Activación instantánea</p>
+        <p class="text-white/80 text-xs mt-1">Escanea el QR y llega conectado al paso fronterizo.</p>
       </div>
       <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
     </div>
