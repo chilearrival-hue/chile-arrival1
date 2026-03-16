@@ -2395,10 +2395,114 @@
       </div>
       <div id="passesContainer" class="space-y-4"></div>
     </section>
+
+    <!-- TAB: ÚTILES -->
+    <section id="utiles" class="tab-content space-y-6">
+      <div class="title-group">
+        <h2 class="main-section-title" data-i18n="tools-title">Herramientas Útiles</h2>
+        <p class="small-text-enhanced" data-i18n="tools-subtitle">Calculadoras y conversores</p>
+      </div>
+
+      <div class="card-glass money-converter p-7 text-white">
+        <div class="relative z-10">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h4 class="color-card-title" data-i18n="exchange-title">Cambio en Tiempo Real</h4>
+              <p class="text-blue-100 text-xs mt-1 font-bold">
+                <span id="rateStatus"><span class="loading-spinner"></span> <span
+                    data-i18n="connecting">Conectando...</span></span>
+              </p>
+            </div>
+          </div>
+          <div class="currency-tabs">
+            <button class="currency-tab active" onclick="selectCurrency('USD',this)">USD 💵</button>
+            <button class="currency-tab" onclick="selectCurrency('EUR',this)">EUR 💶</button>
+            <button class="currency-tab" onclick="selectCurrency('ARS',this)">ARS 🇦🇷</button>
+            <button class="currency-tab" onclick="selectCurrency('BRL',this)">BRL 🇧🇷</button>
+            <button class="currency-tab" onclick="selectCurrency('PEN',this)">PEN 🇵🇪</button>
+            <button class="currency-tab" onclick="selectCurrency('BOB',this)">BOB 🇧🇴</button>
+          </div>
+          <div class="flex items-center gap-5 justify-center">
+            <div class="flex flex-col items-center">
+              <span id="selectedCurrency" class="text-xs uppercase font-bold text-blue-100 mb-2">USD 💵</span>
+              <input type="number" id="currencyInput" value="1" min="0" step="0.01" oninput="convertMoney()"
+                class="input-money">
+            </div>
+            <div class="mt-6">
+              <i class="fas fa-exchange-alt text-blue-200 text-xl"></i>
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-xs uppercase font-bold text-blue-100 mb-2">CLP 💰</span>
+              <div class="bg-white/20 rounded-xl px-5 py-3 min-w-[140px] text-center">
+                <p id="clpResult" class="text-3xl font-black tracking-tight">$---</p>
+                <span id="rateChange" class="rate-change hidden"></span>
+              </div>
+            </div>
+          </div>
+          <div id="exchangeDetails" class="mt-4 text-center text-blue-100 text-xs font-semibold opacity-90">
+            <p id="rateSource" data-i18n="rate-source">Fuente: Banco Central de Chile</p>
+            <p id="rateTime" class="mt-1"><span data-i18n="last-update">Última actualización:</span> <span
+                id="rateTimestamp">--:--</span></p>
+          </div>
+          <p class="text-center text-blue-100 text-[10px] mt-3 font-semibold" data-i18n="rate-disclaimer">Tasa oficial •
+            No incluye comisiones bancarias</p>
+        </div>
+      </div>
+
+      <div class="card-glass fuel-calculator p-7 text-white">
+        <div class="relative z-10">
+          <h3 class="color-card-title mb-2 flex items-center gap-2">
+            <i class="fas fa-gas-pump"></i>
+            <span data-i18n="fuel-title">Calculadora de Combustible</span>
+          </h3>
+          <p class="text-sm text-white/95 mb-5 font-bold" data-i18n="fuel-subtitle">Estima el costo total de tu viaje
+          </p>
+          <div class="space-y-3">
+            <div class="fuel-input-group">
+              <label data-i18n="fuel-distance">Distancia del viaje (km)</label>
+              <input type="number" id="fuelDistance" placeholder="500" min="0" oninput="calculateFuelCost()">
+            </div>
+            <div class="fuel-input-group">
+              <label data-i18n="fuel-consumption">Consumo vehículo (km/litro)</label>
+              <input type="number" id="fuelConsumption" placeholder="12" min="1" step="0.1"
+                oninput="calculateFuelCost()">
+            </div>
+            <div class="fuel-input-group">
+              <label data-i18n="fuel-price">Precio combustible (CLP/litro)</label>
+              <input type="number" id="fuelPrice" placeholder="1400" min="0" oninput="calculateFuelCost()">
+            </div>
+            <div class="fuel-input-group">
+              <label data-i18n="fuel-tolls">Peajes estimados (CLP)</label>
+              <input type="number" id="fuelTolls" placeholder="15000" min="0" oninput="calculateFuelCost()">
+            </div>
+          </div>
+          <div id="fuelResultContainer" class="fuel-result hidden">
+            <p class="text-sm font-bold text-white/90 mb-2" data-i18n="fuel-total">COSTO TOTAL ESTIMADO:</p>
+            <p class="fuel-result-value">$<span id="fuelTotalCost">0</span></p>
+            <div class="mt-4 space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-white/80" data-i18n="fuel-liters">Litros necesarios:</span>
+                <span class="font-black text-white" id="fuelLitersNeeded">0 L</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-white/80" data-i18n="fuel-gas-cost">Costo combustible:</span>
+                <span class="font-black text-white" id="fuelGasCost">$0</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-white/80" data-i18n="fuel-tolls-cost">Costo peajes:</span>
+                <span class="font-black text-white" id="fuelTollsCost">$0</span>
+              </div>
+            </div>
+          </div>
+          <p class="text-center text-white/80 text-[10px] mt-4 font-semibold" data-i18n="fuel-disclaimer">Valores
+            aproximados • Puede variar según tipo de ruta</p>
+        </div>
+      </div>
       <!-- ============================================
      SECCIÓN MONETIZACIÓN — TAB ÚTILES
-    Chile Arrival — Explorer Cards
+     Chile Arrival — Explorer Cards
      ============================================ -->
+
 <!-- HEADER DE SECCIÓN -->
 <div class="px-4 pt-4 pb-2">
   <h2 class="text-lg font-black text-gray-900 dark:text-white">
@@ -2571,199 +2675,6 @@
 </div>
 
     </section>
-<!-- ============================================
-     TAB VIAJERO — Hub de servicios y monetización
-     ============================================ -->
-<section id="viajero" class="tab-content space-y-0">
-
-  <!-- HERO VIAJERO -->
-  <div class="relative overflow-hidden rounded-3xl mx-4 mt-4 mb-5 shadow-xl">
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-700 via-indigo-700 to-violet-800"></div>
-    <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full"></div>
-    <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-white/5 rounded-full"></div>
-    <div class="relative p-6 text-white">
-      <div class="text-4xl mb-2">✈️</div>
-      <h2 class="text-2xl font-black leading-tight mb-1">Todo para tu cruce</h2>
-      <p class="text-blue-200 text-sm font-semibold">Servicios esenciales antes y después de cruzar la frontera</p>
-    </div>
-  </div>
-
-  <!-- ============ ESIM ============ -->
-  <div class="px-4 mb-3">
-    <a href="TU_LINK_AIRALO" target="_blank" rel="noopener sponsored"
-       class="block relative overflow-hidden rounded-2xl shadow-md active:scale-95 transition-transform">
-      <div class="absolute inset-0 bg-gradient-to-br from-violet-600 to-indigo-700"></div>
-      <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
-      <div class="absolute -right-2 bottom-0 w-20 h-20 bg-white/5 rounded-full"></div>
-      <div class="relative p-4 flex items-center gap-4">
-        <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
-          <i class="fas fa-sim-card text-white text-2xl"></i>
-        </div>
-        <div class="flex-1">
-          <div class="flex items-center gap-2 mb-0.5">
-            <span class="text-white font-black text-base">eSIM para tu viaje</span>
-            <span class="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">POPULAR</span>
-          </div>
-          <p class="text-indigo-200 text-xs">Datos en Chile y Argentina sin cambiar tu SIM</p>
-          <p class="text-white/80 text-xs mt-1">Desde $8 USD · Activación instantánea</p>
-        </div>
-        <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
-      </div>
-    </a>
-  </div>
-
-  <!-- ============ SEGURO DE VIAJE ============ -->
-  <div class="px-4 mb-3">
-    <a href="TU_LINK_IATI" target="_blank" rel="noopener sponsored"
-       class="block relative overflow-hidden rounded-2xl shadow-md active:scale-95 transition-transform">
-      <div class="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-700"></div>
-      <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
-      <div class="relative p-4 flex items-center gap-4">
-        <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
-          <i class="fas fa-shield-alt text-white text-2xl"></i>
-        </div>
-        <div class="flex-1">
-          <div class="flex items-center gap-2 mb-0.5">
-            <span class="text-white font-black text-base">Seguro de viaje</span>
-            <span class="bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full">RECOMENDADO</span>
-          </div>
-          <p class="text-emerald-100 text-xs">Cobertura médica y cancelación internacional</p>
-          <p class="text-white/80 text-xs mt-1">iati Seguros · Desde $2/día</p>
-        </div>
-        <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
-      </div>
-    </a>
-  </div>
-
-  <!-- ============ WISE ============ -->
-  <div class="px-4 mb-3">
-    <a href="TU_LINK_WISE" target="_blank" rel="noopener sponsored"
-       class="block relative overflow-hidden rounded-2xl shadow-md active:scale-95 transition-transform">
-      <div class="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600"></div>
-      <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
-      <div class="relative p-4 flex items-center gap-4">
-        <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
-          <i class="fas fa-money-bill-transfer text-white text-2xl"></i>
-        </div>
-        <div class="flex-1">
-          <div class="flex items-center gap-2 mb-0.5">
-            <span class="text-white font-black text-base">Enviar dinero con Wise</span>
-          </div>
-          <p class="text-green-100 text-xs">Mejor tipo de cambio · Sin comisiones ocultas</p>
-          <p class="text-white/80 text-xs mt-1">CLP → ARS al mejor precio del mercado</p>
-        </div>
-        <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
-      </div>
-    </a>
-  </div>
-
-  <!-- ============ ALOJAMIENTO ============ -->
-  <div class="px-4 mb-3">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
-      <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2">
-        <i class="fas fa-bed text-blue-500"></i>
-        <span class="font-bold text-gray-800 dark:text-white text-sm">Alojamiento cerca del paso</span>
-      </div>
-      <a href="TU_LINK_BOOKING_OSORNO" target="_blank" rel="noopener sponsored"
-         class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition border-b border-gray-100 dark:border-gray-700">
-        <div class="flex items-center gap-3">
-          <span class="text-xl">🏔️</span>
-          <div>
-            <p class="text-sm font-semibold text-gray-800 dark:text-white">Hoteles en Osorno</p>
-            <p class="text-xs text-gray-400">Paso Cardenal Samoré</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-blue-500 font-semibold">Ver hoteles</span>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </div>
-      </a>
-      <a href="TU_LINK_BOOKING_PUERTO_MONTT" target="_blank" rel="noopener sponsored"
-         class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition border-b border-gray-100 dark:border-gray-700">
-        <div class="flex items-center gap-3">
-          <span class="text-xl">🌊</span>
-          <div>
-            <p class="text-sm font-semibold text-gray-800 dark:text-white">Hoteles en Puerto Montt</p>
-            <p class="text-xs text-gray-400">Acceso a la Patagonia</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-blue-500 font-semibold">Ver hoteles</span>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </div>
-      </a>
-      <a href="TU_LINK_BOOKING_BARILOCHE" target="_blank" rel="noopener sponsored"
-         class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-        <div class="flex items-center gap-3">
-          <span class="text-xl">⛷️</span>
-          <div>
-            <p class="text-sm font-semibold text-gray-800 dark:text-white">Hoteles en Bariloche</p>
-            <p class="text-xs text-gray-400">Argentina · Lado este</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-blue-500 font-semibold">Ver hoteles</span>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </div>
-      </a>
-    </div>
-  </div>
-
-  <!-- ============ TRANSPORTE ============ -->
-  <div class="px-4 mb-3">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
-      <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2">
-        <i class="fas fa-route text-orange-500"></i>
-        <span class="font-bold text-gray-800 dark:text-white text-sm">Transporte y movilidad</span>
-      </div>
-      <a href="TU_LINK_RENTALCARS" target="_blank" rel="noopener sponsored"
-         class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition border-b border-gray-100 dark:border-gray-700">
-        <div class="flex items-center gap-3">
-          <span class="text-xl">🚗</span>
-          <div>
-            <p class="text-sm font-semibold text-gray-800 dark:text-white">Arriendo de autos</p>
-            <p class="text-xs text-gray-400">Recoge en Chile o Argentina</p>
-          </div>
-        </div>
-        <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-      </a>
-      <a href="TU_LINK_BUSBUD" target="_blank" rel="noopener sponsored"
-         class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-        <div class="flex items-center gap-3">
-          <span class="text-xl">🚌</span>
-          <div>
-            <p class="text-sm font-semibold text-gray-800 dark:text-white">Buses internacionales</p>
-            <p class="text-xs text-gray-400">Santiago · Osorno · Bariloche</p>
-          </div>
-        </div>
-        <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-      </a>
-    </div>
-  </div>
-
-  <!-- ============ BANNER PROMO HOME ============ -->
-  <div class="px-4 mb-3">
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 p-4 shadow-md">
-      <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full"></div>
-      <div class="relative flex items-center gap-3">
-        <span class="text-3xl">💡</span>
-        <div>
-          <p class="text-white font-black text-sm">¿Sabías que necesitas seguro?</p>
-          <p class="text-orange-100 text-xs mt-0.5">Chile exige seguro médico vigente para ingresar</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DISCLAIMER -->
-  <div class="px-4 mb-6">
-    <p class="text-xs text-gray-400 dark:text-gray-600 text-center">
-      * Algunos enlaces son de afiliados. Al reservar a través de ellos
-      apoyás el desarrollo gratuito de esta app. 🙏
-    </p>
-  </div>
-
-</section>
 
     <!-- TAB: TRÁMITES -->
     <section id="docs" class="tab-content">
@@ -2968,36 +2879,35 @@
     </section>
   </main>
   <!-- Navigation -->
-
-<nav class="nav-wrapper">
-  <div class="nav-container">
-    <button class="nav-btn active-tab" onclick="showTab('home', this)" id="nav-home">
-      <i class="fas fa-home"></i>
-      <span data-i18n="nav-home">Inicio</span>
-    </button>
-    <button class="nav-btn" onclick="showTab('viaje', this)" id="nav-viaje">
-      <i class="fas fa-map-marked-alt"></i>
-      <span data-i18n="nav-viaje">Pasos</span>
-    </button>
-    <button class="nav-btn" onclick="showTab('viajero', this)" id="nav-viajero">
-      <i class="fas fa-plane"></i>
-      <span>Viajero</span>
-    </button>
-    <button class="nav-btn" onclick="showTab('utiles', this)" id="nav-utiles">
-      <i class="fas fa-calculator"></i>
-      <span data-i18n="nav-utiles">Útiles</span>
-    </button>
-    <button class="nav-btn" onclick="showTab('docs', this)" id="nav-docs">
-      <i class="fas fa-file-alt"></i>
-      <span data-i18n="nav-docs">Docs</span>
-    </button>
-    <button class="nav-btn" onclick="showTab('info', this)" id="nav-info">
-      <i class="fas fa-info-circle"></i>
-      <span data-i18n="nav-info">Info</span>
-    </button>
+  <div class="nav-wrapper">
+    <nav class="nav-container">
+      <button onclick="showTab('home',this)" class="nav-btn active-tab">
+        <i class="fas fa-home"></i>
+        <span data-i18n="nav-home">Inicio</span>
+        <span id="closedPassesIndicator" class="notification-dot hidden"></span>
+      </button>
+      <button onclick="showTab('viaje',this)" class="nav-btn">
+        <i class="fas fa-route"></i>
+        <span data-i18n="nav-travel">Viaje</span>
+      </button>
+      <button onclick="showTab('utiles',this)" class="nav-btn">
+        <i class="fas fa-tools"></i>
+        <span data-i18n="nav-tools">Útiles</span>
+      </button>
+      <button onclick="showTab('docs',this)" class="nav-btn">
+        <i class="fas fa-passport"></i>
+        <span data-i18n="nav-procedures">Trámites</span>
+      </button>
+      <button onclick="showTab('info',this)" class="nav-btn">
+        <i class="fas fa-info-circle"></i>
+        <span data-i18n="nav-info">Info</span>
+      </button>
+      <button onclick="showTab('acerca',this)" class="nav-btn">
+        <i class="fas fa-question-circle"></i>
+        <span data-i18n="nav-about">Acerca</span>
+      </button>
+    </nav>
   </div>
-</nav>
-
 
   <script>
     // ===== CONFIGURACIÓN =====
