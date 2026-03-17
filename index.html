@@ -109,28 +109,80 @@
 
     /* Colores específicos */
     .glass-blue {
-      background: linear-gradient(135deg, rgba(0, 57, 166, .15) 0%, rgba(37, 99, 235, .1) 100%);
-      border-left: 4px solid var(--chile-blue)
-    }
+  background: linear-gradient(135deg, rgba(0,57,166,.35) 0%, rgba(37,99,235,.28) 100%) !important;
+  border-left: 4px solid #0039a6 !important;
+}
+.glass-green {
+  background: linear-gradient(135deg, rgba(16,185,129,.38) 0%, rgba(5,150,105,.3) 100%) !important;
+  border-left: 4px solid #10b981 !important;
+}
+.glass-red {
+  background: linear-gradient(135deg, rgba(213,43,30,.32) 0%, rgba(220,38,38,.25) 100%) !important;
+  border-left: 4px solid #d52b1e !important;
+}
+.glass-yellow {
+  background: linear-gradient(135deg, rgba(245,158,11,.32) 0%, rgba(217,119,6,.25) 100%) !important;
+  border-left: 4px solid #f59e0b !important;
+}
 
-    .glass-red {
-      background: linear-gradient(135deg, rgba(239, 68, 68, .15) 0%, rgba(220, 38, 38, .1) 100%);
-      border-left: 4px solid var(--chile-red)
-    }
+/* Texto legible en cards glass (modo claro) */
+.glass-blue .card-title-enhanced,
+.glass-green .card-title-enhanced,
+.glass-red .card-title-enhanced,
+.glass-yellow .card-title-enhanced {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
 
-    .glass-green {
-      background: linear-gradient(135deg, rgba(16, 185, 129, .2) 0%, rgba(5, 150, 105, .15) 100%);
-      border-left: 4px solid #10b981
-    }
+.glass-blue .small-text-enhanced,
+.glass-green .small-text-enhanced,
+.glass-red .small-text-enhanced,
+.glass-yellow .small-text-enhanced {
+  color: #1e293b !important;
+}
 
-    [data-theme="dark"] .glass-green {
-      background: linear-gradient(135deg, rgba(16, 185, 129, .25) 0%, rgba(5, 150, 105, .2) 100%)
-    }
+/* Alineación: todas las cards del Kit Viajero a la misma altura */
+#viajero .px-4.mb-3 > a,
+#viajero .px-4.mb-3 > div {
+  min-height: 80px !important;
+  display: flex !important;
+  align-items: stretch !important;
+}
 
-    .glass-yellow {
-      background: linear-gradient(135deg, rgba(245, 158, 11, .15) 0%, rgba(217, 119, 6, .1) 100%);
-      border-left: 4px solid #f59e0b
-    }
+/* La card de Alojamiento y Transporte (blancas) también alineadas */
+#viajero .bg-white,
+[data-theme="dark"] #viajero .bg-gray-800 {
+  border-radius: 16px !important;
+}
+
+/* Fix: header de sección "Servicios para tu viaje" más visible */
+#viajero h2.text-lg {
+  color: #0f172a !important;
+  font-size: 1.1rem !important;
+  padding-bottom: 4px !important;
+  border-bottom: 2px solid rgba(0,57,166,.15) !important;
+  margin-bottom: 4px !important;
+}
+
+/* Dark mode - mantener legibilidad */
+[data-theme="dark"] .glass-blue {
+  background: linear-gradient(135deg, rgba(96,165,250,.25) 0%, rgba(59,130,246,.2) 100%) !important;
+}
+[data-theme="dark"] .glass-green {
+  background: linear-gradient(135deg, rgba(16,185,129,.3) 0%, rgba(5,150,105,.25) 100%) !important;
+}
+[data-theme="dark"] .glass-blue .card-title-enhanced,
+[data-theme="dark"] .glass-green .card-title-enhanced,
+[data-theme="dark"] .glass-red .card-title-enhanced,
+[data-theme="dark"] .glass-yellow .card-title-enhanced {
+  color: #f1f5f9 !important;
+}
+[data-theme="dark"] .glass-blue .small-text-enhanced,
+[data-theme="dark"] .glass-green .small-text-enhanced,
+[data-theme="dark"] .glass-red .small-text-enhanced,
+[data-theme="dark"] .glass-yellow .small-text-enhanced {
+  color: #cbd5e1 !important;
+}
 
     /* Hero optimizado */
     .hero-chile {
