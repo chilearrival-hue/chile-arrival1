@@ -2144,6 +2144,21 @@
     [data-theme="dark"] .text-slate-400 {
       color: #64748b !important
     }
+        /* ===== DARK MODE — KIT VIAJERO CARD TRANSPORTE ===== */
+    [data-theme="dark"] #kit .rounded-2xl {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+    }
+    [data-theme="dark"] #kit .text-gray-800 {
+      color: #f1f5f9 !important;
+    }
+    [data-theme="dark"] #kit .text-gray-400 {
+      color: #94a3b8 !important;
+    }
+    [data-theme="dark"] #kit [style*="background: white"] {
+      background: #1e293b !important;
+    }
+
   </style>
 </head>
 
@@ -2795,7 +2810,7 @@
     
     <!-- Header -->
     <div class="p-4 flex items-center gap-3" style="background: linear-gradient(135deg, #0f766e, #14b8a6);">
-      <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-content center flex-shrink-0 flex items-center justify-center">
+      <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
         <i class="fas fa-exchange-alt text-white text-lg"></i>
       </div>
       <div>
@@ -2853,7 +2868,7 @@
     </div>
 
     <!-- Links hoteles -->
-    <a href="TULINKBOOKINGOSORMO" target="_blank" rel="noopener sponsored"
+    <a href="TULINKBOOKINGOSORNO" target="_blank" rel="noopener sponsored"
        class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition border-b border-gray-100">
       <div class="flex items-center gap-3">
         <span class="text-xl">🏨</span>
@@ -2900,7 +2915,7 @@
 
     <!-- Botón principal -->
     <div class="p-3" style="background: #f8fafc;">
-      <a href="TULINKBOOKINGOSORMO" target="_blank" rel="noopener sponsored"
+      <a href="TULINKBOOKINGOSORNO" target="_blank" rel="noopener sponsored"
          class="flex items-center justify-between w-full px-4 py-3 rounded-xl font-bold text-sm text-white transition-all active:scale-95"
          style="background: linear-gradient(135deg, #1e40af, #3b82f6); box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
         <div class="flex items-center gap-2">
@@ -2916,33 +2931,43 @@
 
 <!-- ============ 5. TRANSPORTE ============ -->
 <div class="px-4 mb-3">
-  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
-    <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2">
-      <i class="fas fa-route text-orange-500"></i>
-      <span class="font-bold text-gray-800 dark:text-white text-sm">Transporte y movilidad</span>
+  <div class="rounded-2xl shadow-sm overflow-hidden" 
+       style="background: white; border: 1px solid #e2e8f0;">
+    
+    <!-- Header -->
+    <div class="p-4 flex items-center gap-2"
+         style="background: linear-gradient(135deg, #ea580c, #f97316); border-bottom: 1px solid rgba(255,255,255,0.1)">
+      <i class="fas fa-route text-white"></i>
+      <span class="font-bold text-white text-sm">Transporte y movilidad</span>
     </div>
+
+    <!-- Arriendo de autos -->
     <a href="TU_LINK_RENTALCARS" target="_blank" rel="noopener sponsored"
-       class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition border-b border-gray-100 dark:border-gray-700">
+       class="flex items-center justify-between px-4 py-3 transition"
+       style="border-bottom: 1px solid #f1f5f9;">
       <div class="flex items-center gap-3">
         <span class="text-xl">🚗</span>
         <div>
-          <p class="text-sm font-semibold text-gray-800 dark:text-white">Arriendo de autos</p>
+          <p class="text-sm font-semibold text-gray-800">Arriendo de autos</p>
           <p class="text-xs text-gray-400">Recoge en Chile o Argentina</p>
         </div>
       </div>
       <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
     </a>
+
+    <!-- Buses -->
     <a href="TU_LINK_BUSBUD" target="_blank" rel="noopener sponsored"
-       class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+       class="flex items-center justify-between px-4 py-3 transition">
       <div class="flex items-center gap-3">
         <span class="text-xl">🚌</span>
         <div>
-          <p class="text-sm font-semibold text-gray-800 dark:text-white">Buses internacionales</p>
+          <p class="text-sm font-semibold text-gray-800">Buses internacionales</p>
           <p class="text-xs text-gray-400">Santiago · Osorno · Bariloche</p>
         </div>
       </div>
       <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
     </a>
+
   </div>
 </div>
       <div class="px-4 mb-6">
@@ -4182,7 +4207,8 @@ createSnowflakes(); // ← esta SÍ se queda, translatePage no la llama
 // Leer parámetro ?tab= de la URL para shortcuts del homescreen
 const urlParams = new URLSearchParams(window.location.search);
 const tabParam  = urlParams.get('tab');
-const validTabs = ['home', 'viaje', 'utiles', 'docs', 'info', 'acerca'];
+const validTabs = ['home','viaje','utiles','docs','info','kit'];
+const tabIndex  = { home:0, viaje:1, utiles:2, docs:3, info:4, kit:5 };
 
 if (tabParam && validTabs.includes(tabParam)) {
   const navBtns = document.querySelectorAll('.nav-btn');
