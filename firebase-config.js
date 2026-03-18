@@ -1,47 +1,35 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDGNpOHDqzMC3ylgQxp1JN0IsUb_rLPTRY",
+  apiKey: "AIzaSyC2s3FmZ_aQnXNNGMoBHEfFDV7SqFbSNpA",
   authDomain: "chile-arrival-839a1.firebaseapp.com",
   projectId: "chile-arrival-839a1",
-  storageBucket: "chile-arrival-839a1.firebasestorage.app",
-  messagingSenderId: "chile-arrival-839a1.firebasestorage.app",
-  appId: "1:1008043594423:web:a3f4e72ba07dedc6483332",
+  storageBucket: "chile-arrival-839a1.appspot.com",
+  messagingSenderId: "1098395537488",
+  appId: "1:1098395537488:web:4e9a2d8f1b3c5e6a7b8c9d"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-window.getCurrentUser = () => auth.currentUser;
-
-window.loginWithGoogle = async () => {
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (e) {
-    console.error('Error login:', e);
-  }
-};
-
-window.logout = async () => {
-  await signOut(auth);
-  document.getElementById('userPanel').classList.add('hidden');
-  document.getElementById('loginBtn').classList.remove('hidden');
-  document.getElementById('logoutBtn').classList.add('hidden');
-};
+// Elementos de auth — guardados con null-check para evitar errores
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const userPanel = document.getElementById('userPanel');
+const userAvatar = document.getElementById('userAvatar');
+const userNameDisplay = document.getElementById('userNameDisplay');
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    document.getElementById('loginBtn').classList.add('hidden');
-    document.getElementById('logoutBtn').classList.remove('hidden');
-    document.getElementById('userPanel').classList.remove('hidden');
-    document.getElementById('userAvatar').src = user.photoURL || '';
-    document.getElementById('userNameDisplay').textContent = user.displayName || 'Usuario';
+    loginBtn?.classList.add('hidden');
+    logoutBtn?.classList.remove('hidden');
+    userPanel?.classList.remove('hidden');
+    if (userAvatar) userAvatar.src = user.photoURL || '';
+    if (userNameDisplay) userNameDisplay.textContent = user.displayName || 'Usuario';
   } else {
-    document.getElementById('loginBtn').classList.remove('hidden');
-    document.getElementById('logoutBtn').classList.add('hidden');
-    document.getElementById('userPanel').classList.add('hidden');
+    loginBtn?.classList.remove('hidden');
+    logoutBtn?.classList.add('hidden');
+    userPanel?.classList.add('hidden');
   }
 });
-
