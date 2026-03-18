@@ -6,7 +6,29 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "headers": [
+      {
+        "source": "/icons/**",
+        "headers": [
+          { "key": "Content-Type", "value": "image/png" }
+        ]
+      },
+      {
+        "source": "/screenshots/**",
+        "headers": [
+          { "key": "Content-Type", "value": "image/png" }
+        ]
+      }
+    ],
     "rewrites": [
+      {
+        "source": "!/icons/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "!/screenshots/**",
+        "destination": "/index.html"
+      },
       {
         "source": "**",
         "destination": "/index.html"
