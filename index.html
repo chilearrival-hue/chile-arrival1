@@ -17,6 +17,9 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
@@ -25,8 +28,6 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
-
     /* Variables CSS optimizadas */
     :root {
       --chile-blue: #0039a6;
@@ -95,16 +96,10 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
     }
 
-
     [data-theme="dark"] .card-glass {
       background: rgba(30, 41, 59, .65);
       border: 1px solid rgba(255, 255, 255, .1);
       box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
-    }
-
-    .card-glass:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(31, 38, 135, .15);
     }
 
     /* Colores específicos */
@@ -2158,6 +2153,16 @@
     [data-theme="dark"] #kit [style*="background: white"] {
       background: #1e293b !important;
     }
+    /* Dark mode — cards Kit Viajero con bg inline reemplazado */
+[data-theme="dark"] .bg-white {
+  background: #1e293b !important;
+}
+[data-theme="dark"] .border-gray-200 {
+  border-color: #334155 !important;
+}
+[data-theme="dark"] .bg-slate-50 {
+  background: #0f172a !important;
+}
 
   </style>
 </head>
@@ -2253,6 +2258,22 @@
       <button onclick="toggleDarkMode()" class="control-btn" id="themeToggle" aria-label="Cambiar tema">
         <i class="fas fa-moon" id="themeIcon"></i>
       </button>
+      <!-- Login / Avatar -->
+      <button onclick="handleLogin()" class="control-btn" id="loginBtn" aria-label="Iniciar sesión">
+        <i class="fas fa-user"></i>
+      </button>
+      <div id="userPanel" class="hidden relative">
+        <img id="userAvatar" src="" alt="Avatar"
+          class="w-10 h-10 rounded-full border-2 border-white cursor-pointer object-cover"
+          onclick="toggleUserMenu()" />
+        <div id="userMenu" class="hidden absolute right-0 top-12 bg-white rounded-2xl shadow-xl p-3 w-48 z-50">
+          <p id="userNameDisplay" class="text-xs font-black text-slate-800 mb-3 px-2 truncate"></p>
+          <button onclick="handleLogout()"
+            class="w-full text-left px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-all">
+            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar sesión
+          </button>
+        </div>
+      </div>
     </div>
     <div class="celestial-body" aria-hidden="true"></div>
     <div class="clouds-container" aria-hidden="true">
@@ -2581,7 +2602,7 @@
     </div>
     <button
       class="text-xs bg-orange-600 text-white px-3 py-2 rounded-lg font-bold hover:bg-orange-700 transition-all"
-      onclick="showTab('kit', document.querySelectorAll('.nav-btn')[5])"
+      onclick="showTab('kit')"
     >
       Abrir Kit Viajero
     </button>
@@ -2758,7 +2779,7 @@
       </div>
 
       <div class="px-4 mb-3">
-  <a href="TU_LINK_AIRALO" target="_blank" rel="noopener sponsored"
+  <a href="https://www.airalo.com" target="_blank" rel="noopener sponsored"
      class="block relative overflow-hidden rounded-2xl shadow-md active:scale-95 transition-transform">
     <div class="absolute inset-0 bg-gradient-to-br from-violet-600 to-indigo-700"></div>
     <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
@@ -2782,7 +2803,7 @@
 
 <!-- ============ 2. SEGUROS DE VIAJE ============ -->
 <div class="px-4 mb-3">
-  <a href="TU_LINK_IATI" target="_blank" rel="noopener sponsored"
+  <a href="https://www.iatiseguros.com" target="_blank" rel="noopener sponsored"
      class="block relative overflow-hidden rounded-2xl shadow-md active:scale-95 transition-transform">
     <div class="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-700"></div>
     <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
@@ -2837,7 +2858,7 @@
 
     <!-- Botón -->
     <div class="p-3" style="background: #f8fafc;">
-      <a href="https://wise.com/invite/TUCODIGOREFERIDO"
+      <a href="https://wise.com"
          target="_blank" rel="noopener sponsored"
          class="flex items-center justify-between w-full px-4 py-3 rounded-xl font-bold text-sm text-white transition-all active:scale-95"
          style="background: linear-gradient(135deg, #0f766e, #14b8a6); box-shadow: 0 4px 12px rgba(20,184,166,0.35);">
@@ -2854,7 +2875,7 @@
 
 <!-- ============ 4. ALOJAMIENTO ============ -->
 <div class="px-4 mb-3">
-  <div class="rounded-2xl overflow-hidden shadow-md" style="background: white; border: 1px solid #e2e8f0;">
+  <div class="rounded-2xl overflow-hidden shadow-md bg-white dark:bg-gray-800 border border-gray-200">
     
     <!-- Header -->
     <div class="p-4 flex items-center gap-3" style="background: linear-gradient(135deg, #1e40af, #3b82f6); ">
@@ -2868,7 +2889,7 @@
     </div>
 
     <!-- Links hoteles -->
-    <a href="TULINKBOOKINGOSORNO" target="_blank" rel="noopener sponsored"
+    <a href="https://www.booking.com/city/cl/osorno.html" target="_blank" rel="noopener sponsored"
        class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition border-b border-gray-100">
       <div class="flex items-center gap-3">
         <span class="text-xl">🏨</span>
@@ -2883,7 +2904,7 @@
       </div>
     </a>
 
-    <a href="TULINKBOOKINGPUERTOMONTT" target="_blank" rel="noopener sponsored"
+    <a href="https://www.booking.com/city/cl/puerto-montt.html" target="_blank" rel="noopener sponsored"
        class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition border-b border-gray-100">
       <div class="flex items-center gap-3">
         <span class="text-xl">🏨</span>
@@ -2898,7 +2919,7 @@
       </div>
     </a>
 
-    <a href="TULINKBOOKINGBARILOCHE" target="_blank" rel="noopener sponsored"
+    <a href="https://www.booking.com/city/ar/san-carlos-de-bariloche.html" target="_blank" rel="noopener sponsored"
        class="flex items-center justify-between px-4 py-3 hover:bg-blue-50 transition">
       <div class="flex items-center gap-3">
         <span class="text-xl">🏨</span>
@@ -2914,8 +2935,8 @@
     </a>
 
     <!-- Botón principal -->
-    <div class="p-3" style="background: #f8fafc;">
-      <a href="TULINKBOOKINGOSORNO" target="_blank" rel="noopener sponsored"
+    <div class="p-3 bg-slate-50">
+      <a href="https://www.booking.com/city/cl/osorno.html" target="_blank" rel="noopener sponsored"
          class="flex items-center justify-between w-full px-4 py-3 rounded-xl font-bold text-sm text-white transition-all active:scale-95"
          style="background: linear-gradient(135deg, #1e40af, #3b82f6); box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
         <div class="flex items-center gap-2">
@@ -2931,9 +2952,8 @@
 
 <!-- ============ 5. TRANSPORTE ============ -->
 <div class="px-4 mb-3">
-  <div class="rounded-2xl shadow-sm overflow-hidden" 
-       style="background: white; border: 1px solid #e2e8f0;">
-    
+ <div class="rounded-2xl shadow-sm overflow-hidden bg-white border border-gray-200">
+  
     <!-- Header -->
     <div class="p-4 flex items-center gap-2"
          style="background: linear-gradient(135deg, #ea580c, #f97316); border-bottom: 1px solid rgba(255,255,255,0.1)">
@@ -2942,7 +2962,7 @@
     </div>
 
     <!-- Arriendo de autos -->
-    <a href="TU_LINK_RENTALCARS" target="_blank" rel="noopener sponsored"
+    <a href="https://www.rentalcars.com" target="_blank" rel="noopener sponsored"
        class="flex items-center justify-between px-4 py-3 transition"
        style="border-bottom: 1px solid #f1f5f9;">
       <div class="flex items-center gap-3">
@@ -2956,7 +2976,7 @@
     </a>
 
     <!-- Buses -->
-    <a href="TU_LINK_BUSBUD" target="_blank" rel="noopener sponsored"
+    <a href="https://www.busbud.com" target="_blank" rel="noopener sponsored"
        class="flex items-center justify-between px-4 py-3 transition">
       <div class="flex items-center gap-3">
         <span class="text-xl">🚌</span>
@@ -2982,32 +3002,32 @@
   <!-- Navigation -->
   <div class="nav-wrapper">
     <nav class="nav-container">
-      <button onclick="showTab('home',this)" class="nav-btn active-tab">
-        <i class="fas fa-home"></i>
-        <span data-i18n="nav-home">Inicio</span>
-        <span id="closedPassesIndicator" class="notification-dot hidden"></span>
-      </button>
-      <button onclick="showTab('viaje',this)" class="nav-btn">
-        <i class="fas fa-route"></i>
-        <span data-i18n="nav-travel">Viaje</span>
-      </button>
-      <button onclick="showTab('utiles',this)" class="nav-btn">
-        <i class="fas fa-tools"></i>
-        <span data-i18n="nav-tools">Útiles</span>
-      </button>
-      <button onclick="showTab('docs',this)" class="nav-btn">
-        <i class="fas fa-passport"></i>
-        <span data-i18n="nav-procedures">Trámites</span>
-      </button>
-      <button onclick="showTab('info',this)" class="nav-btn">
-        <i class="fas fa-info-circle"></i>
-        <span data-i18n="nav-info">Info</span>
-      </button>
-      <button onclick="showTab('kit',this)" class="nav-btn">
-  <i class="fas fa-suitcase-rolling"></i>
-  <span>Kit Viajero</span>
-</button>
-    </nav>
+    <button onclick="showTab('home',this)" class="nav-btn active-tab" data-tab="home">
+      <i class="fas fa-home"></i>
+      <span data-i18n="nav-home">Inicio</span>
+      <span id="closedPassesIndicator" class="notification-dot hidden"></span>
+    </button>
+    <button onclick="showTab('viaje',this)" class="nav-btn" data-tab="viaje">
+      <i class="fas fa-route"></i>
+      <span data-i18n="nav-travel">Viaje</span>
+    </button>
+    <button onclick="showTab('utiles',this)" class="nav-btn" data-tab="utiles">
+      <i class="fas fa-tools"></i>
+      <span data-i18n="nav-tools">Útiles</span>
+    </button>
+    <button onclick="showTab('docs',this)" class="nav-btn" data-tab="docs">
+      <i class="fas fa-passport"></i>
+      <span data-i18n="nav-procedures">Trámites</span>
+    </button>
+    <button onclick="showTab('info',this)" class="nav-btn" data-tab="info">
+      <i class="fas fa-info-circle"></i>
+      <span data-i18n="nav-info">Info</span>
+    </button>
+    <button onclick="showTab('kit',this)" class="nav-btn" data-tab="kit">
+      <i class="fas fa-suitcase-rolling"></i>
+      <span>Kit Viajero</span>
+    </button>
+  </nav>
   </div>
 
   <script>
@@ -3397,17 +3417,19 @@
     }
 
     // ===== NAVEGACIÓN =====
-    function showTab(tabId, buttonElement) {
+   function showTab(tabId, buttonElement) {
   document.querySelectorAll('.tab-content').forEach(tab => {
     tab.classList.remove('active');
   });
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-tab'));
   document.getElementById(tabId).classList.add('active');
-  buttonElement.classList.add('active-tab');
+
+  // Si no se pasa botón, lo busca automáticamente por data-tab
+  const btn = buttonElement || document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
+  if (btn) btn.classList.add('active-tab');
+
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
-
-
     // ===== DARK MODE =====
     function toggleDarkMode() {
       const body = document.body;
@@ -3869,18 +3891,28 @@ function canSubmitReport() {
       submitBtn.disabled = true;
 
       try {
-        await fetch(CONFIG.WEB_APP_URL, {
+        fetch(CONFIG.WEB_APP_URL, {
           method: 'POST', mode: 'no-cors',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(reportData)
-        });
+        }).catch(e => console.warn('Error enviando reporte:', e));
+
+        // Mostramos el reporte localmente de inmediato
         reportsCache.unshift(reportData);
+        localStorage.setItem('reportsCache', JSON.stringify(reportsCache));
         renderReports(reportsCache);
         closeReportModal();
         document.getElementById('reportForm').reset();
-        confetti({particleCount:120, spread:80, origin:{y:0.7}, colors:['#0039a6','#d52b1e','#ffffff','#f59e0b']});
         localStorage.setItem('lastReportTime', Date.now().toString());
-        showToast('✅ ' + (currentLang === 'es' ? '¡Reporte enviado!' : 'Report sent!'), 3000);
+
+        // Confetti y mensaje honesto
+        confetti({particleCount:120, spread:80, origin:{y:0.7}, colors:['#0039a6','#d52b1e','#ffffff','#f59e0b']});
+        showToast(
+          currentLang === 'es'
+            ? '✅ Reporte enviado. Visible para otros viajeros.'
+            : '✅ Report submitted. Visible to other travelers.',
+          3000
+        );
       } catch (error) {
         console.error('Error:', error);
         showToast('❌ ' + t('error'), 3000);
@@ -4064,14 +4096,17 @@ function showConfirm(message, onConfirm) {
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
-    function resetChecklist() {
-      if (confirm(currentLang === 'es' ? '¿Reiniciar todo el checklist?' : 'Reset all checklist?')) {
-        checklistState = [...CHECKLIST_ITEMS[currentLang]];
-        localStorage.setItem('checklistState', JSON.stringify(checklistState));
-        renderChecklist();
-        showToast('🔄 ' + (currentLang === 'es' ? 'Checklist reiniciado' : 'Checklist reset'), 2000);
-      }
+   function resetChecklist() {
+  showConfirm(
+    currentLang === 'es' ? '¿Reiniciar todo el checklist?' : 'Reset all checklist?',
+    () => {
+      checklistState = [...CHECKLIST_ITEMS[currentLang]];
+      localStorage.setItem('checklistState', JSON.stringify(checklistState));
+      renderChecklist();
+      showToast('🔄 ' + (currentLang === 'es' ? 'Checklist reiniciado' : 'Checklist reset'), 2000);
     }
+  );
+}
 
     // ===== CALCULADORAS =====
     function calculateFuelCost() {
@@ -4109,26 +4144,32 @@ function showConfirm(message, onConfirm) {
       const expiryEl  = document.getElementById('expiryDate');
       const warningEl = document.getElementById('warningAlert');
 
-      if (entry > today) {
+     if (entry > today) {
         resultEl.classList.remove('hidden');
         numberEl.textContent = '90';
-        expiryEl.textContent = '⚠️ La fecha no puede ser futura';
+        expiryEl.textContent = currentLang === 'es'
+          ? '⚠️ La fecha no puede ser futura'
+          : '⚠️ Date cannot be in the future';
         warningEl.classList.add('hidden');
         return;
       }
 
-      const daysPassed   = Math.floor((today - entry) / 86400000);
+      const daysPassed    = Math.floor((today - entry) / 86400000);
       const daysRemaining = 90 - daysPassed;
       resultEl.classList.remove('hidden');
 
       if (daysRemaining <= 0) {
         numberEl.textContent = '0';
-        expiryEl.textContent = '⛔ Visa vencida hace ' + Math.abs(daysRemaining) + ' días';
+        expiryEl.textContent = currentLang === 'es'
+          ? '⛔ Visa vencida hace ' + Math.abs(daysRemaining) + ' días'
+          : '⛔ Visa expired ' + Math.abs(daysRemaining) + ' days ago';
         warningEl.classList.remove('hidden');
       } else {
         const expiry = new Date(year, month - 1, day + 90);
+        const locale = currentLang === 'es' ? 'es-CL' : 'en-US';
         numberEl.textContent = daysRemaining;
-        expiryEl.textContent = 'Vence ' + expiry.toLocaleDateString('es-CL', {year:'numeric', month:'long', day:'numeric'});
+        expiryEl.textContent = (currentLang === 'es' ? 'Vence ' : 'Expires ') +
+          expiry.toLocaleDateString(locale, {year:'numeric', month:'long', day:'numeric'});
         warningEl.classList.toggle('hidden', daysRemaining > 15);
       }
 
@@ -4175,7 +4216,7 @@ function showConfirm(message, onConfirm) {
     // ===== CONEXIÓN =====
     window.addEventListener('online', () => {
       showToast('✅ ' + (currentLang === 'es' ? 'Conexión restaurada' : 'Connection restored'), 2000);
-      fetchExchangeRates(); fetchBorderPassesFromSheet(); fetchReportsFromSheet();
+      fetchAllData();
     });
     window.addEventListener('offline', () => {
       showToast('📵 ' + (currentLang === 'es' ? 'Sin conexión - Modo offline' : 'Offline mode'), 3000);
@@ -4208,12 +4249,11 @@ createSnowflakes(); // ← esta SÍ se queda, translatePage no la llama
 const urlParams = new URLSearchParams(window.location.search);
 const tabParam  = urlParams.get('tab');
 const validTabs = ['home','viaje','utiles','docs','info','kit'];
-const tabIndex  = { home:0, viaje:1, utiles:2, docs:3, info:4, kit:5 };
+const tabMap    = { home:0, viaje:1, utiles:2, docs:3, info:4, kit:5 };
 
 if (tabParam && validTabs.includes(tabParam)) {
   const navBtns = document.querySelectorAll('.nav-btn');
-  const tabIndex = { home:0, viaje:1, utiles:2, docs:3, info:4, acerca:5 };
-  const btnIndex = tabIndex[tabParam];
+  const btnIndex = tabMap[tabParam];
   if (btnIndex !== undefined) {
     showTab(tabParam, navBtns[btnIndex]);
   }
@@ -4223,20 +4263,28 @@ fetchExchangeRates();
 fetchBorderPassesFromSheet();
 fetchReportsFromSheet();
 
-      updateIntervalId = setInterval(() => {
+function fetchAllData() {
+  lastFetchTime = Date.now();
+  fetchExchangeRates();
+  fetchBorderPassesFromSheet();
+  fetchReportsFromSheet();
+}
+
+    updateIntervalId = setInterval(() => {
   if (!document.hidden) {
-    fetchExchangeRates();
-    fetchBorderPassesFromSheet();
-    fetchReportsFromSheet();
+    fetchAllData();
   }
 }, CONFIG.UPDATE_INTERVAL);
 
-// Cuando vuelve a primer plano, actualiza inmediatamente
+// Cuando vuelve a primer plano, actualiza solo si pasaron más de 2 minutos
+let lastFetchTime = Date.now();
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
-    fetchExchangeRates();
-    fetchBorderPassesFromSheet();
-    fetchReportsFromSheet();
+    const now = Date.now();
+    if (now - lastFetchTime > 120000) {
+      fetchAllData();
+      lastFetchTime = now;
+    }
   }
 });
 // ESC cierra cualquier modal
@@ -4255,7 +4303,28 @@ document.getElementById('notificationHistoryModal').addEventListener('click', (e
 });
 // Click fuera del contenido cierra el modal
     });
+// ===== LOGIN GOOGLE =====
+    function handleLogin() {
+      showToast(currentLang === 'es' ? '🔄 Conectando con Google...' : '🔄 Connecting with Google...', 2000);
+    }
 
+    function handleLogout() {
+      document.getElementById('userMenu')?.classList.add('hidden');
+      showToast(currentLang === 'es' ? '👋 Sesión cerrada' : '👋 Logged out', 2000);
+    }
+
+    function toggleUserMenu() {
+      document.getElementById('userMenu')?.classList.toggle('hidden');
+    }
+
+    // Cierra el menú si el usuario hace clic fuera
+    document.addEventListener('click', (e) => {
+      const panel = document.getElementById('userPanel');
+      const menu  = document.getElementById('userMenu');
+      if (panel && menu && !panel.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
         window.addEventListener('error', (e) => { console.error('Error capturado:', e.message); });
     window.addEventListener('unhandledrejection', (e) => { console.error('Promise rechazada:', e.reason); });
 
