@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" id="htmlRoot">
 
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9499117035060563"
@@ -10,10 +10,29 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Chile Arrival">
-  <meta name="description"
+ <meta name="description"
     content="Guía completa para ingresar a Chile: pasos fronterizos en tiempo real, tipo de cambio actualizado y toda la información necesaria para tu viaje.">
   <meta name="keywords" content="chile, fronteras, pasos fronterizos, tipo cambio, aduana chile, SAG">
-  <title>Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso </title>
+  <title>Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso</title>
+
+  <!-- Open Graph / WhatsApp / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://chile-arrival-839a1.web.app/">
+  <meta property="og:title" content="Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso">
+  <meta property="og:description" content="Pasos fronterizos en tiempo real, tipo de cambio actualizado, checklist de viaje y todo lo que necesitas para ingresar a Chile.">
+  <meta property="og:image" content="https://chile-arrival-839a1.web.app/screenshots/home.png">
+  <meta property="og:image:width" content="857">
+  <meta property="og:image:height" content="1600">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="pt_BR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://chile-arrival-839a1.web.app/">
+  <meta name="twitter:title" content="Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso">
+  <meta name="twitter:description" content="Pasos fronterizos en tiempo real, tipo de cambio actualizado y todo lo que necesitas para ingresar a Chile.">
+  <meta name="twitter:image" content="https://chile-arrival-839a1.web.app/screenshots/home.png">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
@@ -24,7 +43,7 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -2306,7 +2325,18 @@
       </div>
     </div>
   </div>
-
+<!-- ===== ADSPACE: ENTRE HERO Y CONTENIDO ===== -->
+  <div class="container mx-auto px-5 pt-2 pb-1 relative z-30">
+    <div class="rounded-2xl overflow-hidden" style="min-height: 60px;">
+      <ins class="adsbygoogle"
+           style="display:block;width:100%;min-height:60px;"
+           data-ad-client="ca-pub-9499117035060563"
+           data-ad-slot="REEMPLAZA_CON_TU_AD_SLOT"
+           data-ad-format="horizontal"
+           data-full-width-responsive="true">
+      </ins>
+    </div>
+  </div>
   <main class="container mx-auto px-5 -mt-16 relative z-20">
     <!-- TAB: HOME -->
     <section id="home" class="tab-content active space-y-6">
@@ -2751,13 +2781,13 @@
       🧳
     </div>
     <div>
-      <p class="text-[11px] font-black uppercase tracking-wide text-blue-100 mb-1">
+     <p class="text-[11px] font-black uppercase tracking-wide text-blue-100 mb-1" data-i18n="kit-badge">
         KIT VIAJERO CHILE ARRIVAL
       </p>
-      <h2 class="text-xl font-black text-white leading-tight mb-1">
+      <h2 class="text-xl font-black text-white leading-tight mb-1" data-i18n="kit-title">
         Ahorra en datos, seguros y plata al cruzar
       </h2>
-      <p class="text-xs text-blue-100/90 font-semibold">
+      <p class="text-xs text-blue-100/90 font-semibold" data-i18n="kit-subtitle">
         Selección de servicios que yo usaría para entrar a Chile y Argentina sin sorpresas.
       </p>
     </div>
@@ -2770,10 +2800,10 @@
       <!-- PEGAMOS AQUÍ TODA LA SECCIÓN MONETIZACIÓN QUE ESTABA EN ÚTILES -->
       <!-- HEADER DE SECCIÓN -->
       <div class="px-1 pt-2 pb-2">
-        <h2 class="text-lg font-black text-gray-900 dark:text-white">
+        <h2 class="text-lg font-black text-gray-900 dark:text-white" data-i18n="kit-section-title">
           🧳 Servicios para tu viaje
         </h2>
-        <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5" data-i18n="kit-section-sub">
           Todo lo que necesitas antes y después de cruzar
         </p>
       </div>
@@ -2992,8 +3022,7 @@
 </div>
       <div class="px-4 mb-6">
         <p class="text-xs text-gray-400 dark:text-gray-600 text-center">
-          * Algunos enlaces son de afiliados. Al reservar a través de ellos
-          apoyás el desarrollo gratuito de esta app. 🙏
+          <span data-i18n="kit-disclaimer">* Algunos enlaces son de afiliados. Al reservar a través de ellos apoyás el desarrollo gratuito de esta app. 🙏</span>
         </p>
       </div>
     </section>
@@ -3134,7 +3163,39 @@
         'no-open-passes': 'No hay pasos abiertos', 'operational-passes': '✅ Pasos Operativos',
         'confirms': 'persona(s) confirman', 'moment-ago': 'Hace un momento',
         'minutes-ago': 'Hace {n} min', 'hours-ago': 'Hace {n}h', 'days-ago': 'Hace {n} días',
-        'no-history': 'Sin historial de cambios'
+       'no-history': 'Sin historial de cambios',
+        'kit-badge': 'KIT VIAJERO CHILE ARRIVAL',
+        'kit-title': 'Ahorra en datos, seguros y plata al cruzar',
+        'kit-subtitle': 'Selección de servicios que yo usaría para entrar a Chile y Argentina sin sorpresas.',
+        'kit-section-title': '🧳 Servicios para tu viaje',
+        'kit-section-sub': 'Todo lo que necesitas antes y después de cruzar',
+        'kit-esim-title': 'eSIM para tu viaje',
+        'kit-esim-sub': 'Datos en Chile y Argentina sin cambiar tu SIM',
+        'kit-esim-desc': 'Escanea el QR y llega conectado al paso fronterizo.',
+        'kit-insurance-title': 'Seguro de viaje',
+        'kit-insurance-sub': 'Cobertura médica y cancelación internacional',
+        'kit-insurance-desc': 'iati Seguros · Desde $2/día',
+        'kit-wise-title': 'Enviar dinero con Wise',
+        'kit-wise-sub': 'Mejor tipo de cambio · Sin comisiones ocultas · CLP → ARS al precio real',
+        'kit-wise-b1': 'Primera transferencia <strong>sin comisión</strong>',
+        'kit-wise-b2': 'Tipo de cambio del mercado real (no bancario)',
+        'kit-wise-b3': 'Disponible en Chile y Argentina',
+        'kit-wise-btn': 'Abrir cuenta Wise gratis',
+        'kit-hotel-title': 'Dónde dormir cerca del paso',
+        'kit-hotel-sub': 'Busca alojamiento en la ciudad donde estás o donde vas a cruzar. Mejor dormir antes que manejar de noche.',
+        'kit-hotel-osorno': 'Hoteles en Osorno',
+        'kit-hotel-osorno-sub': 'Paso Cardenal Samoré',
+        'kit-hotel-pto': 'Hoteles en Puerto Montt',
+        'kit-hotel-pto-sub': 'Acceso a la Patagonia',
+        'kit-hotel-bari': 'Hoteles en Bariloche',
+        'kit-hotel-bari-sub': 'Argentina — Lado este',
+        'kit-hotel-btn': 'Buscar hoteles cerca de mí',
+        'kit-transport-title': 'Transporte y movilidad',
+        'kit-car-title': 'Arriendo de autos',
+        'kit-car-sub': 'Recoge en Chile o Argentina',
+        'kit-bus-title': 'Buses internacionales',
+        'kit-bus-sub': 'Santiago · Osorno · Bariloche',
+        'kit-disclaimer': '* Algunos enlaces son de afiliados. Al reservar a través de ellos apoyás el desarrollo gratuito de esta app. 🙏'
       },
       en: {
         'hero-title': 'Chile Arrival 🇨🇱', 'hero-subtitle': 'Your Complete Entry Guide',
@@ -3199,7 +3260,137 @@
         'no-open-passes': 'No open crossings', 'operational-passes': '✅ Operational Crossings',
         'confirms': 'person(s) confirm', 'moment-ago': 'A moment ago',
         'minutes-ago': '{n} min ago', 'hours-ago': '{n}h ago', 'days-ago': '{n} days ago',
-        'no-history': 'No change history'
+        'no-history': 'No change history',
+        'kit-badge': 'CHILE ARRIVAL TRAVELER KIT',
+        'kit-title': 'Save on data, insurance and money when crossing',
+        'kit-subtitle': 'Services I would use to enter Chile and Argentina without surprises.',
+        'kit-section-title': '🧳 Services for your trip',
+        'kit-section-sub': 'Everything you need before and after crossing',
+        'kit-esim-title': 'eSIM for your trip',
+        'kit-esim-sub': 'Data in Chile and Argentina without changing your SIM',
+        'kit-esim-desc': 'Scan the QR and arrive connected at the border crossing.',
+        'kit-insurance-title': 'Travel insurance',
+        'kit-insurance-sub': 'Medical coverage and international cancellation',
+        'kit-insurance-desc': 'iati Insurance · From $2/day',
+        'kit-wise-title': 'Send money with Wise',
+        'kit-wise-sub': 'Best exchange rate · No hidden fees · CLP → ARS at real price',
+        'kit-wise-b1': 'First transfer <strong>fee-free</strong>',
+        'kit-wise-b2': 'Real market exchange rate (not bank rate)',
+        'kit-wise-b3': 'Available in Chile and Argentina',
+        'kit-wise-btn': 'Open Wise account free',
+        'kit-hotel-title': 'Where to sleep near the crossing',
+        'kit-hotel-sub': 'Find accommodation in the city where you are or where you are crossing. Better to sleep before driving at night.',
+        'kit-hotel-osorno': 'Hotels in Osorno',
+        'kit-hotel-osorno-sub': 'Cardenal Samoré crossing',
+        'kit-hotel-pto': 'Hotels in Puerto Montt',
+        'kit-hotel-pto-sub': 'Gateway to Patagonia',
+        'kit-hotel-bari': 'Hotels in Bariloche',
+        'kit-hotel-bari-sub': 'Argentina — East side',
+        'kit-hotel-btn': 'Search hotels near me',
+        'kit-transport-title': 'Transport and mobility',
+        'kit-car-title': 'Car rental',
+        'kit-car-sub': 'Pick up in Chile or Argentina',
+        'kit-bus-title': 'International buses',
+        'kit-bus-sub': 'Santiago · Osorno · Bariloche',
+        'kit-disclaimer': '* Some links are affiliate links. By booking through them you support the free development of this app. 🙏'
+      },
+      pt: {
+        'hero-title': 'Chile Arrival 🇨🇱', 'hero-subtitle': 'Seu Guia Completo de Entrada',
+        'hero-badge': '✓ Atualizado 2026', 'reports-title': 'Relatos de Viajantes',
+        'reports-subtitle': 'Informação em tempo real', 'refresh': 'Atualizar',
+        'loading-reports': 'Carregando relatos...', 'no-reports': 'Sem relatos recentes',
+        'checklist-title': 'Checklist Pré-Viagem', 'checklist-subtitle': 'Marque tudo antes de partir',
+        'reset': 'Reiniciar', 'progress': 'Progresso', 'days-title': 'Dias Restantes no Chile',
+        'days-subtitle': 'Evite multas por exceder 90 dias', 'entry-date': 'Data de Entrada:',
+        'remaining': 'Restam:', 'days': 'dias', 'expires': 'Vence:',
+        'warning-days': '⚠️ Poucos dias restantes! Planeje sua saída',
+        'emergency-title': 'Contatos de Emergência', 'ambulance': 'Ambulância',
+        'firefighters': 'Bombeiros', 'police': 'Carabineros', 'tourist-info': 'Info Turística',
+        'sag-declaration': 'Declaração<br>SAG Online', 'customs': 'Aduana<br>Chile',
+        'tip-title': '💡 Dica do Dia', 'travel-info-title': 'Informações de Viagem',
+        'travel-info-subtitle': 'Postos fronteiriços operacionais', 'last-update-label': 'Última atualização:',
+        'search-placeholder': 'Buscar por nome ou região...', 'tools-title': 'Ferramentas Úteis',
+        'tools-subtitle': 'Calculadoras e conversores', 'exchange-title': 'Câmbio em Tempo Real',
+        'connecting': 'Conectando...', 'online': 'Online', 'offline': 'Sem conexão (cache)', 'error': 'Erro',
+        'rate-source': 'Fonte: Banco Central do Chile', 'last-update': 'Última atualização:',
+        'rate-disclaimer': 'Taxa oficial • Não inclui tarifas bancárias',
+        'fuel-title': 'Calculadora de Combustível', 'fuel-subtitle': 'Estime o custo total da viagem',
+        'fuel-distance': 'Distância da viagem (km)', 'fuel-consumption': 'Consumo do veículo (km/litro)',
+        'fuel-price': 'Preço do combustível (CLP/litro)', 'fuel-tolls': 'Pedágios estimados (CLP)',
+        'fuel-total': 'CUSTO TOTAL ESTIMADO:', 'fuel-liters': 'Litros necessários:',
+        'fuel-gas-cost': 'Custo combustível:', 'fuel-tolls-cost': 'Custo pedágios:',
+        'fuel-disclaimer': 'Valores aproximados • Pode variar conforme o tipo de rota',
+        'procedures-title': 'Procedimentos de Entrada', 'procedures-subtitle': 'Tudo que você precisa saber',
+        'pdi-title': '1. PDI - Controle Migratório', 'pdi-subtitle': 'Polícia de Investigações',
+        'pdi-item1': 'Apresentar <strong>Passaporte ou RG válido</strong>',
+        'pdi-item2': 'Você receberá seu <strong>PNA (Cartão de Turismo)</strong> digital ou físico',
+        'pdi-note': '✓ Válido por 90 dias prorrogáveis • Não perca seu PNA',
+        'customs-title': '2. ADUANA - Veículo e Bagagem', 'customs-subtitle': 'Controle de importação temporária',
+        'customs-documents': 'Documentos do Veículo',
+        'customs-doc1': '<strong>Título/Registro:</strong> Documento original de propriedade',
+        'customs-doc2': '<strong>Procuração:</strong> Obrigatória se o dono NÃO viaja no carro',
+        'customs-doc3': '<strong>SOAP:</strong> Seguro obrigatório de acidentes pessoais',
+        'customs-note': '⚠️ Importação temporária: máximo 90 dias corridos',
+        'sag-title': '3. SAG - Controle Sanitário', 'sag-subtitle': 'Serviço Agrícola Pecuário',
+        'sag-item1': 'Preencher <strong>declaração juramentada de entrada</strong> (digital ou papel)',
+        'sag-item2': 'Proibido: frutas frescas, sementes, carnes não processadas, mel, laticínios',
+        'sag-important': '🚨 MUITO IMPORTANTE',
+        'sag-warning': 'Se trouxer alimentos, <u>DECLARE SEMPRE</u>.<br>Se declarar, sem multa (produto apenas retirado).<br>Se NÃO declarar: <strong>Multa de até $300.000 CLP</strong>',
+        'sag-allowed': '✓ Permitidos: Alimentos industrialmente embalados e fechados',
+        'culture-title': 'Cultura Chilena 🇨🇱', 'culture-subtitle': 'Guia de sobrevivência cultural',
+        'slang-title': '📖 Dicionário Chilensis', 'slang-subtitle': 'Gírias que você precisa conhecer',
+        'nav-home': 'Início', 'nav-travel': 'Viagem', 'nav-tools': 'Úteis',
+        'nav-procedures': 'Trâmites', 'nav-info': 'Info', 'nav-about': 'Sobre',
+        'report-modal-title': '🚨 Reportar Situação',
+        'report-modal-subtitle': 'Ajude outros viajantes compartilhando informações atuais',
+        'report-pass-label': 'Posto fronteiriço:', 'report-pass-placeholder': 'Selecionar posto...',
+        'report-type-label': 'Tipo de relato:', 'report-type-delay': '🕐 Demora',
+        'report-type-closure': '🚫 Fechamento', 'report-type-accident': '🚗 Acidente',
+        'report-type-weather': '🌨️ Clima', 'report-type-other': '📢 Outro',
+        'report-message-label': 'Descreva a situação:',
+        'report-message-placeholder': 'Ex: 2 horas de espera por excesso de veículos',
+        'report-message-note': 'Opcional • Máximo 200 caracteres', 'report-submit': 'Enviar Relato',
+        'cancel': 'Cancelar', 'notification-history-title': '🔔 Histórico de Mudanças',
+        'clear-history': 'Limpar Histórico', 'all-open': '✅ Todos os Postos Abertos',
+        'no-closures': 'Sem fechamentos reportados', 'closed-passes': '⚠️ Postos Fechados',
+        'open': 'ABERTO', 'closed': 'FECHADO', 'region': '📍 Região', 'schedule': '⏰ Horário',
+        'observations': 'ℹ️ Observações Importantes', 'view-all': 'Ver Todos os Postos →',
+        'no-open-passes': 'Sem postos abertos', 'operational-passes': '✅ Postos Operacionais',
+        'confirms': 'pessoa(s) confirmam', 'moment-ago': 'Agora mesmo',
+        'minutes-ago': 'Há {n} min', 'hours-ago': 'Há {n}h', 'days-ago': 'Há {n} dias',
+        'no-history': 'Sem histórico de mudanças',
+        'kit-badge': 'KIT VIAJANTE CHILE ARRIVAL',
+        'kit-title': 'Economize em dados, seguros e dinheiro ao cruzar',
+        'kit-subtitle': 'Serviços que eu usaria para entrar no Chile e Argentina sem surpresas.',
+        'kit-section-title': '🧳 Serviços para sua viagem',
+        'kit-section-sub': 'Tudo que você precisa antes e depois de cruzar',
+        'kit-esim-title': 'eSIM para sua viagem',
+        'kit-esim-sub': 'Dados no Chile e Argentina sem trocar seu SIM',
+        'kit-esim-desc': 'Escaneie o QR e chegue conectado ao posto fronteiriço.',
+        'kit-insurance-title': 'Seguro viagem',
+        'kit-insurance-sub': 'Cobertura médica e cancelamento internacional',
+        'kit-insurance-desc': 'iati Seguros · A partir de $2/dia',
+        'kit-wise-title': 'Enviar dinheiro com Wise',
+        'kit-wise-sub': 'Melhor câmbio · Sem taxas ocultas · CLP → ARS ao preço real',
+        'kit-wise-b1': 'Primeira transferência <strong>sem taxa</strong>',
+        'kit-wise-b2': 'Taxa de câmbio do mercado real (não bancário)',
+        'kit-wise-b3': 'Disponível no Chile e Argentina',
+        'kit-wise-btn': 'Abrir conta Wise grátis',
+        'kit-hotel-title': 'Onde dormir perto do posto',
+        'kit-hotel-sub': 'Busque hospedagem na cidade onde você está ou onde vai cruzar. Melhor dormir antes que dirigir à noite.',
+        'kit-hotel-osorno': 'Hotéis em Osorno',
+        'kit-hotel-osorno-sub': 'Posto Cardenal Samoré',
+        'kit-hotel-pto': 'Hotéis em Puerto Montt',
+        'kit-hotel-pto-sub': 'Acesso à Patagônia',
+        'kit-hotel-bari': 'Hotéis em Bariloche',
+        'kit-hotel-bari-sub': 'Argentina — Lado leste',
+        'kit-hotel-btn': 'Buscar hotéis perto de mim',
+        'kit-transport-title': 'Transporte e mobilidade',
+        'kit-car-title': 'Aluguel de carros',
+        'kit-car-sub': 'Retire no Chile ou Argentina',
+        'kit-bus-title': 'Ônibus internacionais',
+        'kit-bus-sub': 'Santiago · Osorno · Bariloche',
+        'kit-disclaimer': '* Alguns links são de afiliados. Ao reservar através deles você apoia o desenvolvimento gratuito deste app. 🙏'
       }
     };
 
@@ -3224,6 +3415,16 @@
         {id:6, text:"Cash in Chilean pesos (CLP)", checked:false},
         {id:7, text:"Travel medical insurance", checked:false},
         {id:8, text:"SAG declaration completed", checked:false}
+      ],
+      pt: [
+        {id:1, text:"Passaporte válido (+6 meses de validade)", checked:false},
+        {id:2, text:"Seguro SOAP contratado e pago", checked:false},
+        {id:3, text:"Documentos do veículo (título/registro)", checked:false},
+        {id:4, text:"Procuração (se não for o dono)", checked:false},
+        {id:5, text:"Cartão de crédito internacional", checked:false},
+        {id:6, text:"Dinheiro em pesos chilenos (CLP)", checked:false},
+        {id:7, text:"Seguro médico de viagem", checked:false},
+        {id:8, text:"Declaração SAG preenchida", checked:false}
       ]
     };
 
@@ -3249,6 +3450,17 @@
         "Respect speed limits: there are many automatic cameras",
         "In winter, snow chains are mandatory at some crossings",
         "Check crossing status on WhatsApp before traveling"
+      ],
+      pt: [
+        "Sempre leve o seguro SOAP válido para seu veículo (obrigatório)",
+        "O SAG é muito rigoroso: se trouxer comida, SEMPRE declare",
+        "Use cinto de segurança em todos os assentos (multa $175.000 CLP)",
+        "Alguns pedágios rurais só aceitam dinheiro",
+        "Baixe mapas offline: há zonas sem sinal na cordilheira",
+        "A gasolina é mais cara no Chile que nos países vizinhos",
+        "Respeite os limites de velocidade: há muitas câmeras automáticas",
+        "No inverno, correntes de neve são obrigatórias em alguns postos",
+        "Consulte o estado dos postos pelo WhatsApp antes de viajar"
       ]
     };
 
@@ -3280,6 +3492,20 @@
         {word:"Carrete", meaning:"Party", example:"Let's party"},
         {word:"Copete", meaning:"Alcoholic drink", example:"Let's have a drink"},
         {word:"Polera", meaning:"T-shirt", example:"I bought a t-shirt"}
+      ],
+      pt: [
+        {word:"Cachai?", meaning:"Entendeu?", example:"Cachai lo que te digo?"},
+        {word:"Luca", meaning:"Mil pesos", example:"Me custou 5 lucas"},
+        {word:"Bacán", meaning:"Legal, ótimo", example:"Que bacán!"},
+        {word:"Fome", meaning:"Chato, sem graça", example:"O filme foi fome"},
+        {word:"Taco", meaning:"Engarrafamento", example:"Tem muito taco"},
+        {word:"Al toque", meaning:"Imediatamente", example:"Vou al toque"},
+        {word:"Pillo/a", meaning:"Esperto/a", example:"Você é bem pillo"},
+        {word:"Pololeo", meaning:"Namoro", example:"Eles estão em pololeo"},
+        {word:"Po", meaning:"Expressão de ênfase", example:"Sí po, obvio"},
+        {word:"Carrete", meaning:"Festa", example:"Vamos de carrete"},
+        {word:"Copete", meaning:"Bebida alcoólica", example:"Tomemos un copete"},
+        {word:"Polera", meaning:"Camiseta", example:"Comprei uma polera"}
       ]
     };
 
@@ -3295,6 +3521,12 @@
         {icon:"🍽️", title:"Meal times", text:"Lunch 1-3pm, Once (snack) 5-7pm, Dinner 8-10pm. Many places close on Sundays."},
         {icon:"💵", title:"Tips", text:"10% at restaurants (optional but expected). In taxis, round up the amount."},
         {icon:"🚗", title:"Driving", text:"Drive on the right. Seat belt mandatory. Alcohol: 0% tolerance for new drivers."}
+      ],
+      pt: [
+        {icon:"🤝", title:"Cumprimentos", text:"Um beijo na bochecha entre homens e mulheres é normal. Entre homens, aperto de mão."},
+        {icon:"🍽️", title:"Horários de refeição", text:"Almoço 13-15h, Once (lanche) 17-19h, Jantar 20-22h. Muitos locais fecham aos domingos."},
+        {icon:"💵", title:"Gorjetas", text:"10% nos restaurantes (opcional mas esperada). Em táxis, arredondar o valor."},
+        {icon:"🚗", title:"Condução", text:"Dirige-se pela direita. Cinto obrigatório. Álcool: tolerância 0% para motoristas novos."}
       ]
     };
 
@@ -3406,14 +3638,28 @@
       initSlangContent();
       renderReports(reportsCache);
       updatePassesDisplay();
-      document.documentElement.lang = lang;
+
+      // Actualiza lang y dir del documento dinámicamente
+      const langMap = { es: 'es-CL', en: 'en-US', pt: 'pt-BR' };
+      document.documentElement.lang = langMap[lang] || lang;
+
+      // Actualiza el título de la página según idioma
+      const titles = {
+        es: 'Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso',
+        en: 'Chile Arrival 🇨🇱 | Your Complete Entry Guide',
+        pt: 'Chile Arrival 🇨🇱 | Seu Guia Completo de Entrada'
+      };
+      document.title = titles[lang] || titles.es;
     }
 
     function toggleLanguage() {
-      currentLang = currentLang === 'es' ? 'en' : 'es';
+      if (currentLang === 'es') currentLang = 'en';
+      else if (currentLang === 'en') currentLang = 'pt';
+      else currentLang = 'es';
       translatePage(currentLang);
       localStorage.setItem('language', currentLang);
-      showToast(`🌐 ${currentLang === 'es' ? 'Español' : 'English'}`, 2000);
+      const labels = { es: '🇨🇱 Español', en: '🇺🇸 English', pt: '🇧🇷 Português' };
+      showToast(`🌐 ${labels[currentLang]}`, 2000);
     }
 
     // ===== NAVEGACIÓN =====
@@ -3680,7 +3926,7 @@
                   </div>` : ''}
               </div>`).join('')}
           </div>
-          <button onclick="showTab('viaje',document.querySelectorAll('.nav-btn')[1])"
+          <button onclick="showTab('viaje')"
             class="mt-4 w-full text-xs bg-red-600 text-white px-4 py-2.5 rounded-lg font-bold hover:bg-red-700 transition-all">
             ${t('view-all')}
           </button>
@@ -3983,12 +4229,16 @@ function renderNotificationToggle() {
 
     // FIX: función que faltaba
     function clearNotificationHistory() {
-      if (confirm(currentLang === 'es' ? '¿Limpiar todo el historial?' : 'Clear all history?')) {
-        localStorage.removeItem('notificationHistory');
-        updateNotificationBadge();
-        renderNotificationHistory();
-        showToast('🗑️ ' + (currentLang === 'es' ? 'Historial limpiado' : 'History cleared'), 2000);
-      }
+      showConfirm(
+        currentLang === 'es' ? '¿Limpiar todo el historial?' : 'Clear all history?',
+        () => {
+          localStorage.removeItem('notificationHistory');
+          updateNotificationBadge();
+          renderNotificationToggle();
+          renderNotificationHistory();
+          showToast('🗑️ ' + (currentLang === 'es' ? 'Historial limpiado' : 'History cleared'), 2000);
+        }
+      );
     }
 
     // FIX: función que faltaba
@@ -4221,20 +4471,46 @@ function showConfirm(message, onConfirm) {
     window.addEventListener('offline', () => {
       showToast('📵 ' + (currentLang === 'es' ? 'Sin conexión - Modo offline' : 'Offline mode'), 3000);
     });
-
+     let lastFetchTime = Date.now();
+function fetchAllData() {
+  lastFetchTime = Date.now();
+  fetchExchangeRates();
+  fetchBorderPassesFromSheet();
+  fetchReportsFromSheet();
+}
     // ===== INICIALIZACIÓN =====
     document.addEventListener('DOMContentLoaded', () => {
       DOM_CACHE.init();
 
       const savedTheme = localStorage.getItem('theme');
+
       if (savedTheme === 'dark') {
+        // Usuario eligió dark manualmente
+        document.body.setAttribute('data-theme', 'dark');
+        DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
+      } else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // Primera vez y el sistema está en dark mode
         document.body.setAttribute('data-theme', 'dark');
         DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
       }
+
+      // Escucha cambios del sistema en tiempo real
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        // Solo reacciona si el usuario no eligió manualmente
+        if (!localStorage.getItem('theme')) {
+          if (e.matches) {
+            document.body.setAttribute('data-theme', 'dark');
+            DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
+          } else {
+            document.body.removeAttribute('data-theme');
+            DOM_CACHE.themeIcon.classList.replace('fa-sun', 'fa-moon');
+          }
+        }
+      });
       updateNotificationBadge(); // FIX: se mueve fuera del if(dark) para que siempre se ejecute
 
       const savedLang = localStorage.getItem('language');
-      if (savedLang === 'es' || savedLang === 'en') currentLang = savedLang;
+      if (savedLang === 'es' || savedLang === 'en' || savedLang === 'pt') currentLang = savedLang;
      translatePage(currentLang);
 
 DOM_CACHE.entryDate.max = new Date().toISOString().split('T')[0];
@@ -4263,13 +4539,6 @@ fetchExchangeRates();
 fetchBorderPassesFromSheet();
 fetchReportsFromSheet();
 
-function fetchAllData() {
-  lastFetchTime = Date.now();
-  fetchExchangeRates();
-  fetchBorderPassesFromSheet();
-  fetchReportsFromSheet();
-}
-
     updateIntervalId = setInterval(() => {
   if (!document.hidden) {
     fetchAllData();
@@ -4277,7 +4546,6 @@ function fetchAllData() {
 }, CONFIG.UPDATE_INTERVAL);
 
 // Cuando vuelve a primer plano, actualiza solo si pasaron más de 2 minutos
-let lastFetchTime = Date.now();
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
     const now = Date.now();
@@ -4301,7 +4569,12 @@ document.getElementById('reportModal').addEventListener('click', (e) => {
 document.getElementById('notificationHistoryModal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('notificationHistoryModal')) closeNotificationHistory();
 });
-// Click fuera del contenido cierra el modal
+// ===== ADSENSE INIT =====
+try {
+  (adsbygoogle = window.adsbygoogle || []).push({});
+} catch(e) {
+  console.warn('AdSense no disponible:', e);
+}// Click fuera del contenido cierra el modal
     });
 // ===== LOGIN GOOGLE =====
     function handleLogin() {
