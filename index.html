@@ -2869,16 +2869,15 @@ function loadConfetti(callback) {
             <p id="rateTime" class="mt-1"><span data-i18n="last-update">Última actualización:</span> <span
                 id="rateTimestamp">--:--</span></p>
           </div>
-          <div class="mt-5">
+         <div class="mt-5">
   <p style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.7);
             text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;text-align:center;">
-    ${currentLang === 'pt' ? 'Comparar' : currentLang === 'en' ? 'Compare all' : 'Comparar todas'}
-    · <span style="font-weight:600;opacity:0.8">
-      ${currentLang === 'pt' ? 'por 1 unidade' : currentLang === 'en' ? 'per 1 unit' : 'por 1 unidad'}
-    </span>
+    <span id="compareAllLabel">Comparar todas</span>
+    · <span id="perUnitLabel" style="font-weight:600;opacity:0.8">por 1 unidad</span>
   </p>
   <div id="currencyComparisonContainer"></div>
 </div>
+
           <p class="text-center text-blue-100 text-[10px] mt-3 font-semibold" data-i18n="rate-disclaimer">Tasa oficial •
             No incluye comisiones bancarias</p>
         </div>
@@ -4586,6 +4585,10 @@ function renderStats() {
       };
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) metaDesc.setAttribute('content', descriptions[lang] || descriptions.es);
+      const compareEl = document.getElementById('compareAllLabel');
+      const perUnitEl = document.getElementById('perUnitLabel');
+      if (compareEl) compareEl.textContent = lang === 'pt' ? 'Comparar' : lang === 'en' ? 'Compare all' : 'Comparar todas';
+      if (perUnitEl) perUnitEl.textContent = lang === 'pt' ? 'por 1 unidade' : lang === 'en' ? 'per 1 unit' : 'por 1 unidad';
     }
 
     function toggleLanguage() {
