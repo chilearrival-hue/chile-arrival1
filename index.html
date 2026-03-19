@@ -4459,7 +4459,53 @@ function toggleMap() {
     btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
   }
 }
+function updateMapMarkers() {
+  if (!mapInstance) return;
 
+  // Limpia marcadores anteriores antes de agregar nuevos
+  mapInstance.eachLayer(layer => {
+    if (layer instanceof L.Marker) mapInstance.removeLayer(layer);
+  });
+
+  if (!BORDER_PASSES.length) {
+    setTimeout(() => updateMapMarkers(), 1000);
+    return;
+  }
+
+  BORDER_PASSES.forEach(pass => {
+    const coords = PASS_LOCATIONS[pass.name];
+    if (!coords) return;
+
+    const isOpen = pass.status === 'Abierto';
+    const color = isOpen ? '#10b981' : '#ef4444';
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="
+        width:14px;height:14px;border-radius:50%;
+        background:${color};border:2px solid white;
+        box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+      </div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
+    });
+
+    const hours = pass.hours
+      ? (currentLang === 'es' ? 'Horario: ' : currentLang === 'pt' ? 'Horário: ' : 'Hours: ') + pass.hours
+      : '';
+
+    L.marker([coords.lat, coords.lon], { icon })
+      .addTo(mapInstance)
+      .bindPopup(`
+        <div style="font-family:sans-serif;min-width:140px;">
+          <p style="font-weight:900;font-size:13px;margin:0 0 4px">${pass.name}</p>
+          <p style="font-size:11px;color:#64748b;margin:0 0 4px">${pass.region}</p>
+          <p style="font-size:12px;font-weight:700;color:${color};margin:0 0 4px">
+            ${isOpen ? '✅ Abierto' : '🔴 Cerrado'}
+          </p>
+          ${hours ? `<p style="font-size:11px;color:#64748b;margin:0">${hours}</p>` : ''}
+        </div>`);
+  });
+}
 function initMap() {
   const mapEl = document.getElementById('passesMap');
   if (!mapEl) return;
