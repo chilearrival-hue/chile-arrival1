@@ -156,21 +156,21 @@
 }
 
 /* Alineación: todas las cards del Kit Viajero a la misma altura */
-#viajero .px-4.mb-3 > a,
-#viajero .px-4.mb-3 > div {
+#kit .px-4.mb-3 > a,
+#kit .px-4.mb-3 > div {
   min-height: 80px !important;
   display: flex !important;
   align-items: stretch !important;
 }
 
 /* La card de Alojamiento y Transporte (blancas) también alineadas */
-#viajero .bg-white,
-[data-theme="dark"] #viajero .bg-gray-800 {
+#kit .bg-white,
+[data-theme="dark"] #kit .bg-gray-800 {
   border-radius: 16px !important;
 }
 
 /* Fix: header de sección "Servicios para tu viaje" más visible */
-#viajero h2.text-lg {
+#kit h2.text-lg {
   color: #0f172a !important;
   font-size: 1.1rem !important;
   padding-bottom: 4px !important;
@@ -2787,7 +2787,9 @@
       <div id="slangContainer" class="grid grid-cols-2 gap-4"></div>
     </section>
         <!-- TAB: KIT VIAJERO -->
-    <section id="kit" class="tab-content space-y-4 px-4 pt-6 pb-8">
+    <section id="kit" class="tab-content space-y-4 pt-6 pb-8">
+  <div id="kitContentContainer"></div>
+</section>
       <!-- HERO DEL KIT -->
       <div class="card-glass p-5 mb-3 glass-blue relative overflow-hidden">
   <div class="flex items-start gap-3">
@@ -3067,9 +3069,9 @@
       <span data-i18n="nav-info">Info</span>
     </button>
     <button onclick="showTab('kit',this)" class="nav-btn" data-tab="kit">
-      <i class="fas fa-suitcase-rolling"></i>
-      <span>Kit Viajero</span>
-    </button>
+  <i class="fas fa-suitcase-rolling"></i>
+  <span data-i18n="nav-kit">Kit Viajero</span>
+</button>
   </nav>
   </div>
 
@@ -3158,7 +3160,7 @@
         'sag-warning': 'Si traes alimentos, <u>DECLARA SIEMPRE</u>.<br>Si declaras, no hay multa (solo se elimina el producto).<br>Si NO declaras: <strong>Multa de hasta $300.000 CLP</strong>',
         'sag-allowed': '✓ Permitidos: Alimentos envasados industrialmente y cerrados',
         'culture-title': 'Cultura Chilena 🇨🇱', 'culture-subtitle': 'Guía de supervivencia cultural',
-        'slang-title': '📖 Diccionario Chilensis', 'slang-subtitle': 'Modismos que debes conocer','nav-info': 'Info', 'nav-about': 'Acerca',
+        'slang-title': '📖 Diccionario Chilensis', 'slang-subtitle': 'Modismos que debes conocer','nav-info': 'Info', 'nav-about': 'Acerca','nav-kit': 'Kit Viajero',
         'nav-home': 'Inicio', 'nav-travel': 'Viaje', 'nav-tools': 'Útiles', 'nav-procedures': 'Trámites',
         'report-modal-title': '🚨 Reportar Situación',
         'report-modal-subtitle': 'Ayuda a otros viajeros compartiendo información actual',
@@ -3259,7 +3261,7 @@
         'sag-allowed': '✓ Allowed: Industrially packaged and sealed food',
         'culture-title': 'Chilean Culture 🇨🇱', 'culture-subtitle': 'Cultural survival guide',
         'slang-title': '📖 Chilean Dictionary', 'slang-subtitle': 'Idioms you should know',
-        'nav-home': 'Home', 'nav-travel': 'Travel', 'nav-tools': 'Tools', 'nav-procedures': 'Procedures','nav-info': 'Info', 'nav-about': 'About',
+        'nav-home': 'Home', 'nav-travel': 'Travel', 'nav-tools': 'Tools', 'nav-procedures': 'Procedures','nav-info': 'Info','nav-kit': 'Travel Kit', 'nav-about': 'About',
         'report-modal-title': '🚨 Report Situation',
         'report-modal-subtitle': 'Help other travelers by sharing current information',
         'report-pass-label': 'Border crossing:', 'report-pass-placeholder': 'Select crossing...',
@@ -3359,7 +3361,7 @@
         'culture-title': 'Cultura Chilena 🇨🇱', 'culture-subtitle': 'Guia de sobrevivência cultural',
         'slang-title': '📖 Dicionário Chilensis', 'slang-subtitle': 'Gírias que você precisa conhecer',
         'nav-home': 'Início', 'nav-travel': 'Viagem', 'nav-tools': 'Úteis',
-        'nav-procedures': 'Trâmites', 'nav-info': 'Info', 'nav-about': 'Sobre',
+        'nav-procedures': 'Trâmites', 'nav-info': 'Info','nav-kit': 'Kit Viajante', 'nav-about': 'Sobre',
         'report-modal-title': '🚨 Reportar Situação',
         'report-modal-subtitle': 'Ajude outros viajantes compartilhando informações atuais',
         'report-pass-label': 'Posto fronteiriço:', 'report-pass-placeholder': 'Selecionar posto...',
@@ -3654,11 +3656,185 @@
         if (TRANSLATIONS[lang]?.[key]) el.placeholder = TRANSLATIONS[lang][key];
       });
       initChecklist();
+      function initKitContent() {
+  const container = document.getElementById('kitContentContainer');
+  if (!container) return;
+  container.innerHTML = `
+    <!-- Hero kit -->
+    <div class="card-glass p-5 mb-3 glass-blue">
+      <p class="text-[11px] font-black uppercase text-blue-100 mb-1">${t('kit-badge')}</p>
+      <h2 class="text-xl font-black text-white leading-tight mb-1">${t('kit-title')}</h2>
+      <p class="text-xs text-blue-100/90 font-semibold">${t('kit-subtitle')}</p>
+    </div>
+
+    <!-- Header sección -->
+    <div class="px-1 pt-2 pb-2">
+      <h2 class="text-lg font-black" style="color: var(--text-primary)">${t('kit-section-title')}</h2>
+      <p class="text-xs text-gray-400 mt-0.5">${t('kit-section-sub')}</p>
+    </div>
+
+    <!-- eSIM -->
+    <div class="px-4 mb-3">
+      <a href="https://www.airalo.com" target="_blank" rel="noopener sponsored"
+         class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
+        <div class="relative p-4 flex items-center gap-4"
+             style="background: linear-gradient(135deg, #7c3aed, #4338ca)">
+          <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
+            <i class="fas fa-sim-card text-white text-2xl"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-white font-black text-base">${t('kit-esim-title')}</p>
+            <p class="text-indigo-200 text-xs">${t('kit-esim-sub')}</p>
+            <p class="text-white/80 text-xs mt-1">${t('kit-esim-desc')}</p>
+          </div>
+          <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
+        </div>
+      </a>
+    </div>
+
+    <!-- Seguro -->
+    <div class="px-4 mb-3">
+      <a href="https://www.iatiseguros.com" target="_blank" rel="noopener sponsored"
+         class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
+        <div class="relative p-4 flex items-center gap-4"
+             style="background: linear-gradient(135deg, #059669, #0f766e)">
+          <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
+            <i class="fas fa-shield-alt text-white text-2xl"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-white font-black text-base">${t('kit-insurance-title')}</p>
+            <p class="text-emerald-100 text-xs">${t('kit-insurance-sub')}</p>
+            <p class="text-white/80 text-xs mt-1">${t('kit-insurance-desc')}</p>
+          </div>
+          <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
+        </div>
+      </a>
+    </div>
+
+    <!-- Wise -->
+    <div class="px-4 mb-3">
+      <div class="rounded-2xl overflow-hidden shadow-md border border-gray-200">
+        <div class="p-4 flex items-center gap-3"
+             style="background: linear-gradient(135deg, #0f766e, #14b8a6)">
+          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-exchange-alt text-white text-lg"></i>
+          </div>
+          <div>
+            <p class="text-white font-black text-sm">${t('kit-wise-title')}</p>
+            <p class="text-teal-100 text-xs mt-0.5">${t('kit-wise-sub')}</p>
+          </div>
+        </div>
+        <div class="px-4 py-3 bg-white dark:bg-gray-800">
+          <p class="text-xs font-semibold mb-1" style="color:var(--text-primary)">✓ ${t('kit-wise-b1')}</p>
+          <p class="text-xs font-semibold mb-1" style="color:var(--text-primary)">✓ ${t('kit-wise-b2')}</p>
+          <p class="text-xs font-semibold"       style="color:var(--text-primary)">✓ ${t('kit-wise-b3')}</p>
+        </div>
+        <div class="p-3 bg-slate-50">
+          <a href="https://wise.com" target="_blank" rel="noopener sponsored"
+             class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm text-white font-bold active:scale-95 transition-all"
+             style="background: linear-gradient(135deg, #0f766e, #14b8a6)">
+            <span><i class="fas fa-paper-plane mr-2"></i>${t('kit-wise-btn')}</span>
+            <span class="text-xs bg-white/20 px-2 py-1 rounded-full">+ ${currentLang === 'es' ? 'Sin comisión' : currentLang === 'pt' ? 'Sem taxa' : 'No fees'}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hoteles -->
+    <div class="px-4 mb-3">
+      <div class="rounded-2xl overflow-hidden shadow-md border border-gray-200">
+        <div class="p-4 flex items-center gap-3"
+             style="background: linear-gradient(135deg, #1e40af, #3b82f6)">
+          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-bed text-white text-lg"></i>
+          </div>
+          <div>
+            <p class="text-white font-black text-sm">${t('kit-hotel-title')}</p>
+            <p class="text-blue-100 text-xs mt-0.5">${t('kit-hotel-sub')}</p>
+          </div>
+        </div>
+        <a href="https://www.booking.com/city/cl/osorno.html" target="_blank" rel="noopener sponsored"
+           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🏨</span>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">${t('kit-hotel-osorno')}</p>
+              <p class="text-xs text-gray-400">${t('kit-hotel-osorno-sub')}</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </a>
+        <a href="https://www.booking.com/city/cl/puerto-montt.html" target="_blank" rel="noopener sponsored"
+           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🏨</span>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">${t('kit-hotel-pto')}</p>
+              <p class="text-xs text-gray-400">${t('kit-hotel-pto-sub')}</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </a>
+        <a href="https://www.booking.com/city/ar/san-carlos-de-bariloche.html" target="_blank" rel="noopener sponsored"
+           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🏨</span>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">${t('kit-hotel-bari')}</p>
+              <p class="text-xs text-gray-400">${t('kit-hotel-bari-sub')}</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Transporte -->
+    <div class="px-4 mb-3">
+      <div class="rounded-2xl shadow-sm overflow-hidden border border-gray-200">
+        <div class="p-4 flex items-center gap-2"
+             style="background: linear-gradient(135deg, #ea580c, #f97316)">
+          <i class="fas fa-route text-white"></i>
+          <span class="font-bold text-white text-sm">${t('kit-transport-title')}</span>
+        </div>
+        <a href="https://www.rentalcars.com" target="_blank" rel="noopener sponsored"
+           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🚗</span>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">${t('kit-car-title')}</p>
+              <p class="text-xs text-gray-400">${t('kit-car-sub')}</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </a>
+        <a href="https://www.busbud.com" target="_blank" rel="noopener sponsored"
+           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 transition">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">🚌</span>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">${t('kit-bus-title')}</p>
+              <p class="text-xs text-gray-400">${t('kit-bus-sub')}</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="px-4 mb-6">
+      <p class="text-xs text-gray-400 text-center">${t('kit-disclaimer')}</p>
+    </div>
+  `;
+}
+      initChecklist();
       showDailyTip();
       initCultureContent();
       initSlangContent();
       renderReports(reportsCache);
       updatePassesDisplay();
+      initKitContent();
 
       // Actualiza lang y dir del documento dinámicamente
       const langMap = { es: 'es-CL', en: 'en-US', pt: 'pt-BR' };
