@@ -38,16 +38,24 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
   <script src="https://cdn.tailwindcss.com/3.4.1"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+function loadConfetti(callback) {
+  if (typeof confetti !== 'undefined') { callback(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js';
+  s.onload = callback;
+  document.head.appendChild(s);
+}
+</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <style>
     /* Variables CSS optimizadas */
     :root {
@@ -4865,14 +4873,33 @@ function initMap() {
   const mapEl = document.getElementById('passesMap');
   if (!mapEl) return;
 
-  // Si ya existe, solo actualiza tamaño y marcadores
+  // Carga Leaflet solo cuando se necesita
+  if (typeof L === 'undefined') {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+    document.head.appendChild(link);
+
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    script.onload = () => initMapCore();
+    document.head.appendChild(script);
+    return;
+  }
+
+  initMapCore();
+}
+
+function initMapCore() {
+  const mapEl = document.getElementById('passesMap');
+  if (!mapEl) return;
+
   if (mapInitialized && mapInstance) {
     mapInstance.invalidateSize(true);
     updateMapMarkers();
     return;
   }
 
-  // Fuerza dimensiones antes de inicializar
   mapEl.style.height = '300px';
   mapEl.style.width = '100%';
 
@@ -4888,7 +4915,6 @@ function initMap() {
       crossOrigin: true
     }).addTo(mapInstance);
 
-    // Espera que los tiles carguen y luego fuerza resize
     mapInstance.whenReady(() => {
       setTimeout(() => {
         mapInstance.invalidateSize(true);
@@ -5088,7 +5114,12 @@ localStorage.setItem('totalReportsSent', totalReports.toString());
 renderStats();
 
         // Confetti y mensaje honesto
-        confetti({particleCount:120, spread:80, origin:{y:0.7}, colors:['#0039a6','#d52b1e','#ffffff','#f59e0b']});
+        loadConfetti(() => confetti({
+  particleCount: 180,
+  spread: 100,
+  origin: { y: 0.6 },
+  colors: ['#0039a6','#d52b1e','#ffffff','#f59e0b','#10b981']
+}));
        showToast(
           currentLang === 'es'
             ? '✅ Reporte enviado. Visible para otros viajeros.'
@@ -5272,12 +5303,7 @@ function renderNotificationToggle() {
       if (checked === total && total > 0) {
         const totalChecks = parseInt(localStorage.getItem('totalChecksCompleted') || '0') + 1;
 localStorage.setItem('totalChecksCompleted', totalChecks.toString());
-        confetti({
-          particleCount: 180,
-          spread: 100,
-          origin: { y: 0.6 },
-          colors: ['#0039a6','#d52b1e','#ffffff','#f59e0b','#10b981']
-        });
+        loadConfetti(() => confetti({particleCount:120, spread:80, origin:{y:0.7}, colors:['#0039a6','#d52b1e','#ffffff','#f59e0b']}));
         showToast(
           currentLang === 'es' ? '🎉 ¡Checklist completo! Listo para viajar' :
           currentLang === 'pt' ? '🎉 Checklist completo! Pronto para viajar' :
