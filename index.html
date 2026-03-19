@@ -2536,6 +2536,13 @@ function loadConfetti(callback) {
   <main class="container mx-auto px-5 -mt-16 relative z-20">
     <!-- TAB: HOME -->
     <section id="home" class="tab-content active space-y-6">
+      <div class="card-glass chile-flag p-4" id="quickSummaryCard">
+  <div class="flex items-center gap-2 mb-3">
+    <i class="fas fa-tachometer-alt text-blue-600"></i>
+    <h3 class="card-title-enhanced">Resumen</h3>
+  </div>
+  <div id="quickSummaryContainer"></div>
+</div>
       <div id="closedPassesSection"></div>
 
       <div class="card-glass chile-flag p-6">
@@ -2772,6 +2779,40 @@ function loadConfetti(callback) {
     style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3)">
   </div>
 </div>
+<div class="flex gap-2 flex-wrap mb-4">
+  <button onclick="filterByCountry('todos', this)"
+    id="filter-todos"
+    class="filter-country-btn active-filter"
+    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #0039a6;
+           background:#0039a6;color:white;font-size:12px;font-weight:800;
+           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    🌎 Todos
+  </button>
+  <button onclick="filterByCountry('Argentina', this)"
+    id="filter-argentina"
+    class="filter-country-btn"
+    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #e2e8f0;
+           background:transparent;color:#64748b;font-size:12px;font-weight:800;
+           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    🇦🇷 Argentina
+  </button>
+  <button onclick="filterByCountry('Bolivia', this)"
+    id="filter-bolivia"
+    class="filter-country-btn"
+    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #e2e8f0;
+           background:transparent;color:#64748b;font-size:12px;font-weight:800;
+           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    🇧🇴 Bolivia
+  </button>
+  <button onclick="filterByCountry('Perú', this)"
+    id="filter-peru"
+    class="filter-country-btn"
+    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #e2e8f0;
+           background:transparent;color:#64748b;font-size:12px;font-weight:800;
+           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    🇵🇪 Perú
+  </button>
+</div>
       <div class="search-box">
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" onkeyup="debouncedFilterPasses()" data-i18n-placeholder="search-placeholder"
@@ -2828,6 +2869,16 @@ function loadConfetti(callback) {
             <p id="rateTime" class="mt-1"><span data-i18n="last-update">Última actualización:</span> <span
                 id="rateTimestamp">--:--</span></p>
           </div>
+          <div class="mt-5">
+  <p style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.7);
+            text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;text-align:center;">
+    ${currentLang === 'pt' ? 'Comparar' : currentLang === 'en' ? 'Compare all' : 'Comparar todas'}
+    · <span style="font-weight:600;opacity:0.8">
+      ${currentLang === 'pt' ? 'por 1 unidade' : currentLang === 'en' ? 'per 1 unit' : 'por 1 unidad'}
+    </span>
+  </p>
+  <div id="currencyComparisonContainer"></div>
+</div>
           <p class="text-center text-blue-100 text-[10px] mt-3 font-semibold" data-i18n="rate-disclaimer">Tasa oficial •
             No incluye comisiones bancarias</p>
         </div>
@@ -2885,7 +2936,11 @@ function loadConfetti(callback) {
       <!-- ============================================
      SECCIÓN MONETIZACIÓN — TAB ÚTILES
      Chile Arrival — Explorer Cards
-     ============================================ -->
+ 
+    ============================================ -->
+    <div class="card-glass fuel-calculator p-7">
+  <div class="relative z-10" id="tollsContainer"></div>
+</div>
 <div class="px-4 pb-6">
   <div class="card-glass glass-yellow p-4 flex items-center justify-between">
     <div>
@@ -3045,6 +3100,18 @@ function loadConfetti(callback) {
         <p class="small-text-enhanced" data-i18n="culture-subtitle">Guía de supervivencia cultural</p>
       </div>
       <div class="space-y-4 mb-8" id="cultureInfo"></div>
+      <div class="card-glass p-5 mb-6">
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center flex-shrink-0">
+      <i class="fas fa-tag text-white"></i>
+    </div>
+    <div>
+      <h3 class="card-title-enhanced">Guía de Precios</h3>
+      <p class="small-text-enhanced">Referencia en pesos chilenos (CLP)</p>
+    </div>
+  </div>
+  <div id="priceGuideContainer"></div>
+</div>
       <div class="bg-gradient-to-r from-red-600 to-blue-600 p-6 rounded-2xl text-white mb-4 shadow-xl">
         <h3 class="text-2xl font-black text-center mb-2 tracking-tight" data-i18n="slang-title">📖 Diccionario Chilensis</h3>
         <p class="text-center text-sm opacity-95 font-bold" data-i18n="slang-subtitle">Modismos que debes conocer</p>
@@ -3461,38 +3528,133 @@ function loadConfetti(callback) {
 
     // ===== DATOS TRADUCIBLES =====
     const CHECKLIST_ITEMS = {
-      es: [
-        {id:1, text:"Pasaporte válido (+6 meses de vigencia)", checked:false},
-        {id:2, text:"SOAP contratado y pagado", checked:false},
-        {id:3, text:"Documentos del vehículo (título/padrón)", checked:false},
-        {id:4, text:"Poder notarial (si no es el dueño)", checked:false},
-        {id:5, text:"Tarjeta de crédito internacional", checked:false},
-        {id:6, text:"Efectivo en pesos chilenos (CLP)", checked:false},
-        {id:7, text:"Seguro médico de viaje", checked:false},
-        {id:8, text:"Declaración SAG completada", checked:false}
-      ],
-      en: [
-        {id:1, text:"Valid passport (+6 months validity)", checked:false},
-        {id:2, text:"SOAP insurance contracted and paid", checked:false},
-        {id:3, text:"Vehicle documents (title/registration)", checked:false},
-        {id:4, text:"Power of attorney (if not the owner)", checked:false},
-        {id:5, text:"International credit card", checked:false},
-        {id:6, text:"Cash in Chilean pesos (CLP)", checked:false},
-        {id:7, text:"Travel medical insurance", checked:false},
-        {id:8, text:"SAG declaration completed", checked:false}
-      ],
-      pt: [
-        {id:1, text:"Passaporte válido (+6 meses de validade)", checked:false},
-        {id:2, text:"Seguro SOAP contratado e pago", checked:false},
-        {id:3, text:"Documentos do veículo (título/registro)", checked:false},
-        {id:4, text:"Procuração (se não for o dono)", checked:false},
-        {id:5, text:"Cartão de crédito internacional", checked:false},
-        {id:6, text:"Dinheiro em pesos chilenos (CLP)", checked:false},
-        {id:7, text:"Seguro médico de viagem", checked:false},
-        {id:8, text:"Declaração SAG preenchida", checked:false}
-      ]
-    };
-
+  es: {
+    auto: [
+      {id:1, text:"Pasaporte válido (+6 meses de vigencia)", checked:false},
+      {id:2, text:"SOAP contratado y pagado", checked:false},
+      {id:3, text:"Documentos del vehículo (título/padrón)", checked:false},
+      {id:4, text:"Poder notarial (si no eres el dueño)", checked:false},
+      {id:5, text:"Tarjeta de crédito internacional", checked:false},
+      {id:6, text:"Efectivo en pesos chilenos (CLP)", checked:false},
+      {id:7, text:"Seguro médico de viaje", checked:false},
+      {id:8, text:"Declaración SAG completada", checked:false}
+    ],
+    moto: [
+      {id:1, text:"Pasaporte válido (+6 meses de vigencia)", checked:false},
+      {id:2, text:"SOAP contratado y pagado", checked:false},
+      {id:3, text:"Documentos de la moto (título/padrón)", checked:false},
+      {id:4, text:"Poder notarial (si no eres el dueño)", checked:false},
+      {id:5, text:"Casco homologado", checked:false},
+      {id:6, text:"Ropa de abrigo (cordillera)", checked:false},
+      {id:7, text:"Seguro médico de viaje", checked:false},
+      {id:8, text:"Declaración SAG completada", checked:false}
+    ],
+    peaton: [
+      {id:1, text:"Pasaporte válido (+6 meses de vigencia)", checked:false},
+      {id:2, text:"Efectivo en pesos chilenos (CLP)", checked:false},
+      {id:3, text:"Tarjeta de crédito internacional", checked:false},
+      {id:4, text:"Seguro médico de viaje", checked:false},
+      {id:5, text:"Declaración SAG completada", checked:false},
+      {id:6, text:"Dirección de alojamiento en Chile", checked:false},
+      {id:7, text:"Teléfono con datos o eSIM", checked:false},
+      {id:8, text:"Mapas offline descargados", checked:false}
+    ],
+    mascota: [
+      {id:1, text:"Pasaporte válido (+6 meses de vigencia)", checked:false},
+      {id:2, text:"Certificado veterinario oficial", checked:false},
+      {id:3, text:"Vacuna antirrábica vigente", checked:false},
+      {id:4, text:"Autorización SAG para mascota", checked:false},
+      {id:5, text:"Microchip de identificación", checked:false},
+      {id:6, text:"Desparasitación al día", checked:false},
+      {id:7, text:"Jaula o transportín homologado", checked:false},
+      {id:8, text:"Comida suficiente para el viaje", checked:false}
+    ]
+  },
+  en: {
+    auto: [
+      {id:1, text:"Valid passport (+6 months validity)", checked:false},
+      {id:2, text:"SOAP insurance contracted and paid", checked:false},
+      {id:3, text:"Vehicle documents (title/registration)", checked:false},
+      {id:4, text:"Power of attorney (if not the owner)", checked:false},
+      {id:5, text:"International credit card", checked:false},
+      {id:6, text:"Cash in Chilean pesos (CLP)", checked:false},
+      {id:7, text:"Travel medical insurance", checked:false},
+      {id:8, text:"SAG declaration completed", checked:false}
+    ],
+    moto: [
+      {id:1, text:"Valid passport (+6 months validity)", checked:false},
+      {id:2, text:"SOAP insurance contracted and paid", checked:false},
+      {id:3, text:"Motorcycle documents (title/registration)", checked:false},
+      {id:4, text:"Power of attorney (if not the owner)", checked:false},
+      {id:5, text:"Approved helmet", checked:false},
+      {id:6, text:"Warm clothing (mountain crossing)", checked:false},
+      {id:7, text:"Travel medical insurance", checked:false},
+      {id:8, text:"SAG declaration completed", checked:false}
+    ],
+    peaton: [
+      {id:1, text:"Valid passport (+6 months validity)", checked:false},
+      {id:2, text:"Cash in Chilean pesos (CLP)", checked:false},
+      {id:3, text:"International credit card", checked:false},
+      {id:4, text:"Travel medical insurance", checked:false},
+      {id:5, text:"SAG declaration completed", checked:false},
+      {id:6, text:"Accommodation address in Chile", checked:false},
+      {id:7, text:"Phone with data or eSIM", checked:false},
+      {id:8, text:"Offline maps downloaded", checked:false}
+    ],
+    mascota: [
+      {id:1, text:"Valid passport (+6 months validity)", checked:false},
+      {id:2, text:"Official veterinary certificate", checked:false},
+      {id:3, text:"Valid rabies vaccine", checked:false},
+      {id:4, text:"SAG authorization for pet", checked:false},
+      {id:5, text:"Identification microchip", checked:false},
+      {id:6, text:"Up to date deworming", checked:false},
+      {id:7, text:"Approved carrier or crate", checked:false},
+      {id:8, text:"Enough food for the trip", checked:false}
+    ]
+  },
+  pt: {
+    auto: [
+      {id:1, text:"Passaporte válido (+6 meses de validade)", checked:false},
+      {id:2, text:"Seguro SOAP contratado e pago", checked:false},
+      {id:3, text:"Documentos do veículo (título/registro)", checked:false},
+      {id:4, text:"Procuração (se não for o dono)", checked:false},
+      {id:5, text:"Cartão de crédito internacional", checked:false},
+      {id:6, text:"Dinheiro em pesos chilenos (CLP)", checked:false},
+      {id:7, text:"Seguro médico de viagem", checked:false},
+      {id:8, text:"Declaração SAG preenchida", checked:false}
+    ],
+    moto: [
+      {id:1, text:"Passaporte válido (+6 meses de validade)", checked:false},
+      {id:2, text:"Seguro SOAP contratado e pago", checked:false},
+      {id:3, text:"Documentos da moto (título/registro)", checked:false},
+      {id:4, text:"Procuração (se não for o dono)", checked:false},
+      {id:5, text:"Capacete homologado", checked:false},
+      {id:6, text:"Roupa de frio (travessia da cordilheira)", checked:false},
+      {id:7, text:"Seguro médico de viagem", checked:false},
+      {id:8, text:"Declaração SAG preenchida", checked:false}
+    ],
+    peaton: [
+      {id:1, text:"Passaporte válido (+6 meses de validade)", checked:false},
+      {id:2, text:"Dinheiro em pesos chilenos (CLP)", checked:false},
+      {id:3, text:"Cartão de crédito internacional", checked:false},
+      {id:4, text:"Seguro médico de viagem", checked:false},
+      {id:5, text:"Declaração SAG preenchida", checked:false},
+      {id:6, text:"Endereço de hospedagem no Chile", checked:false},
+      {id:7, text:"Celular com dados ou eSIM", checked:false},
+      {id:8, text:"Mapas offline baixados", checked:false}
+    ],
+    mascota: [
+      {id:1, text:"Passaporte válido (+6 meses de validade)", checked:false},
+      {id:2, text:"Certificado veterinário oficial", checked:false},
+      {id:3, text:"Vacina antirrábica válida", checked:false},
+      {id:4, text:"Autorização SAG para animal", checked:false},
+      {id:5, text:"Microchip de identificação", checked:false},
+      {id:6, text:"Vermifugação em dia", checked:false},
+      {id:7, text:"Caixa de transporte homologada", checked:false},
+      {id:8, text:"Comida suficiente para a viagem", checked:false}
+    ]
+  }
+};
     const DAILY_TIPS = {
       es: [
         "Lleva siempre SOAP vigente para tu vehículo (seguro obligatorio)",
@@ -3529,50 +3691,104 @@ function loadConfetti(callback) {
       ]
     };
 
-    const CHILEAN_SLANG = {
-      es: [
-        {word:"Cachai?", meaning:"¿Entiendes?", example:"Cachai lo que te digo?"},
-        {word:"Luca", meaning:"Mil pesos", example:"Me costó 5 lucas"},
-        {word:"Bacán", meaning:"Genial, excelente", example:"¡Qué bacán!"},
-        {word:"Fome", meaning:"Aburrido", example:"La película estuvo fome"},
-        {word:"Taco", meaning:"Atasco, tráfico", example:"Hay mucho taco"},
-        {word:"Al toque", meaning:"De inmediato", example:"Voy al toque"},
-        {word:"Pillo/a", meaning:"Astuto", example:"Eres bien pillo"},
-        {word:"Pololeo", meaning:"Noviazgo", example:"Están en pololeo"},
-        {word:"Po", meaning:"Muletilla (pues)", example:"Sí po, obvio"},
-        {word:"Carrete", meaning:"Fiesta", example:"Vamos de carrete"},
-        {word:"Copete", meaning:"Bebida alcohólica", example:"Tomemos un copete"},
-        {word:"Polera", meaning:"Camiseta", example:"Me compré una polera"}
-      ],
-      en: [
-        {word:"Cachai?", meaning:"You get it?", example:"Cachai lo que te digo?"},
-        {word:"Luca", meaning:"Thousand pesos", example:"It cost me 5 lucas"},
-        {word:"Bacán", meaning:"Cool, great", example:"How cool!"},
-        {word:"Fome", meaning:"Boring", example:"The movie was boring"},
-        {word:"Taco", meaning:"Traffic jam", example:"There's a lot of traffic"},
-        {word:"Al toque", meaning:"Right away", example:"I'm going right away"},
-        {word:"Pillo/a", meaning:"Clever", example:"You're quite clever"},
-        {word:"Pololeo", meaning:"Dating", example:"They're dating"},
-        {word:"Po", meaning:"Filler word", example:"Yes po, obviously"},
-        {word:"Carrete", meaning:"Party", example:"Let's party"},
-        {word:"Copete", meaning:"Alcoholic drink", example:"Let's have a drink"},
-        {word:"Polera", meaning:"T-shirt", example:"I bought a t-shirt"}
-      ],
-      pt: [
-        {word:"Cachai?", meaning:"Entendeu?", example:"Cachai lo que te digo?"},
-        {word:"Luca", meaning:"Mil pesos", example:"Me custou 5 lucas"},
-        {word:"Bacán", meaning:"Legal, ótimo", example:"Que bacán!"},
-        {word:"Fome", meaning:"Chato, sem graça", example:"O filme foi fome"},
-        {word:"Taco", meaning:"Engarrafamento", example:"Tem muito taco"},
-        {word:"Al toque", meaning:"Imediatamente", example:"Vou al toque"},
-        {word:"Pillo/a", meaning:"Esperto/a", example:"Você é bem pillo"},
-        {word:"Pololeo", meaning:"Namoro", example:"Eles estão em pololeo"},
-        {word:"Po", meaning:"Expressão de ênfase", example:"Sí po, obvio"},
-        {word:"Carrete", meaning:"Festa", example:"Vamos de carrete"},
-        {word:"Copete", meaning:"Bebida alcoólica", example:"Tomemos un copete"},
-        {word:"Polera", meaning:"Camiseta", example:"Comprei uma polera"}
-      ]
-    };
+   const CHILEAN_SLANG = {
+  es: [
+    {word:"Cachai?", meaning:"¿Entiendes?", example:"Cachai lo que te digo?"},
+    {word:"Luca", meaning:"Mil pesos", example:"Me costó 5 lucas"},
+    {word:"Bacán", meaning:"Genial, excelente", example:"¡Qué bacán!"},
+    {word:"Fome", meaning:"Aburrido", example:"La película estuvo fome"},
+    {word:"Taco", meaning:"Atasco, tráfico", example:"Hay mucho taco"},
+    {word:"Al toque", meaning:"De inmediato", example:"Voy al toque"},
+    {word:"Pillo/a", meaning:"Astuto", example:"Eres bien pillo"},
+    {word:"Pololeo", meaning:"Noviazgo", example:"Están en pololeo"},
+    {word:"Po", meaning:"Muletilla (pues)", example:"Sí po, obvio"},
+    {word:"Carrete", meaning:"Fiesta", example:"Vamos de carrete"},
+    {word:"Copete", meaning:"Bebida alcohólica", example:"Tomemos un copete"},
+    {word:"Polera", meaning:"Camiseta", example:"Me compré una polera"},
+    {word:"Weon/Wea", meaning:"Tipo / cosa (informal)", example:"Qué wea más rara"},
+    {word:"Cuático", meaning:"Impresionante o raro", example:"Eso estuvo cuático"},
+    {word:"Altiro", meaning:"Ahora mismo", example:"Voy altiro"},
+    {word:"Choro/a", meaning:"Valiente, audaz", example:"Ese gallo es bien choro"},
+    {word:"Gallo/a", meaning:"Persona, tipo", example:"El gallo ese es bacán"},
+    {word:"Harto", meaning:"Mucho", example:"Hay harta gente"},
+    {word:"Caña", meaning:"Resaca", example:"Tengo una caña terrible"},
+    {word:"Pega", meaning:"Trabajo", example:"Estoy en la pega"},
+    {word:"Flaite", meaning:"Persona de modales bruscos", example:"No seas flaite"},
+    {word:"Pituto", meaning:"Contacto o favor", example:"Entró por pituto"},
+    {word:"Cana", meaning:"Cárcel o policía", example:"Lo llevaron a la cana"},
+    {word:"Micro", meaning:"Autobús urbano", example:"Toma la micro"},
+    {word:"Completo", meaning:"Hot dog con todo", example:"Un completo italiano"},
+    {word:"Once", meaning:"Merienda de la tarde", example:"Ven a tomar la once"},
+    {word:"Achuntar", meaning:"Acertar, dar en el blanco", example:"Achuntaste perfecto"},
+    {word:"Andar pato", meaning:"Sin dinero", example:"Ando pato esta semana"},
+    {word:"Buena onda", meaning:"Buen ambiente o persona", example:"Es muy buena onda"},
+    {word:"Chao pescao", meaning:"Adiós (informal)", example:"Chao pescao, nos vemos"}
+  ],
+  en: [
+    {word:"Cachai?", meaning:"You get it?", example:"Cachai lo que te digo?"},
+    {word:"Luca", meaning:"Thousand pesos", example:"It cost me 5 lucas"},
+    {word:"Bacán", meaning:"Cool, great", example:"How cool!"},
+    {word:"Fome", meaning:"Boring", example:"The movie was boring"},
+    {word:"Taco", meaning:"Traffic jam", example:"There's a lot of traffic"},
+    {word:"Al toque", meaning:"Right away", example:"I'm going right away"},
+    {word:"Pillo/a", meaning:"Clever", example:"You're quite clever"},
+    {word:"Pololeo", meaning:"Dating", example:"They're dating"},
+    {word:"Po", meaning:"Filler word", example:"Yes po, obviously"},
+    {word:"Carrete", meaning:"Party", example:"Let's party"},
+    {word:"Copete", meaning:"Alcoholic drink", example:"Let's have a drink"},
+    {word:"Polera", meaning:"T-shirt", example:"I bought a t-shirt"},
+    {word:"Weon/Wea", meaning:"Dude / thing (informal)", example:"What a weird thing"},
+    {word:"Cuático", meaning:"Impressive or weird", example:"That was intense"},
+    {word:"Altiro", meaning:"Right now", example:"I'm going right now"},
+    {word:"Choro/a", meaning:"Bold, brave", example:"That guy is bold"},
+    {word:"Gallo/a", meaning:"Person, guy", example:"That guy is cool"},
+    {word:"Harto", meaning:"A lot", example:"There are a lot of people"},
+    {word:"Caña", meaning:"Hangover", example:"I have a terrible hangover"},
+    {word:"Pega", meaning:"Job, work", example:"I'm at work"},
+    {word:"Flaite", meaning:"Rough person", example:"Don't be rude"},
+    {word:"Pituto", meaning:"Contact or favor", example:"He got in through connections"},
+    {word:"Cana", meaning:"Jail or police", example:"They took him to jail"},
+    {word:"Micro", meaning:"City bus", example:"Take the bus"},
+    {word:"Completo", meaning:"Hot dog with everything", example:"An Italian completo"},
+    {word:"Once", meaning:"Afternoon snack", example:"Come for once"},
+    {word:"Achuntar", meaning:"To nail it, get it right", example:"You nailed it"},
+    {word:"Andar pato", meaning:"To be broke", example:"I'm broke this week"},
+    {word:"Buena onda", meaning:"Good vibes or person", example:"Great vibes"},
+    {word:"Chao pescao", meaning:"Bye (informal)", example:"See you later"}
+  ],
+  pt: [
+    {word:"Cachai?", meaning:"Entendeu?", example:"Cachai lo que te digo?"},
+    {word:"Luca", meaning:"Mil pesos", example:"Me custou 5 lucas"},
+    {word:"Bacán", meaning:"Legal, ótimo", example:"Que bacán!"},
+    {word:"Fome", meaning:"Chato, sem graça", example:"O filme foi fome"},
+    {word:"Taco", meaning:"Engarrafamento", example:"Tem muito taco"},
+    {word:"Al toque", meaning:"Imediatamente", example:"Vou al toque"},
+    {word:"Pillo/a", meaning:"Esperto/a", example:"Você é bem pillo"},
+    {word:"Pololeo", meaning:"Namoro", example:"Eles estão em pololeo"},
+    {word:"Po", meaning:"Expressão de ênfase", example:"Sí po, obvio"},
+    {word:"Carrete", meaning:"Festa", example:"Vamos de carrete"},
+    {word:"Copete", meaning:"Bebida alcoólica", example:"Tomemos un copete"},
+    {word:"Polera", meaning:"Camiseta", example:"Comprei uma polera"},
+    {word:"Weon/Wea", meaning:"Cara / coisa (informal)", example:"Que coisa estranha"},
+    {word:"Cuático", meaning:"Impressionante ou estranho", example:"Isso foi intenso"},
+    {word:"Altiro", meaning:"Agora mesmo", example:"Vou agora mesmo"},
+    {word:"Choro/a", meaning:"Corajoso, ousado", example:"Esse cara é ousado"},
+    {word:"Gallo/a", meaning:"Pessoa, cara", example:"Esse cara é legal"},
+    {word:"Harto", meaning:"Muito", example:"Tem muita gente"},
+    {word:"Caña", meaning:"Ressaca", example:"Tenho uma ressaca terrível"},
+    {word:"Pega", meaning:"Trabalho", example:"Estou no trabalho"},
+    {word:"Flaite", meaning:"Pessoa grosseira", example:"Não seja grosseiro"},
+    {word:"Pituto", meaning:"Contato ou favor", example:"Entrou por indicação"},
+    {word:"Cana", meaning:"Cadeia ou polícia", example:"Levaram ele preso"},
+    {word:"Micro", meaning:"Ônibus urbano", example:"Pega o ônibus"},
+    {word:"Completo", meaning:"Hot dog com tudo", example:"Um completo italiano"},
+    {word:"Once", meaning:"Lanche da tarde", example:"Vem tomar o once"},
+    {word:"Achuntar", meaning:"Acertar em cheio", example:"Você acertou em cheio"},
+    {word:"Andar pato", meaning:"Estar sem dinheiro", example:"Estou sem dinheiro essa semana"},
+    {word:"Buena onda", meaning:"Boa energia ou pessoa", example:"Ótima energia"},
+    {word:"Chao pescao", meaning:"Tchau (informal)", example:"Até mais"}
+  ]
+};
 // ===== FAQ DATA =====
     const FAQ_DATA = {
       es: [
@@ -3631,6 +3847,8 @@ function loadConfetti(callback) {
       ]
     };
     const CULTURE_INFO = {
+      
+      
       es: [
         {icon:"🤝", title:"Saludos", text:"Un beso en la mejilla entre hombres y mujeres es normal. Entre hombres, apretón de manos."},
         {icon:"🍽️", title:"Horarios de comida", text:"Almuerzo 13-15h, Once (merienda) 17-19h, Cena 20-22h. Los domingos muchos locales cierran."},
@@ -3650,6 +3868,92 @@ function loadConfetti(callback) {
         {icon:"🚗", title:"Condução", text:"Dirige-se pela direita. Cinto obrigatório. Álcool: tolerância 0% para motoristas novos."}
       ]
     };
+    const PRICE_GUIDE = {
+  es: [
+    { icon:"🚌", category:"Transporte", items:[
+      { name:"Micro urbana (Santiago)", price:"$850 CLP" },
+      { name:"Metro Santiago", price:"$800–$950 CLP" },
+      { name:"Taxi básico (bajada)", price:"$600 CLP" },
+      { name:"Uber/Cabify (viaje corto)", price:"$3.000–$6.000 CLP" },
+      { name:"Bus interprovincial", price:"$8.000–$25.000 CLP" }
+    ]},
+    { icon:"🍽️", category:"Comida", items:[
+      { name:"Menú del día (restaurante)", price:"$4.500–$7.000 CLP" },
+      { name:"Completo (hot dog)", price:"$2.000–$3.500 CLP" },
+      { name:"McDonald's combo", price:"$6.500–$8.500 CLP" },
+      { name:"Café con leche", price:"$2.000–$3.500 CLP" },
+      { name:"Supermercado (compra básica)", price:"$15.000–$25.000 CLP" }
+    ]},
+    { icon:"🏨", category:"Alojamiento", items:[
+      { name:"Hostel (cama en dorm)", price:"$12.000–$18.000 CLP" },
+      { name:"Hostel (habitación privada)", price:"$25.000–$45.000 CLP" },
+      { name:"Hotel 3 estrellas", price:"$50.000–$90.000 CLP" },
+      { name:"Airbnb (departamento)", price:"$35.000–$70.000 CLP" }
+    ]},
+    { icon:"⛽", category:"Combustible", items:[
+      { name:"Gasolina 93 octanos", price:"~$1.050 CLP/L" },
+      { name:"Gasolina 95 octanos", price:"~$1.100 CLP/L" },
+      { name:"Gasolina 97 octanos", price:"~$1.180 CLP/L" },
+      { name:"Diésel", price:"~$960 CLP/L" }
+    ]}
+  ],
+  en: [
+    { icon:"🚌", category:"Transport", items:[
+      { name:"City bus (Santiago)", price:"$850 CLP" },
+      { name:"Metro Santiago", price:"$800–$950 CLP" },
+      { name:"Basic taxi (start)", price:"$600 CLP" },
+      { name:"Uber/Cabify (short trip)", price:"$3,000–$6,000 CLP" },
+      { name:"Intercity bus", price:"$8,000–$25,000 CLP" }
+    ]},
+    { icon:"🍽️", category:"Food", items:[
+      { name:"Set lunch (restaurant)", price:"$4,500–$7,000 CLP" },
+      { name:"Completo (hot dog)", price:"$2,000–$3,500 CLP" },
+      { name:"McDonald's combo", price:"$6,500–$8,500 CLP" },
+      { name:"Coffee with milk", price:"$2,000–$3,500 CLP" },
+      { name:"Supermarket (basic shop)", price:"$15,000–$25,000 CLP" }
+    ]},
+    { icon:"🏨", category:"Accommodation", items:[
+      { name:"Hostel (dorm bed)", price:"$12,000–$18,000 CLP" },
+      { name:"Hostel (private room)", price:"$25,000–$45,000 CLP" },
+      { name:"3-star hotel", price:"$50,000–$90,000 CLP" },
+      { name:"Airbnb (apartment)", price:"$35,000–$70,000 CLP" }
+    ]},
+    { icon:"⛽", category:"Fuel", items:[
+      { name:"Gasoline 93 octane", price:"~$1,050 CLP/L" },
+      { name:"Gasoline 95 octane", price:"~$1,100 CLP/L" },
+      { name:"Gasoline 97 octane", price:"~$1,180 CLP/L" },
+      { name:"Diesel", price:"~$960 CLP/L" }
+    ]}
+  ],
+  pt: [
+    { icon:"🚌", category:"Transporte", items:[
+      { name:"Ônibus urbano (Santiago)", price:"$850 CLP" },
+      { name:"Metrô Santiago", price:"$800–$950 CLP" },
+      { name:"Táxi básico (bandeirada)", price:"$600 CLP" },
+      { name:"Uber/Cabify (viagem curta)", price:"$3.000–$6.000 CLP" },
+      { name:"Ônibus interestadual", price:"$8.000–$25.000 CLP" }
+    ]},
+    { icon:"🍽️", category:"Comida", items:[
+      { name:"Prato do dia (restaurante)", price:"$4.500–$7.000 CLP" },
+      { name:"Completo (hot dog)", price:"$2.000–$3.500 CLP" },
+      { name:"Combo McDonald's", price:"$6.500–$8.500 CLP" },
+      { name:"Café com leite", price:"$2.000–$3.500 CLP" },
+      { name:"Supermercado (compra básica)", price:"$15.000–$25.000 CLP" }
+    ]},
+    { icon:"🏨", category:"Hospedagem", items:[
+      { name:"Hostel (cama em dorm)", price:"$12.000–$18.000 CLP" },
+      { name:"Hostel (quarto privado)", price:"$25.000–$45.000 CLP" },
+      { name:"Hotel 3 estrelas", price:"$50.000–$90.000 CLP" },
+      { name:"Airbnb (apartamento)", price:"$35.000–$70.000 CLP" }
+    ]},
+    { icon:"⛽", category:"Combustível", items:[
+      { name:"Gasolina 93 octanas", price:"~$1.050 CLP/L" },
+      { name:"Gasolina 95 octanas", price:"~$1.100 CLP/L" },
+      { name:"Gasolina 97 octanas", price:"~$1.180 CLP/L" },
+      { name:"Diesel", price:"~$960 CLP/L" }
+    ]}
+  ]
+};
 
     // ===== VARIABLES GLOBALES =====
     let currentLang = 'es';
@@ -3891,6 +4195,96 @@ function loadConfetti(callback) {
     </div>
   `;
 }
+// ===== ONBOARDING =====
+function initOnboarding() {
+  if (localStorage.getItem('onboardingDone')) return;
+
+  const slides = {
+    es: [
+      { icon:'🇨🇱', title:'Bienvenido a Chile Arrival', text:'Tu guía completa para cruzar la frontera a Chile. Todo lo que necesitás en un solo lugar.' },
+      { icon:'🛂', title:'Pasos en tiempo real', text:'Consultá el estado de 18 pasos fronterizos con Argentina, Bolivia y Perú. Con mapa y clima incluido.' },
+      { icon:'🧳', title:'Todo para tu viaje', text:'Checklist personalizado, tipo de cambio, calculadora de combustible, peajes y mucho más.' }
+    ],
+    en: [
+      { icon:'🇨🇱', title:'Welcome to Chile Arrival', text:'Your complete guide to crossing the border into Chile. Everything you need in one place.' },
+      { icon:'🛂', title:'Real-time crossings', text:'Check the status of 18 border crossings with Argentina, Bolivia and Peru. With map and weather included.' },
+      { icon:'🧳', title:'Everything for your trip', text:'Personalized checklist, exchange rate, fuel calculator, tolls and much more.' }
+    ],
+    pt: [
+      { icon:'🇨🇱', title:'Bem-vindo ao Chile Arrival', text:'Seu guia completo para cruzar a fronteira do Chile. Tudo que você precisa em um só lugar.' },
+      { icon:'🛂', title:'Postos em tempo real', text:'Consulte o estado de 18 postos fronteiriços com Argentina, Bolívia e Peru. Com mapa e clima incluído.' },
+      { icon:'🧳', title:'Tudo para sua viagem', text:'Checklist personalizado, câmbio, calculadora de combustível, pedágios e muito mais.' }
+    ]
+  };
+
+  let currentSlide = 0;
+  const data = slides[currentLang] || slides.es;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'onboardingOverlay';
+  overlay.style.cssText = `
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.85);z-index:99999;
+    display:flex;align-items:center;justify-content:center;
+    backdrop-filter:blur(6px);padding:20px;`;
+
+  function renderSlide() {
+    const slide = data[currentSlide];
+    const isLast = currentSlide === data.length - 1;
+    const btnLabel = isLast
+      ? (currentLang === 'es' ? '¡Empezar!' : currentLang === 'pt' ? 'Começar!' : 'Get started!')
+      : (currentLang === 'es' ? 'Siguiente →' : currentLang === 'pt' ? 'Próximo →' : 'Next →');
+
+    overlay.innerHTML = `
+      <div style="background:var(--card-bg);border-radius:24px;padding:36px 28px;
+                  max-width:360px;width:100%;text-align:center;
+                  box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+        <div style="font-size:64px;margin-bottom:16px;line-height:1">${slide.icon}</div>
+        <h2 style="font-size:20px;font-weight:900;color:var(--text-primary);
+                   margin-bottom:12px;line-height:1.3">${slide.title}</h2>
+        <p style="font-size:14px;font-weight:600;color:#64748b;
+                  line-height:1.6;margin-bottom:28px">${slide.text}</p>
+
+        <!-- Dots -->
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:24px">
+          ${data.map((_, i) => `
+            <div style="width:${i === currentSlide ? '24px' : '8px'};height:8px;
+                        border-radius:4px;transition:all 0.3s;
+                        background:${i === currentSlide ? '#0039a6' : '#e2e8f0'}"></div>
+          `).join('')}
+        </div>
+
+        <button onclick="nextOnboardingSlide()"
+          style="width:100%;padding:14px;background:linear-gradient(135deg,#0039a6,#1e40af);
+                 color:white;border:none;border-radius:12px;font-size:15px;
+                 font-weight:800;cursor:pointer;margin-bottom:10px;">
+          ${btnLabel}
+        </button>
+        <button onclick="skipOnboarding()"
+          style="width:100%;padding:10px;background:transparent;color:#94a3b8;
+                 border:none;font-size:13px;font-weight:600;cursor:pointer;">
+          ${currentLang === 'es' ? 'Saltar' : currentLang === 'pt' ? 'Pular' : 'Skip'}
+        </button>
+      </div>`;
+  }
+
+  window.nextOnboardingSlide = function() {
+    currentSlide++;
+    if (currentSlide >= data.length) {
+      skipOnboarding();
+    } else {
+      renderSlide();
+    }
+  };
+
+  window.skipOnboarding = function() {
+    overlay.remove();
+    localStorage.setItem('onboardingDone', '1');
+  };
+
+  document.body.appendChild(overlay);
+  renderSlide();
+}
 // ===== PWA INSTALL =====
 let deferredInstallPrompt = null;
 
@@ -4005,6 +4399,82 @@ function copyAppLink() {
               currentLang === 'pt' ? 'Link copiado' : 'Link copied'), 2000);
   });
 }
+// ===== WIDGET RESUMEN RÁPIDO =====
+function renderQuickSummary() {
+  const container = document.getElementById('quickSummaryContainer');
+  if (!container) return;
+
+  const openPasses = BORDER_PASSES.filter(p => p.status === 'Abierto').length;
+  const closedPasses = BORDER_PASSES.filter(p => p.status === 'Cerrado').length;
+  const usdRate = exchangeRates.USD > 0 ? '$' + exchangeRates.USD.toLocaleString('es-CL') : '---';
+
+  const entryDate = localStorage.getItem('entryDate');
+  let daysLeft = null;
+  if (entryDate) {
+    const [y, m, d] = entryDate.split('-').map(Number);
+    const entry = new Date(y, m - 1, d);
+    const today = new Date(); today.setHours(0,0,0,0);
+    daysLeft = 90 - Math.floor((today - entry) / 86400000);
+    if (daysLeft < 0) daysLeft = 0;
+  }
+
+  const labels = {
+    es: { open:'abiertos', closed:'cerrado(s)', usd:'USD → CLP', days:'días restantes', noDate:'Ingresa tu fecha' },
+    en: { open:'open', closed:'closed', usd:'USD → CLP', days:'days left', noDate:'Enter your date' },
+    pt: { open:'abertos', closed:'fechado(s)', usd:'USD → CLP', days:'dias restantes', noDate:'Insira sua data' }
+  };
+  const l = labels[currentLang] || labels.es;
+
+  const daysColor = daysLeft === null ? '#64748b' : daysLeft <= 10 ? '#dc2626' : daysLeft <= 30 ? '#f59e0b' : '#10b981';
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+
+      <!-- Pasos abiertos -->
+      <div onclick="showTab('viaje', document.querySelector('.nav-btn[data-tab=viaje]'))"
+        style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);
+               border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;
+               transition:all 0.2s;" class="hover:scale-105">
+        <p style="font-size:24px;font-weight:900;color:#10b981;line-height:1.1">${openPasses}</p>
+        <p style="font-size:10px;font-weight:800;color:#065f46;line-height:1.3;margin-top:2px">
+          ${l.open}
+        </p>
+        ${closedPasses > 0 ? `
+          <p style="font-size:9px;font-weight:700;color:#dc2626;margin-top:2px">
+            ${closedPasses} ${l.closed}
+          </p>` : ''}
+      </div>
+
+      <!-- Tipo de cambio -->
+      <div onclick="showTab('utiles', document.querySelector('.nav-btn[data-tab=utiles]'))"
+        style="background:rgba(0,57,166,0.1);border:1px solid rgba(0,57,166,0.2);
+               border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;
+               transition:all 0.2s;">
+        <p style="font-size:16px;font-weight:900;color:#0039a6;line-height:1.1">${usdRate}</p>
+        <p style="font-size:10px;font-weight:800;color:#1e40af;line-height:1.3;margin-top:2px">
+          ${l.usd}
+        </p>
+      </div>
+
+      <!-- Días restantes -->
+      <div onclick="showTab('home', document.querySelector('.nav-btn[data-tab=home]'))"
+        style="background:rgba(${daysLeft !== null && daysLeft <= 10 ? '220,38,38' : '245,158,11'},0.1);
+               border:1px solid rgba(${daysLeft !== null && daysLeft <= 10 ? '220,38,38' : '245,158,11'},0.25);
+               border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;
+               transition:all 0.2s;">
+        <p style="font-size:${daysLeft !== null ? '24px' : '13px'};font-weight:900;
+                  color:${daysColor};line-height:1.1">
+          ${daysLeft !== null ? daysLeft : l.noDate}
+        </p>
+        ${daysLeft !== null ? `
+          <p style="font-size:10px;font-weight:800;color:${daysColor};
+                    line-height:1.3;margin-top:2px;opacity:0.8">
+            ${l.days}
+          </p>` : ''}
+      </div>
+
+    </div>`;
+}
 // ===== ESTADÍSTICAS =====
 function initStats() {
   // Suma una visita cada vez que se abre la app
@@ -4061,6 +4531,26 @@ function renderStats() {
       initChecklist();
       showDailyTip();
       initCultureContent();
+      function initPriceGuide() {
+  const container = document.getElementById('priceGuideContainer');
+  if (!container) return;
+  const guide = PRICE_GUIDE[currentLang] || PRICE_GUIDE.es;
+
+  container.innerHTML = guide.map(section => `
+    <div class="mb-4">
+      <p class="text-sm font-black mb-2" style="color:var(--text-primary)">
+        ${section.icon} ${section.category}
+      </p>
+      <div class="space-y-1">
+        ${section.items.map(item => `
+          <div class="flex justify-between items-center py-2 px-3 rounded-lg"
+            style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.05)">
+            <span class="text-xs font-semibold" style="color:#475569">${item.name}</span>
+            <span class="text-xs font-black" style="color:#0039a6">${item.price}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
       initSlangContent();
       renderReports(reportsCache);
       updatePassesDisplay();
@@ -4157,7 +4647,27 @@ function renderStats() {
         container.appendChild(sf);
       }
     }
-
+async function fetchARSRate() {
+  try {
+    const res = await fetchWithRetry(
+      'https://api.exchangerate-api.com/v4/latest/USD',
+      {}, 2, 5000
+    );
+    const data = await res.json();
+    // Devuelve cuántos ARS vale 1 USD
+    return data.rates?.ARS || 900;
+  } catch(e) {
+    // Si falla, usa valor de caché o estimado
+    const cached = localStorage.getItem('exchangeRates');
+    if (cached) {
+      const rates = JSON.parse(cached);
+      const usd = rates.USD || 900;
+      const ars = rates.ARS || 1;
+      return usd / ars;
+    }
+    return 900; // fallback estimado
+  }
+}
     // ===== TIPO DE CAMBIO =====
     async function fetchExchangeRates() {
       const statusEl = DOM_CACHE.rateStatus;
@@ -4187,7 +4697,7 @@ if (clpEl) clpEl.style.opacity = '0.4';
           timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
           if (clpEl) clpEl.style.opacity = '1';
           if (clpEl) clpEl.style.opacity = '1';
-          showRateChange(); convertMoney(); return true;
+          showRateChange(); convertMoney();renderQuickSummary(); return true;
         } catch(e) { console.warn('API primaria falló, intentando backup...'); }
 
         try {
@@ -4197,10 +4707,10 @@ if (clpEl) clpEl.style.opacity = '0.4';
           exchangeRates = {
             USD: Math.round(data2.dolar.valor),
             EUR: Math.round(data2.euro.valor),
-            ARS: parseFloat((data2.dolar.valor / 220).toFixed(2)),
-            BRL: Math.round(data2.dolar.valor / 5.5),
-            PEN: Math.round(data2.dolar.valor / 3.8),
-            BOB: Math.round(data2.dolar.valor / 7.0)
+            ARS: parseFloat((data2.dolar.valor / await fetchARSRate()).toFixed(2)),
+BRL: Math.round(data2.dolar.valor / 5.5),
+PEN: Math.round(data2.dolar.valor / 3.8),
+BOB: Math.round(data2.dolar.valor / 7.0)
           };
           ratesLastUpdate = new Date(data2.dolar.fecha);
           localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
@@ -4208,7 +4718,7 @@ if (clpEl) clpEl.style.opacity = '0.4';
           document.querySelector('.cache-warning')?.remove();
           statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
           timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
-          showRateChange(); convertMoney(); return true;
+          showRateChange(); convertMoney();renderQuickSummary(); return true;
         } catch(e) { console.error('API backup falló'); }
 
         const cached = localStorage.getItem('exchangeRates');
@@ -4274,6 +4784,7 @@ if (clpEl) clpEl.style.opacity = '0.4';
       const val = parseFloat(DOM_CACHE.currencyInput.value) || 0;
       const rate = exchangeRates[selectedCurrency];
       DOM_CACHE.clpResult.textContent = rate > 0 ? '$' + Math.round(val * rate).toLocaleString('es-CL') : '$---';
+      renderCurrencyComparison();
     }
 // Coordenadas geográficas de los pasos para clima
     const PASS_COORDINATES = {
@@ -4461,6 +4972,7 @@ if (clpEl) clpEl.style.opacity = '0.4';
   renderOpenPassesInViaje();
   showLastUpdate();
   if (mapInitialized && mapInstance) updateMapMarkers();
+  renderQuickSummary();
 }
 
     function renderClosedPassesInHome() {
@@ -4591,9 +5103,10 @@ const openPasses = BORDER_PASSES
           </div>
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div class="pass-info-box">
-              <p class="pass-info-label">${t('region')}</p>
-              <p class="pass-info-value">${sanitizeInput(pass.region)}</p>
-            </div>
+  <p class="pass-info-label">${t('schedule')}</p>
+  <p class="pass-info-value">${sanitizeInput(pass.hours)}</p>
+  ${getOpenNowBadge(pass.hours)}
+</div>
             <div class="pass-info-box">
               <p class="pass-info-label">${t('schedule')}</p>
               <p class="pass-info-value">${sanitizeInput(pass.hours)}</p>
@@ -4778,6 +5291,273 @@ function getDistanceKm(lat1, lon1, lat2, lon2) {
             Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
             Math.sin(dLon/2) * Math.sin(dLon/2);
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+// ===== CALCULADORA DE PEAJES =====
+const TOLLS_DATA = {
+  es: [
+    { route:'Santiago → Valparaíso', cost:9200,  km:120, via:'Ruta 68' },
+    { route:'Santiago → Viña del Mar', cost:9200, km:130, via:'Ruta 68' },
+    { route:'Santiago → Rancagua', cost:3200,    km:90,  via:'Ruta 5 Sur' },
+    { route:'Santiago → Talca', cost:8100,       km:255, via:'Ruta 5 Sur' },
+    { route:'Santiago → Chillán', cost:11200,    km:400, via:'Ruta 5 Sur' },
+    { route:'Santiago → Concepción', cost:14800, km:500, via:'Ruta 5 Sur' },
+    { route:'Santiago → Temuco', cost:18400,     km:670, via:'Ruta 5 Sur' },
+    { route:'Santiago → Osorno', cost:22100,     km:920, via:'Ruta 5 Sur' },
+    { route:'Santiago → Puerto Montt', cost:24600, km:1020, via:'Ruta 5 Sur' },
+    { route:'Santiago → Los Andes', cost:4100,   km:80,  via:'Ruta 57' },
+    { route:'Santiago → San Antonio', cost:5800, km:110, via:'Ruta 78' },
+    { route:'Concepción → Temuco', cost:5200,    km:185, via:'Ruta 5 Sur' }
+  ],
+  en: [
+    { route:'Santiago → Valparaíso', cost:9200,  km:120, via:'Route 68' },
+    { route:'Santiago → Viña del Mar', cost:9200, km:130, via:'Route 68' },
+    { route:'Santiago → Rancagua', cost:3200,    km:90,  via:'Route 5 South' },
+    { route:'Santiago → Talca', cost:8100,       km:255, via:'Route 5 South' },
+    { route:'Santiago → Chillán', cost:11200,    km:400, via:'Route 5 South' },
+    { route:'Santiago → Concepción', cost:14800, km:500, via:'Route 5 South' },
+    { route:'Santiago → Temuco', cost:18400,     km:670, via:'Route 5 South' },
+    { route:'Santiago → Osorno', cost:22100,     km:920, via:'Route 5 South' },
+    { route:'Santiago → Puerto Montt', cost:24600, km:1020, via:'Route 5 South' },
+    { route:'Santiago → Los Andes', cost:4100,   km:80,  via:'Route 57' },
+    { route:'Santiago → San Antonio', cost:5800, km:110, via:'Route 78' },
+    { route:'Concepción → Temuco', cost:5200,    km:185, via:'Route 5 South' }
+  ],
+  pt: [
+    { route:'Santiago → Valparaíso', cost:9200,  km:120, via:'Rota 68' },
+    { route:'Santiago → Viña del Mar', cost:9200, km:130, via:'Rota 68' },
+    { route:'Santiago → Rancagua', cost:3200,    km:90,  via:'Rota 5 Sul' },
+    { route:'Santiago → Talca', cost:8100,       km:255, via:'Rota 5 Sul' },
+    { route:'Santiago → Chillán', cost:11200,    km:400, via:'Rota 5 Sul' },
+    { route:'Santiago → Concepción', cost:14800, km:500, via:'Rota 5 Sul' },
+    { route:'Santiago → Temuco', cost:18400,     km:670, via:'Rota 5 Sul' },
+    { route:'Santiago → Osorno', cost:22100,     km:920, via:'Rota 5 Sul' },
+    { route:'Santiago → Puerto Montt', cost:24600, km:1020, via:'Rota 5 Sul' },
+    { route:'Santiago → Los Andes', cost:4100,   km:80,  via:'Rota 57' },
+    { route:'Santiago → San Antonio', cost:5800, km:110, via:'Rota 78' },
+    { route:'Concepción → Temuco', cost:5200,    km:185, via:'Rota 5 Sul' }
+  ]
+};
+
+function renderTollsCalculator() {
+  const container = document.getElementById('tollsContainer');
+  if (!container) return;
+  const routes = TOLLS_DATA[currentLang] || TOLLS_DATA.es;
+  const labels = {
+    es: { title:'Calculadora de Peajes', sub:'Valores aproximados ida simple',
+          route:'Seleccionar ruta...', via:'Vía', km:'Distancia',
+          cost:'Peaje estimado', note:'* Valores referenciales · Pueden variar según categoría de vehículo' },
+    en: { title:'Tolls Calculator', sub:'Approximate one-way values',
+          route:'Select route...', via:'Via', km:'Distance',
+          cost:'Estimated toll', note:'* Reference values · May vary by vehicle category' },
+    pt: { title:'Calculadora de Pedágios', sub:'Valores aproximados ida simples',
+          route:'Selecionar rota...', via:'Via', km:'Distância',
+          cost:'Pedágio estimado', note:'* Valores referenciais · Podem variar por categoria de veículo' }
+  };
+  const l = labels[currentLang] || labels.es;
+
+  container.innerHTML = `
+    <h3 class="color-card-title mb-1 flex items-center gap-2">
+      <i class="fas fa-road"></i> ${l.title}
+    </h3>
+    <p class="text-sm text-white/90 font-bold mb-4">${l.sub}</p>
+    <select id="tollRouteSelect" onchange="showTollResult()"
+      style="width:100%;padding:12px 16px;border-radius:12px;border:2px solid rgba(255,255,255,0.3);
+             background:rgba(255,255,255,0.15);color:white;font-weight:700;font-size:14px;
+             margin-bottom:12px;cursor:pointer;">
+      <option value="" style="color:#0f172a">${l.route}</option>
+      ${routes.map((r, i) => `
+        <option value="${i}" style="color:#0f172a">${r.route}</option>`).join('')}
+    </select>
+    <div id="tollResult" class="hidden"
+      style="background:rgba(255,255,255,0.15);border-radius:14px;padding:16px;
+             border:1px solid rgba(255,255,255,0.25);">
+      <div class="grid grid-cols-3 gap-3 text-center">
+        <div>
+          <p style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.7);
+                    text-transform:uppercase;margin-bottom:4px">${l.via}</p>
+          <p id="tollVia" style="font-size:12px;font-weight:800;color:white"></p>
+        </div>
+        <div>
+          <p style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.7);
+                    text-transform:uppercase;margin-bottom:4px">${l.km}</p>
+          <p id="tollKm" style="font-size:14px;font-weight:900;color:white"></p>
+        </div>
+        <div>
+          <p style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.7);
+                    text-transform:uppercase;margin-bottom:4px">${l.cost}</p>
+          <p id="tollCost" style="font-size:18px;font-weight:900;color:#fbbf24"></p>
+        </div>
+      </div>
+      <p style="font-size:10px;color:rgba(255,255,255,0.6);text-align:center;
+                margin-top:10px;font-weight:600">${l.note}</p>
+    </div>`;
+}
+
+function showTollResult() {
+  const select = document.getElementById('tollRouteSelect');
+  const result = document.getElementById('tollResult');
+  const idx = select.value;
+  if (idx === '') { result.classList.add('hidden'); return; }
+
+  const routes = TOLLS_DATA[currentLang] || TOLLS_DATA.es;
+  const route = routes[parseInt(idx)];
+  if (!route) return;
+
+  document.getElementById('tollVia').textContent = route.via;
+  document.getElementById('tollKm').textContent = route.km + ' km';
+  document.getElementById('tollCost').textContent = '$' + route.cost.toLocaleString('es-CL');
+  result.classList.remove('hidden');
+
+  // Rellena automáticamente el campo de peajes en la calculadora de combustible
+  const tollsInput = document.getElementById('fuelTolls');
+  if (tollsInput) {
+    tollsInput.value = route.cost;
+    calculateFuelCost();
+    showToast('⛽ ' + (currentLang === 'es' ? 'Peaje cargado en calculadora de combustible' :
+              currentLang === 'pt' ? 'Pedágio carregado na calculadora' :
+              'Toll loaded into fuel calculator'), 3000);
+  }
+}
+// ===== COMPARAR MONEDAS =====
+function renderCurrencyComparison() {
+  const container = document.getElementById('currencyComparisonContainer');
+  if (!container) return;
+
+  const amount = parseFloat(DOM_CACHE.currencyInput?.value) || 1;
+  const currencies = [
+    { code:'USD', flag:'🇺🇸', name:{ es:'Dólar', en:'Dollar', pt:'Dólar' } },
+    { code:'EUR', flag:'🇪🇺', name:{ es:'Euro', en:'Euro', pt:'Euro' } },
+    { code:'ARS', flag:'🇦🇷', name:{ es:'Peso arg.', en:'Arg. Peso', pt:'Peso arg.' } },
+    { code:'BRL', flag:'🇧🇷', name:{ es:'Real', en:'Real', pt:'Real' } },
+    { code:'PEN', flag:'🇵🇪', name:{ es:'Sol', en:'Sol', pt:'Sol' } },
+    { code:'BOB', flag:'🇧🇴', name:{ es:'Boliviano', en:'Boliviano', pt:'Boliviano' } }
+  ];
+
+  container.innerHTML = currencies.map(cur => {
+    const rate = exchangeRates[cur.code];
+    const result = rate > 0 ? Math.round(amount * rate).toLocaleString('es-CL') : '---';
+    const isSelected = cur.code === selectedCurrency;
+    return `
+      <div onclick="selectCurrencyFromComparison('${cur.code}')"
+        style="display:flex;align-items:center;justify-content:space-between;
+               padding:10px 12px;border-radius:12px;cursor:pointer;transition:all 0.2s;
+               background:${isSelected ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)'};
+               border:1px solid ${isSelected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'};
+               margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:18px">${cur.flag}</span>
+          <div>
+            <p style="font-size:12px;font-weight:800;color:white;margin:0;line-height:1.2">
+              ${cur.code}
+            </p>
+            <p style="font-size:10px;color:rgba(255,255,255,0.7);margin:0;line-height:1.2">
+              ${cur.name[currentLang] || cur.name.es}
+            </p>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <p style="font-size:14px;font-weight:900;color:white;margin:0;line-height:1.2">
+            $${result}
+          </p>
+          <p style="font-size:10px;color:rgba(255,255,255,0.6);margin:0;line-height:1.2">CLP</p>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function selectCurrencyFromComparison(code) {
+  selectedCurrency = code;
+  const btn = document.querySelector(`.currency-tab[onclick*="${code}"]`);
+  if (btn) {
+    document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const symbols = {USD:'💵', EUR:'💶', ARS:'🇦🇷', BRL:'🇧🇷', PEN:'🇵🇪', BOB:'🇧🇴'};
+  const selectedEl = document.getElementById('selectedCurrency');
+  if (selectedEl) selectedEl.textContent = code + ' ' + (symbols[code] || '');
+  showRateChange();
+  convertMoney();
+  renderCurrencyComparison();
+}
+// ===== HORARIO EN TIEMPO REAL =====
+function isPassOpenNow(hoursStr) {
+  if (!hoursStr || hoursStr.trim() === '') return null;
+  if (hoursStr.includes('24h') || hoursStr === '24/7') return true;
+
+  // Extrae rango tipo "8-20h" o "8:00-20:00"
+  const match = hoursStr.match(/(\d{1,2})(?::(\d{2}))?[-–](\d{1,2})(?::(\d{2}))?/);
+  if (!match) return null;
+
+  const openH  = parseInt(match[1]);
+  const openM  = parseInt(match[2] || '0');
+  const closeH = parseInt(match[3]);
+  const closeM = parseInt(match[4] || '0');
+
+  const now = new Date().toLocaleString('en-US', { timeZone: 'America/Santiago' });
+  const santiago = new Date(now);
+  const currentMinutes = santiago.getHours() * 60 + santiago.getMinutes();
+  const openMinutes    = openH  * 60 + openM;
+  const closeMinutes   = closeH * 60 + closeM;
+
+  return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+}
+
+function getOpenNowBadge(hoursStr) {
+  const isOpen = isPassOpenNow(hoursStr);
+  if (isOpen === null) return '';
+
+  if (isOpen) {
+    return `<span style="
+      display:inline-flex;align-items:center;gap:4px;
+      background:rgba(16,185,129,0.15);color:#065f46;
+      border:1px solid rgba(16,185,129,0.3);
+      border-radius:20px;padding:3px 8px;
+      font-size:10px;font-weight:800;">
+      <span style="width:6px;height:6px;background:#10b981;border-radius:50%;display:inline-block;"></span>
+      ${currentLang === 'es' ? 'Abierto ahora' : currentLang === 'pt' ? 'Aberto agora' : 'Open now'}
+    </span>`;
+  } else {
+    return `<span style="
+      display:inline-flex;align-items:center;gap:4px;
+      background:rgba(239,68,68,0.15);color:#991b1b;
+      border:1px solid rgba(239,68,68,0.3);
+      border-radius:20px;padding:3px 8px;
+      font-size:10px;font-weight:800;">
+      <span style="width:6px;height:6px;background:#ef4444;border-radius:50%;display:inline-block;"></span>
+      ${currentLang === 'es' ? 'Cerrado ahora' : currentLang === 'pt' ? 'Fechado agora' : 'Closed now'}
+    </span>`;
+  }
+}
+// ===== FILTRO POR PAÍS =====
+let activeCountryFilter = 'todos';
+
+function filterByCountry(country, button) {
+  activeCountryFilter = country;
+
+  // Actualiza botones
+  document.querySelectorAll('.filter-country-btn').forEach(btn => {
+    btn.style.background = 'transparent';
+    btn.style.color = '#64748b';
+    btn.style.borderColor = '#e2e8f0';
+  });
+  button.style.background = '#0039a6';
+  button.style.color = 'white';
+  button.style.borderColor = '#0039a6';
+
+  // Filtra las cards
+  document.querySelectorAll('#passesContainer [data-pass]').forEach(card => {
+    if (country === 'todos') {
+      card.classList.remove('hidden');
+      return;
+    }
+    const cardText = card.textContent.toLowerCase();
+    const matches = cardText.includes(country.toLowerCase());
+    card.classList.toggle('hidden', !matches);
+  });
+
+  // Actualiza contador
+  const visible = document.querySelectorAll('#passesContainer [data-pass]:not(.hidden)').length;
+  showToast(`🔍 ${visible} paso${visible !== 1 ? 's' : ''} ${country === 'todos' ? 'en total' : 'con ' + country}`, 2000);
 }
 // ===== MAPA =====
 let mapInstance = null;
@@ -5253,14 +6033,14 @@ function renderNotificationToggle() {
     }
 
     // ===== CHECKLIST =====
-    function initChecklist() {
-  const saved = localStorage.getItem('checklistState');
-  const freshItems = CHECKLIST_ITEMS[currentLang];
+   function initChecklist() {
+  const savedProfile = localStorage.getItem('checklistProfile') || 'auto';
+  const saved = localStorage.getItem('checklistState_' + savedProfile);
+  const freshItems = CHECKLIST_ITEMS[currentLang][savedProfile];
 
   if (saved) {
     try {
       const savedState = JSON.parse(saved);
-      // Mantiene el estado checked pero actualiza el texto al idioma actual
       checklistState = freshItems.map(item => ({
         ...item,
         checked: savedState.find(s => s.id === item.id)?.checked || false
@@ -5271,6 +6051,64 @@ function renderNotificationToggle() {
   } else {
     checklistState = [...freshItems];
   }
+  renderChecklistProfile(savedProfile);
+  renderChecklist();
+}
+
+function renderChecklistProfile(activeProfile) {
+  const profiles = [
+    { id:'auto',    icon:'fa-car',      label:{ es:'Auto', en:'Car', pt:'Carro' } },
+    { id:'moto',    icon:'fa-motorcycle', label:{ es:'Moto', en:'Moto', pt:'Moto' } },
+    { id:'peaton',  icon:'fa-walking',  label:{ es:'Peatón', en:'Walker', pt:'Pedestre' } },
+    { id:'mascota', icon:'fa-paw',      label:{ es:'Mascota', en:'Pet', pt:'Animal' } }
+  ];
+
+  const existing = document.getElementById('checklistProfileSelector');
+  if (existing) existing.remove();
+
+  const selector = document.createElement('div');
+  selector.id = 'checklistProfileSelector';
+  selector.style.cssText = 'display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;';
+  selector.innerHTML = profiles.map(p => `
+    <button onclick="switchChecklistProfile('${p.id}')"
+      id="profile-btn-${p.id}"
+      style="flex:1;min-width:60px;padding:8px 4px;border-radius:12px;border:2px solid;
+             font-size:11px;font-weight:800;cursor:pointer;transition:all 0.2s;
+             display:flex;flex-direction:column;align-items:center;gap:4px;
+             ${activeProfile === p.id
+               ? 'background:#0039a6;color:white;border-color:#0039a6;'
+               : 'background:transparent;color:#64748b;border-color:#e2e8f0;'}">
+      <i class="fas ${p.icon}" style="font-size:16px"></i>
+      ${p.label[currentLang] || p.label.es}
+    </button>`).join('');
+
+  DOM_CACHE.checklistContainer.before(selector);
+}
+
+function switchChecklistProfile(profile) {
+  // Guarda el estado del perfil actual antes de cambiar
+  const currentProfile = localStorage.getItem('checklistProfile') || 'auto';
+  localStorage.setItem('checklistState_' + currentProfile, JSON.stringify(checklistState));
+  localStorage.setItem('checklistProfile', profile);
+
+  // Carga el nuevo perfil
+  const saved = localStorage.getItem('checklistState_' + profile);
+  const freshItems = CHECKLIST_ITEMS[currentLang][profile];
+  if (saved) {
+    try {
+      const savedState = JSON.parse(saved);
+      checklistState = freshItems.map(item => ({
+        ...item,
+        checked: savedState.find(s => s.id === item.id)?.checked || false
+      }));
+    } catch {
+      checklistState = [...freshItems];
+    }
+  } else {
+    checklistState = [...freshItems];
+  }
+
+  renderChecklistProfile(profile);
   renderChecklist();
 }
 
@@ -5283,14 +6121,15 @@ function renderNotificationToggle() {
       updateChecklistProgress();
     }
 
-    function toggleChecklistItem(id) {
-      const item = checklistState.find(i => i.id === id);
-      if (item) {
-        item.checked = !item.checked;
-        localStorage.setItem('checklistState', JSON.stringify(checklistState));
-        renderChecklist();
-      }
-    }
+   function toggleChecklistItem(id) {
+  const item = checklistState.find(i => i.id === id);
+  if (item) {
+    item.checked = !item.checked;
+    const profile = localStorage.getItem('checklistProfile') || 'auto';
+    localStorage.setItem('checklistState_' + profile, JSON.stringify(checklistState));
+    renderChecklist();
+  }
+}
 
    function updateChecklistProgress() {
       const total = checklistState.length;
@@ -5337,16 +6176,118 @@ function showConfirm(message, onConfirm) {
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
-   function resetChecklist() {
- showConfirm(
-    currentLang === 'es' ? '¿Reiniciar todo el checklist?' : currentLang === 'pt' ? 'Reiniciar toda a lista?' : 'Reset all checklist?',
+ function resetChecklist() {
+  showConfirm(
+    currentLang === 'es' ? '¿Reiniciar el checklist actual?' :
+    currentLang === 'pt' ? 'Reiniciar a lista atual?' : 'Reset current checklist?',
     () => {
-      checklistState = [...CHECKLIST_ITEMS[currentLang]];
-      localStorage.setItem('checklistState', JSON.stringify(checklistState));
+      const profile = localStorage.getItem('checklistProfile') || 'auto';
+      checklistState = [...CHECKLIST_ITEMS[currentLang][profile]];
+      localStorage.setItem('checklistState_' + profile, JSON.stringify(checklistState));
       renderChecklist();
-      showToast('🔄 ' + (currentLang === 'es' ? 'Checklist reiniciado' : 'Checklist reset'), 2000);
+      showToast('🔄 ' + (currentLang === 'es' ? 'Checklist reiniciado' :
+                currentLang === 'pt' ? 'Lista reiniciada' : 'Checklist reset'), 2000);
     }
   );
+}
+// ===== RECORDATORIO VENCIMIENTO =====
+function scheduleExpiryReminder(entryDateStr) {
+  const [year, month, day] = entryDateStr.split('-').map(Number);
+  const expiry = new Date(year, month - 1, day + 90);
+  const reminder = new Date(expiry);
+  reminder.setDate(reminder.getDate() - 10);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  reminder.setHours(0, 0, 0, 0);
+
+  const daysUntilReminder = Math.floor((reminder - today) / 86400000);
+
+  // Guarda la fecha de recordatorio
+  localStorage.setItem('expiryReminderDate', reminder.toISOString().split('T')[0]);
+  localStorage.setItem('expiryDate', expiry.toISOString().split('T')[0]);
+
+  // Si el recordatorio es hoy o ya pasó, muestra alerta inmediata
+  if (daysUntilReminder <= 0) {
+    const daysLeft = Math.floor((expiry - today) / 86400000);
+    if (daysLeft > 0) showExpiryAlert(daysLeft);
+    return;
+  }
+
+  // Si faltan menos de 3 días para el recordatorio, avisa ya
+  if (daysUntilReminder <= 3) {
+    showToast(
+      currentLang === 'es' ? `⚠️ Tu visa vence en ${Math.floor((expiry - today) / 86400000)} días` :
+      currentLang === 'pt' ? `⚠️ Seu visto vence em ${Math.floor((expiry - today) / 86400000)} dias` :
+      `⚠️ Your visa expires in ${Math.floor((expiry - today) / 86400000)} days`, 5000
+    );
+  }
+}
+
+function showExpiryAlert(daysLeft) {
+  const existing = document.getElementById('expiryAlert');
+  if (existing) existing.remove();
+
+  const alert = document.createElement('div');
+  alert.id = 'expiryAlert';
+  alert.style.cssText = `
+    position:fixed;top:0;left:0;width:100%;z-index:9999;
+    background:linear-gradient(135deg,#dc2626,#b91c1c);
+    color:white;padding:14px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    box-shadow:0 4px 20px rgba(220,38,38,0.5);`;
+
+  const texts = {
+    es: { msg: `⚠️ Te quedan solo ${daysLeft} días en Chile`, btn: 'Planificar salida' },
+    en: { msg: `⚠️ Only ${daysLeft} days left in Chile`, btn: 'Plan departure' },
+    pt: { msg: `⚠️ Restam apenas ${daysLeft} dias no Chile`, btn: 'Planejar saída' }
+  };
+  const l = texts[currentLang] || texts.es;
+
+  alert.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;flex:1">
+      <i class="fas fa-exclamation-triangle" style="font-size:20px;flex-shrink:0"></i>
+      <p style="font-size:13px;font-weight:800;line-height:1.4;margin:0">${l.msg}</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-shrink:0">
+      <button onclick="showTab('home');document.getElementById('expiryAlert').remove();"
+        style="background:white;color:#dc2626;border:none;padding:8px 12px;
+               border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;">
+        ${l.btn}
+      </button>
+      <button onclick="document.getElementById('expiryAlert').remove()"
+        style="background:rgba(255,255,255,0.2);color:white;border:none;
+               width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;">
+        &times;
+      </button>
+    </div>`;
+
+  document.body.prepend(alert);
+
+  // Auto-cierra después de 10 segundos
+  setTimeout(() => alert?.remove(), 10000);
+}
+
+function checkExpiryOnLoad() {
+  const expiryDateStr = localStorage.getItem('expiryDate');
+  if (!expiryDateStr) return;
+
+  const expiry = new Date(expiryDateStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  expiry.setHours(0, 0, 0, 0);
+
+  const daysLeft = Math.floor((expiry - today) / 86400000);
+
+  if (daysLeft <= 10 && daysLeft > 0) {
+    setTimeout(() => showExpiryAlert(daysLeft), 2000);
+  } else if (daysLeft <= 0) {
+    setTimeout(() => showToast(
+      currentLang === 'es' ? '⛔ Tu visa de turista ha vencido' :
+      currentLang === 'pt' ? '⛔ Seu visto de turista venceu' :
+      '⛔ Your tourist visa has expired', 5000
+    ), 2000);
+  }
 }
 // ===== HISTORIAL DE FECHAS =====
 function getDateHistory() {
@@ -5502,6 +6443,7 @@ function loadHistoryDate(dateStr) {
       localStorage.setItem('entryDate', entryDate);
 saveDateToHistory(entryDate);
 renderDateHistory();
+scheduleExpiryReminder(entryDate);
     }
 
     // ===== CONTENIDO ESTÁTICO =====
@@ -5830,6 +6772,10 @@ if (savedEntryDate) {
 
 createSnowflakes();
 initStats();
+initPriceGuide();
+renderTollsCalculator();
+checkExpiryOnLoad();
+setTimeout(() => initOnboarding(), 1000);
 // Muestra banner de instalación si corresponde
 if (!window.matchMedia('(display-mode: standalone)').matches) {
   setTimeout(() => showInstallBanner(), 3000);
