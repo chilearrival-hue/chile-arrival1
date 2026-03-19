@@ -2185,6 +2185,48 @@
       max-height: 300px;
       padding: 0 18px 16px;
     }
+    /* Banner activar notificaciones */
+    .notif-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    }
+    .notif-banner-text {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.4;
+    }
+    .notif-banner-text span {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      margin-top: 2px;
+    }
+    .notif-banner-btn {
+      background: white;
+      color: #1e40af;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .notif-banner-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
     /* Skeleton Loader */
     .skeleton {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -2199,29 +2241,52 @@
     }
 
     @keyframes loading {
-      0% {
-        background-position: 200% 0
-      }
-
-      100% {
-        background-position: -200% 0
-      }
+      0%   { background-position: 200% 0 }
+      100% { background-position: -200% 0 }
     }
 
-    .skeleton-text {
-      height: 16px;
-      margin-bottom: 8px
+    .skeleton-text   { height: 16px; margin-bottom: 8px; }
+    .skeleton-title  { height: 24px; width: 60%; margin-bottom: 12px; }
+    .skeleton-button { height: 48px; border-radius: 12px; }
+
+    /* Skeleton específico para cards de pasos */
+    .skeleton-pass-card {
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 4px 16px rgba(31,38,135,0.1);
     }
 
-    .skeleton-title {
-      height: 24px;
-      width: 60%;
-      margin-bottom: 12px
+    [data-theme="dark"] .skeleton-pass-card {
+      background: rgba(30,41,59,0.65);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .skeleton-button {
-      height: 48px;
-      border-radius: 12px
+    .skeleton-pass-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .skeleton-pass-badge {
+      height: 22px;
+      width: 70px;
+      border-radius: 20px;
+    }
+
+    .skeleton-pass-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .skeleton-pass-box {
+      height: 52px;
+      border-radius: 10px;
     }
 
     /* ===== DARK MODE — CONTENIDO GENERADO POR JS ===== */
@@ -3765,6 +3830,7 @@
       updatePassesDisplay();
       initKitContent();
       initFAQ();
+      showPushBanner();
 
       // Actualiza placeholder del buscador de pasos
       const searchInput = document.getElementById('searchInput');
@@ -3817,7 +3883,12 @@
   const btn = buttonElement || document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
   if (btn) btn.classList.add('active-tab');
 
-  window.scrollTo({top: 0, behavior: 'smooth'});
+ window.scrollTo({top: 0, behavior: 'smooth'});
+
+  // Muestra banner de notificaciones al entrar a Viaje
+  if (tabId === 'viaje') {
+    setTimeout(() => showPushBanner(), 800);
+  }
 }
     // ===== DARK MODE =====
     function toggleDarkMode() {
@@ -4079,6 +4150,10 @@
     // FIX CRÍTICO #1, #2, #3: función reescrita correctamente
     async function fetchBorderPassesFromSheet() {
       const cached = localStorage.getItem('borderPassesCache');
+
+      // Muestra skeleton solo si no hay caché todavía
+      if (!cached) showPassesSkeleton();
+
       if (cached) {
         try {
           BORDER_PASSES = JSON.parse(cached);  // FIX: era BORDERPASSES
@@ -4101,9 +4176,10 @@
           return;
         }
 
-        BORDER_PASSES = passes;  // FIX: era BORDERPASSES
+        BORDER_PASSES = passes;
         localStorage.setItem('borderPassesCache', JSON.stringify(BORDER_PASSES));
         localStorage.setItem('borderPassesCacheTime', Date.now().toString());
+        detectPassChanges(passes);
         updatePassesDisplay();
         populateReportPassSelect();
 
@@ -4175,7 +4251,28 @@
           </button>
         </div>`;
     }
-
+function showPassesSkeleton() {
+      const container = DOM_CACHE.passesContainer;
+      if (!container) return;
+      container.innerHTML = `
+        <div class="mb-4">
+          <div class="skeleton skeleton-title" style="width:55%;height:28px;border-radius:8px;"></div>
+        </div>
+        ${[1,2,3].map(() => `
+          <div class="skeleton-pass-card">
+            <div class="skeleton-pass-header">
+              <div>
+                <div class="skeleton skeleton-title" style="width:160px;height:22px;"></div>
+                <div class="skeleton skeleton-text" style="width:90px;height:13px;margin-top:6px;"></div>
+              </div>
+              <div class="skeleton skeleton-pass-badge"></div>
+            </div>
+            <div class="skeleton-pass-grid">
+              <div class="skeleton skeleton-pass-box"></div>
+              <div class="skeleton skeleton-pass-box"></div>
+            </div>
+          </div>`).join('')}`;
+    }
     function renderOpenPassesInViaje() {
       const container = DOM_CACHE.passesContainer;
       const openPasses = BORDER_PASSES.filter(p => p.status === 'Abierto');
@@ -4815,6 +4912,159 @@ function showConfirm(message, onConfirm) {
       document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
       // Abre el seleccionado si estaba cerrado
       if (!isOpen) item.classList.add('open');
+    }
+    // ===== NOTIFICACIONES PUSH =====
+
+    // Guarda el estado anterior de los pasos para comparar
+    let previousPassesState = {};
+
+    function getNotifTexts() {
+      return {
+        es: {
+          title: '🚨 Cambio en paso fronterizo',
+          opened: 'acaba de ABRIRSE',
+          closed: 'acaba de CERRARSE',
+          bannerTitle: '🔔 Activar alertas de pasos',
+          bannerSub: 'Te avisamos si un paso cambia de estado',
+          bannerBtn: 'Activar',
+          granted: '✅ Notificaciones activadas',
+          denied: '❌ Permiso denegado en ajustes del dispositivo',
+          unsupported: '📵 Tu dispositivo no soporta notificaciones'
+        },
+        en: {
+          title: '🚨 Border crossing status change',
+          opened: 'just OPENED',
+          closed: 'just CLOSED',
+          bannerTitle: '🔔 Enable crossing alerts',
+          bannerSub: 'We notify you if a crossing changes status',
+          bannerBtn: 'Enable',
+          granted: '✅ Notifications enabled',
+          denied: '❌ Permission denied in device settings',
+          unsupported: '📵 Your device does not support notifications'
+        },
+        pt: {
+          title: '🚨 Mudança em posto fronteiriço',
+          opened: 'acabou de ABRIR',
+          closed: 'acabou de FECHAR',
+          bannerTitle: '🔔 Ativar alertas de postos',
+          bannerSub: 'Avisamos se um posto mudar de estado',
+          bannerBtn: 'Ativar',
+          granted: '✅ Notificações ativadas',
+          denied: '❌ Permissão negada nas configurações',
+          unsupported: '📵 Seu dispositivo não suporta notificações'
+        }
+      };
+    }
+
+    function isNotificationsSupported() {
+      return 'Notification' in window && 'serviceWorker' in navigator;
+    }
+
+    async function requestNotificationPermission() {
+      const texts = getNotifTexts()[currentLang];
+      if (!isNotificationsSupported()) {
+        showToast(texts.unsupported, 3000);
+        return false;
+      }
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        localStorage.setItem('notifPermission', 'granted');
+        hidePushBanner();
+        showToast(texts.granted, 3000);
+        return true;
+      } else {
+        showToast(texts.denied, 4000);
+        return false;
+      }
+    }
+
+    function sendPushNotification(passName, newStatus) {
+      if (!isNotificationsSupported()) return;
+      if (Notification.permission !== 'granted') return;
+      const texts = getNotifTexts()[currentLang];
+      const statusText = newStatus === 'Abierto' ? texts.opened : texts.closed;
+      const icon = newStatus === 'Abierto' ? '✅' : '🚫';
+      try {
+        const notif = new Notification(texts.title, {
+          body: `${icon} ${passName} ${statusText}`,
+          icon: '/icons/icon-180x180.png',
+          badge: '/icons/icon-32x32.png',
+          tag: `pass-${passName}`,
+          renotify: true
+        });
+        notif.onclick = () => {
+          window.focus();
+          showTab('viaje', document.querySelector('.nav-btn[data-tab="viaje"]'));
+          notif.close();
+        };
+        // Guarda en historial de notificaciones
+        const history = JSON.parse(localStorage.getItem('notificationHistory') || '[]');
+        history.unshift({
+          title: `${icon} ${passName}`,
+          message: statusText,
+          timestamp: new Date().toISOString(),
+          read: false
+        });
+        localStorage.setItem('notificationHistory', JSON.stringify(history.slice(0, 50)));
+        updateNotificationBadge();
+      } catch(e) {
+        console.warn('Error enviando notificación:', e);
+      }
+    }
+
+    function detectPassChanges(newPasses) {
+      if (!newPasses || !newPasses.length) return;
+      // Primera carga — solo guarda el estado, no notifica
+      if (!Object.keys(previousPassesState).length) {
+        newPasses.forEach(p => { previousPassesState[p.name] = p.status; });
+        return;
+      }
+      // Detecta cambios respecto al estado anterior
+      newPasses.forEach(pass => {
+        const prev = previousPassesState[pass.name];
+        if (prev && prev !== pass.status) {
+          sendPushNotification(pass.name, pass.status);
+        }
+        previousPassesState[pass.name] = pass.status;
+      });
+    }
+
+    function showPushBanner() {
+      // No mostrar si ya tiene permiso o ya lo rechazó antes
+      if (!isNotificationsSupported()) return;
+      if (Notification.permission === 'granted') return;
+      if (localStorage.getItem('notifBannerDismissed')) return;
+      const texts = getNotifTexts()[currentLang];
+      const existing = document.getElementById('pushBanner');
+      if (existing) {
+        existing.querySelector('.notif-banner-text').childNodes[0].textContent = texts.bannerTitle;
+        existing.querySelector('.notif-banner-text span').textContent = texts.bannerSub;
+        existing.querySelector('.notif-banner-btn').textContent = texts.bannerBtn;
+        return;
+      }
+      const banner = document.createElement('div');
+      banner.id = 'pushBanner';
+      banner.className = 'notif-banner';
+      banner.innerHTML = `
+        <div class="notif-banner-text">
+          ${texts.bannerTitle}
+          <span>${texts.bannerSub}</span>
+        </div>
+        <button class="notif-banner-btn" onclick="requestNotificationPermission()">
+          ${texts.bannerBtn}
+        </button>
+        <button onclick="hidePushBanner(true)"
+          style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:20px;cursor:pointer;padding:0 4px;line-height:1;">
+          &times;
+        </button>`;
+      // Inserta al inicio del tab Viaje
+      const viajeSection = document.getElementById('viaje');
+      if (viajeSection) viajeSection.prepend(banner);
+    }
+
+    function hidePushBanner(dismissed = false) {
+      document.getElementById('pushBanner')?.remove();
+      if (dismissed) localStorage.setItem('notifBannerDismissed', '1');
     }
     // ===== SERVICE WORKER =====
     if ('serviceWorker' in navigator) {
