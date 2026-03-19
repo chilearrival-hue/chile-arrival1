@@ -46,6 +46,8 @@
   <script src="https://cdn.tailwindcss.com/3.4.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <style>
     /* Variables CSS optimizadas */
     :root {
@@ -2692,6 +2694,22 @@
         <p class="small-text-enhanced" data-i18n="travel-info-subtitle">Pasos fronterizos operativos</p>
         <p id="lastUpdate" class="text-xs text-slate-500 mt-2 font-semibold"></p>
       </div>
+      <div class="card-glass p-4 mb-4">
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="card-title-enhanced flex items-center gap-2">
+      <i class="fas fa-map-marked-alt text-blue-600"></i>
+      <span>Mapa de Pasos</span>
+    </h3>
+    <button onclick="toggleMap()"
+      id="mapToggleBtn"
+      class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-blue-700 transition-all">
+      <i class="fas fa-map"></i> Ver mapa
+    </button>
+  </div>
+  <div id="mapContainer" class="hidden" style="height:300px;border-radius:12px;overflow:hidden;">
+    <div id="passesMap" style="height:100%;width:100%;"></div>
+  </div>
+</div>
       <div class="search-box">
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" onkeyup="debouncedFilterPasses()" data-i18n-placeholder="search-placeholder"
@@ -3927,6 +3945,8 @@
       const statusEl = DOM_CACHE.rateStatus;
       const timestampEl = DOM_CACHE.rateTimestamp;
       statusEl.innerHTML = '<span class="loading-spinner"></span> ' + t('connecting');
+      const clpEl = DOM_CACHE.clpResult;
+if (clpEl) clpEl.style.opacity = '0.4';
 
       try {
         try {
@@ -3947,6 +3967,8 @@
           document.querySelector('.cache-warning')?.remove();
           statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
           timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
+          if (clpEl) clpEl.style.opacity = '1';
+          if (clpEl) clpEl.style.opacity = '1';
           showRateChange(); convertMoney(); return true;
         } catch(e) { console.warn('API primaria falló, intentando backup...'); }
 
@@ -4155,12 +4177,21 @@
       if (!cached) showPassesSkeleton();
 
       if (cached) {
-        try {
-          BORDER_PASSES = JSON.parse(cached);  // FIX: era BORDERPASSES
-          updatePassesDisplay();
-          populateReportPassSelect();
-        } catch(e) { /* caché corrupto */ }
-      }
+  try {
+    const cacheTime = parseInt(localStorage.getItem('borderPassesCacheTime') || '0');
+    const cacheAge = Date.now() - cacheTime;
+    const maxAge = 30 * 60 * 1000; // 30 minutos
+
+    BORDER_PASSES = JSON.parse(cached);
+    updatePassesDisplay();
+    populateReportPassSelect();
+
+    // Si el caché tiene más de 30 minutos, avisa al usuario
+    if (cacheAge > maxAge) {
+      showToast('🔄 Actualizando datos de pasos...', 2000);
+    }
+  } catch(e) { /* caché corrupto */ }
+}
 
       try {
         const url = CONFIG.WEB_APP_URL + '?action=getPasses&cacheBust=' + Date.now(); // FIX: era CONFIG.WEBAPPURL
@@ -4196,10 +4227,11 @@
     // FIX: el bloque huérfano fue eliminado completamente ↑
 
     function updatePassesDisplay() {
-      renderClosedPassesInHome();
-      renderOpenPassesInViaje();
-      showLastUpdate();
-    }
+  renderClosedPassesInHome();
+  renderOpenPassesInViaje();
+  showLastUpdate();
+  if (mapInitialized && mapInstance) updateMapMarkers();
+}
 
     function renderClosedPassesInHome() {
       const container = DOM_CACHE.closedPassesSection;
@@ -4275,7 +4307,14 @@ function showPassesSkeleton() {
     }
     function renderOpenPassesInViaje() {
       const container = DOM_CACHE.passesContainer;
-      const openPasses = BORDER_PASSES.filter(p => p.status === 'Abierto');
+      const favs = getFavorites();
+const openPasses = BORDER_PASSES
+  .filter(p => p.status === 'Abierto')
+  .sort((a, b) => {
+    const aFav = favs.includes(a.name) ? 0 : 1;
+    const bFav = favs.includes(b.name) ? 0 : 1;
+    return aFav - bFav;
+  });
 
       if (openPasses.length === 0) {
         container.innerHTML = `
@@ -4302,7 +4341,8 @@ function showPassesSkeleton() {
     }
 
     function renderPassCard(pass) {
-      const hasObs = pass.observations && pass.observations.trim() !== '';
+  const favs = getFavorites();
+  const hasObs = pass.observations && pass.observations.trim() !== '';
       return `
         <div class="card-glass glass-green p-5 ${pass.important ? 'ring-2 ring-yellow-400' : ''}" data-pass="${pass.name.toLowerCase()}">
           <div class="flex justify-between items-start mb-4">
@@ -4310,7 +4350,14 @@ function showPassesSkeleton() {
               <h4 class="font-black text-xl text-slate-900">${sanitizeInput(pass.name)} ${pass.important ? '⭐' : ''}</h4>
               <p class="text-xs text-slate-700 font-bold mt-1.5">${sanitizeInput(pass.country)}</p>
             </div>
-            <span class="badge badge-live">${t('open')}</span>
+            <div class="flex items-center gap-2">
+  <button onclick="event.stopPropagation(); toggleFavorite('${sanitizeInput(pass.name)}')"
+    style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px;line-height:1;"
+    aria-label="Favorito">
+    ${favs.includes(pass.name) ? '⭐' : '☆'}
+  </button>
+  <span class="badge badge-live">${t('open')}</span>
+</div>
           </div>
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div class="pass-info-box">
@@ -4383,9 +4430,125 @@ function showPassesSkeleton() {
     latest.toLocaleDateString(currentLang === 'es' ? 'es-CL' : 'en-US',
       {year:'numeric', month:'long', day:'numeric'});
 }
+// ===== MAPA =====
+let mapInstance = null;
+let mapInitialized = false;
 
-    // ===== REPORTES =====
-    async function fetchReportsFromSheet() {
+const PASS_LOCATIONS = {
+  'Chacalluta':          { lat: -18.35, lon: -70.06 },
+  'Jama':                { lat: -23.25, lon: -67.07 },
+  'Los Libertadores':    { lat: -32.83, lon: -70.07 },
+  'Chungará':            { lat: -18.50, lon: -69.15 },
+  'Carririñe':           { lat: -39.83, lon: -71.83 },
+  'Cardenal Samoré':     { lat: -40.73, lon: -71.99 },
+  'Integración Austral': { lat: -52.08, lon: -69.27 }
+};
+
+function toggleMap() {
+  const container = document.getElementById('mapContainer');
+  const btn = document.getElementById('mapToggleBtn');
+  const isHidden = container.classList.contains('hidden');
+
+  if (isHidden) {
+    container.classList.remove('hidden');
+    btn.innerHTML = '<i class="fas fa-times"></i> Cerrar mapa';
+    setTimeout(() => initMap(), 100);
+  } else {
+    container.classList.add('hidden');
+    btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
+  }
+}
+
+function initMap() {
+  if (mapInitialized && mapInstance) {
+    mapInstance.invalidateSize();
+    updateMapMarkers();
+    return;
+  }
+
+  mapInstance = L.map('passesMap', { zoomControl: true }).setView([-35, -70], 4);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+    maxZoom: 18
+  }).addTo(mapInstance);
+
+  mapInitialized = true;
+  updateMapMarkers();
+}
+
+function updateMapMarkers() {
+  if (!mapInstance) return;
+
+  BORDER_PASSES.forEach(pass => {
+    const coords = PASS_LOCATIONS[pass.name];
+    if (!coords) return;
+
+    const isOpen = pass.status === 'Abierto';
+    const color = isOpen ? '#10b981' : '#ef4444';
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="
+        width:14px;height:14px;border-radius:50%;
+        background:${color};border:2px solid white;
+        box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+      </div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
+    });
+
+    const hours = pass.hours
+      ? (currentLang === 'es' ? 'Horario: ' : currentLang === 'pt' ? 'Horário: ' : 'Hours: ') + pass.hours
+      : '';
+
+    L.marker([coords.lat, coords.lon], { icon })
+      .addTo(mapInstance)
+      .bindPopup(`
+        <div style="font-family:sans-serif;min-width:140px;">
+          <p style="font-weight:900;font-size:13px;margin:0 0 4px">${pass.name}</p>
+          <p style="font-size:11px;color:#64748b;margin:0 0 4px">${pass.region}</p>
+          <p style="font-size:12px;font-weight:700;color:${color};margin:0 0 4px">
+            ${isOpen ? '✅ Abierto' : '🔴 Cerrado'}
+          </p>
+          ${hours ? `<p style="font-size:11px;color:#64748b;margin:0">${hours}</p>` : ''}
+        </div>`);
+  });
+}
+// ===== FAVORITOS =====
+function getFavorites() {
+  return JSON.parse(localStorage.getItem('favoritePasses') || '[]');
+}
+
+function toggleFavorite(passName) {
+  let favs = getFavorites();
+  if (favs.includes(passName)) {
+    favs = favs.filter(f => f !== passName);
+    showToast('⭐ ' + (currentLang === 'es' ? 'Eliminado de favoritos' : currentLang === 'pt' ? 'Removido dos favoritos' : 'Removed from favorites'), 2000);
+  } else {
+    favs.push(passName);
+    showToast('⭐ ' + (currentLang === 'es' ? 'Agregado a favoritos' : currentLang === 'pt' ? 'Adicionado aos favoritos' : 'Added to favorites'), 2000);
+  }
+  localStorage.setItem('favoritePasses', JSON.stringify(favs));
+  renderOpenPassesInViaje();
+}
+// ===== COMPARTIR =====
+function shareReport(paso, tipo, mensaje) {
+  const icons = {
+    'Demora':'🟡', 'Cierre':'🔴', 'Accidente':'🚗',
+    'Clima':'🌨️', 'Otro':'📢'
+  };
+  const icon = icons[tipo] || '📢';
+  const texts = {
+    es: `${icon} *Reporte Chile Arrival*\n📍 Paso: ${paso}\n⚠️ Tipo: ${tipo}${mensaje ? '\n💬 ' + mensaje : ''}\n\n_Compartido desde Chile Arrival_`,
+    en: `${icon} *Chile Arrival Report*\n📍 Crossing: ${paso}\n⚠️ Type: ${tipo}${mensaje ? '\n💬 ' + mensaje : ''}\n\n_Shared from Chile Arrival_`,
+    pt: `${icon} *Relato Chile Arrival*\n📍 Posto: ${paso}\n⚠️ Tipo: ${tipo}${mensaje ? '\n💬 ' + mensaje : ''}\n\n_Compartilhado do Chile Arrival_`
+  };
+  const text = texts[currentLang] || texts.es;
+  const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+// ===== REPORTES =====
+async function fetchReportsFromSheet() {
   // Carga caché primero mientras espera la red
   const cached = localStorage.getItem('reportsCache');
   if (cached) {
@@ -4429,19 +4592,19 @@ function showPassesSkeleton() {
       }
 
       const typeClass = {
-        'Demora':'type-delay','Delay':'type-delay','Demora':'type-delay',
-        'Cierre':'type-close','Closure':'type-close','Fechamento':'type-close',
-        'Accidente':'type-accident','Accident':'type-accident','Acidente':'type-accident',
-        'Clima':'type-weather','Weather':'type-weather','Clima':'type-weather',
-        'Otro':'type-other','Other':'type-other','Outro':'type-other'
-      };
-      const typeIcon = {
-        'Demora':'🟡','Delay':'🟡','Demora':'🟡',
-        'Cierre':'🔴','Closure':'🔴','Fechamento':'🔴',
-        'Accidente':'🚗','Accident':'🚗','Acidente':'🚗',
-        'Clima':'🌨️','Weather':'🌨️',
-        'Otro':'📢','Other':'📢','Outro':'📢'
-      };
+  'Demora':'type-delay', 'Delay':'type-delay', 'Retraso':'type-delay',
+  'Cierre':'type-close', 'Closure':'type-close', 'Fechamento':'type-close',
+  'Accidente':'type-accident', 'Accident':'type-accident', 'Acidente':'type-accident',
+  'Clima':'type-weather', 'Weather':'type-weather',
+  'Otro':'type-other', 'Other':'type-other', 'Outro':'type-other'
+};
+const typeIcon = {
+  'Demora':'🟡', 'Delay':'🟡', 'Retraso':'🟡',
+  'Cierre':'🔴', 'Closure':'🔴', 'Fechamento':'🔴',
+  'Accidente':'🚗', 'Accident':'🚗', 'Acidente':'🚗',
+  'Clima':'🌨️', 'Weather':'🌨️',
+  'Otro':'📢', 'Other':'📢', 'Outro':'📢'
+};
 
       container.innerHTML = reports.slice(0, 5).map(report => `
         <div class="report-card ${typeClass[report.tipo] || 'type-other'}">
@@ -4450,7 +4613,15 @@ function showPassesSkeleton() {
             <div class="report-time">⏱️ ${getTimeAgo(report.timestamp)}</div>
           </div>
           ${report.mensaje ? `<div class="report-message">"${sanitizeInput(report.mensaje)}"</div>` : ''}
-          <div class="report-votes"><span>👍 ${report.votos} ${t('confirms')}</span></div>
+          <div class="report-votes flex justify-between items-center">
+  <span>👍 ${report.votos} ${t('confirms')}</span>
+  <button
+    onclick="shareReport('${sanitizeInput(report.paso)}','${sanitizeInput(report.tipo)}','${sanitizeInput(report.mensaje || '')}')"
+    style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:800;color:#25d366;display:flex;align-items:center;gap:4px;">
+    <i class="fab fa-whatsapp" style="font-size:16px"></i>
+    ${currentLang === 'pt' ? 'Compartilhar' : currentLang === 'en' ? 'Share' : 'Compartir'}
+  </button>
+</div>
         </div>`).join('');
     }
 function canSubmitReport() {
@@ -4498,6 +4669,7 @@ function canSubmitReport() {
         'Clima':'Clima','Otro':'Otro',
         'Fechamento':'Cierre','Acidente':'Accidente','Outro':'Otro'
       };
+      const now = new Date();
       const reportData = {
         timestamp: now.toISOString(),
         paso: pass, tipo: typeToEs[type] || type, mensaje: message,
@@ -4557,12 +4729,21 @@ function canSubmitReport() {
   });
 }
 
-    function refreshReports() {
-      fetchReportsFromSheet();
-      fetchBorderPassesFromSheet();
-      fetchExchangeRates();
-      showToast('🔄 ' + t('refresh'), 2000);
-    }
+   function refreshReports() {
+  const btn = document.querySelector('button[onclick="refreshReports()"]');
+  if (btn) {
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-sync-alt"></i> <span data-i18n="refresh">' + t('refresh') + '</span>';
+      btn.disabled = false;
+    }, 3000);
+  }
+  fetchReportsFromSheet();
+  fetchBorderPassesFromSheet();
+  fetchExchangeRates();
+  showToast('🔄 ' + t('refresh'), 2000);
+}
 function renderNotificationToggle() {
   const container = document.getElementById('notificationToggleContainer');
   if (!container) return;
@@ -4748,37 +4929,118 @@ function showConfirm(message, onConfirm) {
     }
   );
 }
+// ===== HISTORIAL DE FECHAS =====
+function getDateHistory() {
+  return JSON.parse(localStorage.getItem('entryDateHistory') || '[]');
+}
 
+function saveDateToHistory(dateStr) {
+  let history = getDateHistory();
+  history = history.filter(d => d !== dateStr);
+  history.unshift(dateStr);
+  history = history.slice(0, 5);
+  localStorage.setItem('entryDateHistory', JSON.stringify(history));
+}
+
+function renderDateHistory() {
+  const history = getDateHistory();
+  const existing = document.getElementById('dateHistoryContainer');
+  if (existing) existing.remove();
+  if (!history.length) return;
+
+  const container = document.createElement('div');
+  container.id = 'dateHistoryContainer';
+  container.style.cssText = 'margin-top:12px;';
+
+  const label = currentLang === 'es' ? 'Fechas anteriores:' :
+                currentLang === 'pt' ? 'Datas anteriores:' : 'Previous dates:';
+
+  container.innerHTML = `
+    <p style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.7);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">
+      ${label}
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      ${history.map(date => {
+        const [y, m, d] = date.split('-');
+        const formatted = `${d}/${m}/${y}`;
+        return `
+          <button
+            onclick="loadHistoryDate('${date}')"
+            style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);
+                   color:white;padding:6px 12px;border-radius:20px;font-size:12px;
+                   font-weight:700;cursor:pointer;">
+            ${formatted}
+          </button>`;
+      }).join('')}
+    </div>`;
+
+  const daysResult = document.getElementById('daysResult');
+  if (daysResult) daysResult.after(container);
+}
+
+function loadHistoryDate(dateStr) {
+  const input = DOM_CACHE.entryDate || document.getElementById('entryDate');
+  if (input) {
+    input.value = dateStr;
+    calculateDaysRemaining();
+    showToast('📅 ' + (currentLang === 'es' ? 'Fecha cargada' :
+              currentLang === 'pt' ? 'Data carregada' : 'Date loaded'), 2000);
+  }
+}
     // ===== CALCULADORAS =====
-    function calculateFuelCost() {
-      const distance    = parseFloat(document.getElementById('fuelDistance').value) || 0;
-      const consumption = parseFloat(document.getElementById('fuelConsumption').value) || 0;
-      const price       = parseFloat(document.getElementById('fuelPrice').value) || 0;
-      const tolls       = parseFloat(document.getElementById('fuelTolls').value) || 0;
-      const resultEl    = document.getElementById('fuelResultContainer');
+   function calculateFuelCost() {
+  const distance    = parseFloat(document.getElementById('fuelDistance').value) || 0;
+  const consumption = parseFloat(document.getElementById('fuelConsumption').value) || 0;
+  const price       = parseFloat(document.getElementById('fuelPrice').value) || 0;
+  const tolls       = parseFloat(document.getElementById('fuelTolls').value) || 0;
+  const resultEl    = document.getElementById('fuelResultContainer');
 
-      if (distance > 0 && consumption > 0 && price > 0) {
-        const liters   = distance / consumption;
-        const gasCost  = liters * price;
-        const total    = gasCost + tolls;
-        document.getElementById('fuelLitersNeeded').textContent = liters.toFixed(1) + ' L';
-        document.getElementById('fuelGasCost').textContent = '$' + Math.round(gasCost).toLocaleString('es-CL');
-        document.getElementById('fuelTollsCost').textContent = '$' + Math.round(tolls).toLocaleString('es-CL');
-        document.getElementById('fuelTotalCost').textContent = Math.round(total).toLocaleString('es-CL');
-        resultEl.classList.remove('hidden');
-      } else {
-        resultEl.classList.add('hidden');
-      }
-    }
+  // Validaciones
+  if (distance < 0 || consumption < 0 || price < 0 || tolls < 0) {
+    resultEl.classList.add('hidden');
+    showToast('⚠️ Los valores no pueden ser negativos', 3000);
+    return;
+  }
+  if (consumption > 0 && consumption < 1) {
+    resultEl.classList.add('hidden');
+    showToast('⚠️ El consumo mínimo es 1 km/litro', 3000);
+    return;
+  }
+  if (distance > 50000) {
+    resultEl.classList.add('hidden');
+    showToast('⚠️ La distancia parece demasiado grande', 3000);
+    return;
+  }
+
+  if (distance > 0 && consumption > 0 && price > 0) {
+    const liters   = distance / consumption;
+    const gasCost  = liters * price;
+    const total    = gasCost + tolls;
+    document.getElementById('fuelLitersNeeded').textContent = liters.toFixed(1) + ' L';
+    document.getElementById('fuelGasCost').textContent = '$' + Math.round(gasCost).toLocaleString('es-CL');
+    document.getElementById('fuelTollsCost').textContent = '$' + Math.round(tolls).toLocaleString('es-CL');
+    document.getElementById('fuelTotalCost').textContent = Math.round(total).toLocaleString('es-CL');
+    resultEl.classList.remove('hidden');
+  } else {
+    resultEl.classList.add('hidden');
+  }
+}
 
     // FIX: se eliminó el segundo <script> duplicado — esta es la única versión
     function calculateDaysRemaining() {
-      const entryDate = DOM_CACHE.entryDate ? DOM_CACHE.entryDate.value : document.getElementById('entryDate').value;
-      if (!entryDate) return;
+  const entryDate = DOM_CACHE.entryDate ? DOM_CACHE.entryDate.value : document.getElementById('entryDate').value;
+  if (!entryDate) return;
 
-      const [year, month, day] = entryDate.split('-').map(Number);
-      const entry = new Date(year, month - 1, day);
-      const today = new Date(); today.setHours(0,0,0,0); entry.setHours(0,0,0,0);
+  const [year, month, day] = entryDate.split('-').map(Number);
+
+  // Validación de rango de fecha
+  if (year < 2000 || year > new Date().getFullYear()) {
+    showToast('⚠️ Ingresá una fecha válida de entrada', 3000);
+    return;
+  }
+
+  const entry = new Date(year, month - 1, day);
+  const today = new Date(); today.setHours(0,0,0,0); entry.setHours(0,0,0,0);
 
       const resultEl  = document.getElementById('daysResult');
       const numberEl  = document.getElementById('daysNumber');
@@ -4819,6 +5081,8 @@ function showConfirm(message, onConfirm) {
       }
 
       localStorage.setItem('entryDate', entryDate);
+saveDateToHistory(entryDate);
+renderDateHistory();
     }
 
     // ===== CONTENIDO ESTÁTICO =====
@@ -5142,6 +5406,7 @@ const savedEntryDate = localStorage.getItem('entryDate');
 if (savedEntryDate) {
   DOM_CACHE.entryDate.value = savedEntryDate;
   calculateDaysRemaining();
+  renderDateHistory();
 }
 
 createSnowflakes();
