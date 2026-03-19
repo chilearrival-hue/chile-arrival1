@@ -4452,13 +4452,8 @@ function toggleMap() {
   if (isHidden) {
     container.classList.remove('hidden');
     btn.innerHTML = '<i class="fas fa-times"></i> Cerrar mapa';
-    setTimeout(() => {
-      initMap();
-      if (mapInstance) {
-        mapInstance.invalidateSize(true);
-        mapInstance.setView([-35, -70], 4);
-      }
-    }, 200);
+    // Espera más tiempo para que el DOM esté listo
+    setTimeout(() => initMap(), 400);
   } else {
     container.classList.add('hidden');
     btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
@@ -4466,59 +4461,45 @@ function toggleMap() {
 }
 
 function initMap() {
+  const mapEl = document.getElementById('passesMap');
+  if (!mapEl) return;
+
+  // Si ya existe, solo actualiza tamaño y marcadores
   if (mapInitialized && mapInstance) {
-    mapInstance.invalidateSize();
+    mapInstance.invalidateSize(true);
     updateMapMarkers();
     return;
   }
 
-  mapInstance = L.map('passesMap', { zoomControl: true }).setView([-35, -70], 4);
+  // Fuerza dimensiones antes de inicializar
+  mapEl.style.height = '300px';
+  mapEl.style.width = '100%';
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap',
-    maxZoom: 18
-  }).addTo(mapInstance);
+  try {
+    mapInstance = L.map('passesMap', {
+      zoomControl: true,
+      preferCanvas: true
+    }).setView([-35, -70], 4);
 
-  mapInitialized = true;
-  updateMapMarkers();
-}
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      maxZoom: 18,
+      crossOrigin: true
+    }).addTo(mapInstance);
 
-function updateMapMarkers() {
-  if (!mapInstance) return;
-
-  BORDER_PASSES.forEach(pass => {
-    const coords = PASS_LOCATIONS[pass.name];
-    if (!coords) return;
-
-    const isOpen = pass.status === 'Abierto';
-    const color = isOpen ? '#10b981' : '#ef4444';
-    const icon = L.divIcon({
-      className: '',
-      html: `<div style="
-        width:14px;height:14px;border-radius:50%;
-        background:${color};border:2px solid white;
-        box-shadow:0 2px 6px rgba(0,0,0,0.3);">
-      </div>`,
-      iconSize: [14, 14],
-      iconAnchor: [7, 7]
+    // Espera que los tiles carguen y luego fuerza resize
+    mapInstance.whenReady(() => {
+      setTimeout(() => {
+        mapInstance.invalidateSize(true);
+        updateMapMarkers();
+      }, 300);
     });
 
-    const hours = pass.hours
-      ? (currentLang === 'es' ? 'Horario: ' : currentLang === 'pt' ? 'Horário: ' : 'Hours: ') + pass.hours
-      : '';
+    mapInitialized = true;
 
-    L.marker([coords.lat, coords.lon], { icon })
-      .addTo(mapInstance)
-      .bindPopup(`
-        <div style="font-family:sans-serif;min-width:140px;">
-          <p style="font-weight:900;font-size:13px;margin:0 0 4px">${pass.name}</p>
-          <p style="font-size:11px;color:#64748b;margin:0 0 4px">${pass.region}</p>
-          <p style="font-size:12px;font-weight:700;color:${color};margin:0 0 4px">
-            ${isOpen ? '✅ Abierto' : '🔴 Cerrado'}
-          </p>
-          ${hours ? `<p style="font-size:11px;color:#64748b;margin:0">${hours}</p>` : ''}
-        </div>`);
-  });
+  } catch(e) {
+    console.error('Error iniciando mapa:', e);
+  }
 }
 // ===== FAVORITOS =====
 function getFavorites() {
