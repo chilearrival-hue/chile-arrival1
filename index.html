@@ -4452,7 +4452,13 @@ function toggleMap() {
   if (isHidden) {
     container.classList.remove('hidden');
     btn.innerHTML = '<i class="fas fa-times"></i> Cerrar mapa';
-    setTimeout(() => initMap(), 100);
+    setTimeout(() => {
+      initMap();
+      if (mapInstance) {
+        mapInstance.invalidateSize(true);
+        mapInstance.setView([-35, -70], 4);
+      }
+    }, 200);
   } else {
     container.classList.add('hidden');
     btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
