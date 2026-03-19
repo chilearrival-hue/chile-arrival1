@@ -2027,20 +2027,20 @@
       }
 
       .nav-btn {
-        height: 62px;
-        gap: 4px
+        height: 58px;
+        gap: 2px
       }
 
       .nav-btn i {
-        font-size: 18px
+        font-size: 16px
       }
 
       .nav-btn span {
-        font-size: 9px
+        font-size: 8px
       }
 
       .nav-container {
-        padding: 0 4px
+        padding: 0 2px
       }
     }
 
@@ -2067,7 +2067,124 @@
       background: linear-gradient(to bottom, var(--chile-blue) 0%, var(--chile-blue) 50%, var(--chile-red) 50%, var(--chile-red) 100%);
       border-radius: 20px 0 0 20px;
     }
-
+/* Weather badge en dark mode */
+    [data-theme="dark"] .weather-badge {
+      background: rgba(255,255,255,0.1) !important;
+      border-color: rgba(255,255,255,0.15) !important;
+      color: #f1f5f9 !important;
+    }
+    [data-theme="dark"] .weather-badge span {
+      color: #f1f5f9 !important;
+    }
+    /* Botón volver arriba */
+    .scroll-top-btn {
+      position: fixed;
+      bottom: 95px;
+      left: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0039a6, #1e40af);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,57,166,0.4);
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .scroll-top-btn.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+    .scroll-top-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,57,166,0.5);
+    }
+    /* Reloj Chile en hero */
+    .chile-clock {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      color: white;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+    .chile-clock i {
+      font-size: 11px;
+      opacity: 0.85;
+    }
+    /* FAQ Acordeón */
+    .faq-item {
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+    [data-theme="dark"] .faq-item {
+      background: rgba(30,41,59,0.8);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 16px 18px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 13.5px;
+      color: var(--text-primary);
+      -webkit-tap-highlight-color: transparent;
+      line-height: 1.4;
+    }
+    .faq-question i {
+      color: var(--chile-blue);
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .faq-item.open .faq-question i {
+      transform: rotate(180deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      line-height: 1.6;
+      padding: 0 18px;
+    }
+    [data-theme="dark"] .faq-answer {
+      color: #cbd5e1;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      padding: 0 18px 16px;
+    }
     /* Skeleton Loader */
     .skeleton {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -2169,8 +2286,23 @@
     [data-theme="dark"] #kit .text-gray-400 {
       color: #94a3b8 !important;
     }
-    [data-theme="dark"] #kit [style*="background: white"] {
+   [data-theme="dark"] #kit [style*="background: white"] {
       background: #1e293b !important;
+    }
+    [data-theme="dark"] #kit .text-gray-800,
+    [data-theme="dark"] #kit p.text-sm.font-semibold {
+      color: #f1f5f9 !important;
+    }
+    [data-theme="dark"] #kit p.text-xs.text-gray-400,
+    [data-theme="dark"] #kit .text-gray-400 {
+      color: #94a3b8 !important;
+    }
+    [data-theme="dark"] #kit a.bg-white,
+    [data-theme="dark"] #kit div.bg-white {
+      background: #1e293b !important;
+    }
+    [data-theme="dark"] #kit .border-gray-100 {
+      border-color: #334155 !important;
     }
     /* Dark mode — cards Kit Viajero con bg inline reemplazado */
 [data-theme="dark"] .bg-white {
@@ -2187,6 +2319,10 @@
 </head>
 
 <body>
+  <!-- Botón volver arriba -->
+  <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
+    <i class="fas fa-chevron-up"></i>
+  </button>
   <!-- Toast notification -->
   <div id="toast" class="toast">
     <i class="fas fa-check-circle text-xl"></i>
@@ -2230,7 +2366,6 @@
   <div class="report-type-option" data-type="Accidente" onclick="selectReportType('Accidente')" data-i18n="report-type-accident">🚗 Accidente</div>
   <div class="report-type-option" data-type="Clima" onclick="selectReportType('Clima')" data-i18n="report-type-weather">🌨️ Clima</div>
   <div class="report-type-option" data-type="Otro" onclick="selectReportType('Otro')" data-i18n="report-type-other">📢 Otro</div>
-</div>
           </div>
           <input type="hidden" id="reportType" required>
         </div>
@@ -2273,22 +2408,7 @@
       <button onclick="toggleDarkMode()" class="control-btn" id="themeToggle" aria-label="Cambiar tema">
         <i class="fas fa-moon" id="themeIcon"></i>
       </button>
-      <!-- Login / Avatar -->
-      <button onclick="handleLogin()" class="control-btn" id="loginBtn" aria-label="Iniciar sesión">
-        <i class="fas fa-user"></i>
-      </button>
-      <div id="userPanel" class="hidden relative">
-        <img id="userAvatar" src="" alt="Avatar"
-          class="w-10 h-10 rounded-full border-2 border-white cursor-pointer object-cover"
-          onclick="toggleUserMenu()" />
-        <div id="userMenu" class="hidden absolute right-0 top-12 bg-white rounded-2xl shadow-xl p-3 w-48 z-50">
-          <p id="userNameDisplay" class="text-xs font-black text-slate-800 mb-3 px-2 truncate"></p>
-          <button onclick="handleLogout()"
-            class="w-full text-left px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-all">
-            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar sesión
-          </button>
-        </div>
-      </div>
+
     </div>
     <div class="celestial-body" aria-hidden="true"></div>
     <div class="clouds-container" aria-hidden="true">
@@ -2316,8 +2436,13 @@
       <h1 class="text-3xl font-black tracking-tight drop-shadow-lg" data-i18n="hero-title">Chile Arrival 🇨🇱</h1>
       <p class="text-white/90 font-bold text-sm mt-1 drop-shadow" data-i18n="hero-subtitle">Tu Guía Completa de Ingreso
       </p>
-      <div class="mt-3">
+      <div class="mt-3 flex flex-wrap items-center gap-2">
         <span class="badge badge-live" data-i18n="hero-badge">✓ Actualizado 2026</span>
+        <div class="chile-clock">
+          <i class="fas fa-clock"></i>
+          <span id="chileTime">--:--:--</span>
+          <span style="opacity:0.7;font-size:10px;">Santiago</span>
+        </div>
       </div>
     </div>
   </div>
@@ -2396,7 +2521,7 @@
           <div class="flex flex-col items-center gap-4">
             <div class="w-full">
               <label class="text-xs font-bold mb-2 block" data-i18n="entry-date">Fecha de Ingreso:</label>
-              <input type="date" id="entryDate" class="date-input" onchange="calculateDaysRemaining()">
+              <input type="date" id="entryDate" class="date-input" onchange="calculateDaysRemaining()" max="2099-12-31">
             </div>
             <div id="daysResult" class="text-center mt-4 hidden">
               <p class="text-sm font-bold mb-2" data-i18n="remaining">Te quedan:</p>
@@ -2619,16 +2744,17 @@
 <div class="px-4 pb-6">
   <div class="card-glass glass-yellow p-4 flex items-center justify-between">
     <div>
-      <p class="text-xs font-bold text-orange-800 mb-1">
+      <p class="text-xs font-bold text-orange-800 mb-1" data-i18n="banner-kit-title">
         ¿Ya tienes listos tus servicios?
       </p>
-      <p class="text-xs text-orange-700 font-semibold">
+      <p class="text-xs text-orange-700 font-semibold" data-i18n="banner-kit-sub">
         eSIM, seguros, transporte y alojamientos en el Kit Viajero.
       </p>
     </div>
     <button
       class="text-xs bg-orange-600 text-white px-3 py-2 rounded-lg font-bold hover:bg-orange-700 transition-all"
-      onclick="showTab('kit')"
+      onclick="showTab('kit', document.querySelector('.nav-btn[data-tab=kit]'))"
+      data-i18n="banner-kit-btn"
     >
       Abrir Kit Viajero
     </button>
@@ -2752,6 +2878,19 @@
           </div>
         </div>
       </div>
+   <!-- FAQ -->
+        <div class="card-glass p-6 mt-5">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-question text-white text-lg"></i>
+            </div>
+            <div>
+              <h3 class="font-black text-base text-slate-900" data-i18n="faq-title">Preguntas Frecuentes</h3>
+              <p class="text-xs text-slate-500 font-semibold" data-i18n="faq-subtitle">Todo lo que necesitas saber</p>
+            </div>
+          </div>
+          <div id="faqContainer"></div>
+        </div>
     </section>
 
     <!-- TAB: INFO -->
@@ -2956,7 +3095,12 @@
         'kit-bus-sub': 'Santiago · Osorno · Bariloche',
         'kit-disclaimer': '* Algunos enlaces son de afiliados. Al reservar a través de ellos apoyás el desarrollo gratuito de esta app. 🙏',
         'slang-search': 'Buscar modismo...',
-        'slang-empty': 'No se encontraron modismos'
+        'slang-empty': 'No se encontraron modismos',
+        'banner-kit-title': '¿Ya tienes listos tus servicios?',
+        'banner-kit-sub': 'eSIM, seguros, transporte y alojamientos en el Kit Viajero.',
+        'banner-kit-btn': 'Abrir Kit Viajero',
+        'faq-title': 'Preguntas Frecuentes',
+        'faq-subtitle': 'Todo lo que necesitas saber'
     
       },
       en: {
@@ -3056,7 +3200,12 @@
         'kit-bus-sub': 'Santiago · Osorno · Bariloche',
         'kit-disclaimer': '* Some links are affiliate links. By booking through them you support the free development of this app. 🙏',
         'slang-search': 'Search slang...',
-        'slang-empty': 'No slang found'
+        'slang-empty': 'No slang found',
+        'banner-kit-title': 'Are your services ready?',
+        'banner-kit-sub': 'eSIM, insurance, transport and accommodation in the Travel Kit.',
+        'banner-kit-btn': 'Open Travel Kit',
+        'faq-title': 'Frequently Asked Questions',
+        'faq-subtitle': 'Everything you need to know'
       },
       pt: {
         'hero-title': 'Chile Arrival 🇨🇱', 'hero-subtitle': 'Seu Guia Completo de Entrada',
@@ -3156,7 +3305,12 @@
         'kit-bus-sub': 'Santiago · Osorno · Bariloche',
         'kit-disclaimer': '* Alguns links são de afiliados. Ao reservar através deles você apoia o desenvolvimento gratuito deste app. 🙏',
         'slang-search': 'Buscar gíria...',
-        'slang-empty': 'Nenhuma gíria encontrada'
+        'slang-empty': 'Nenhuma gíria encontrada',
+        'banner-kit-title': 'Seus serviços estão prontos?',
+        'banner-kit-sub': 'eSIM, seguros, transporte e hospedagem no Kit Viajante.',
+        'banner-kit-btn': 'Abrir Kit Viajante',
+        'faq-title': 'Perguntas Frequentes',
+        'faq-subtitle': 'Tudo que você precisa saber'
       }
     };
 
@@ -3274,7 +3428,63 @@
         {word:"Polera", meaning:"Camiseta", example:"Comprei uma polera"}
       ]
     };
-
+// ===== FAQ DATA =====
+    const FAQ_DATA = {
+      es: [
+        { q: '¿Necesito visa para entrar a Chile?',
+          a: 'La mayoría de países de América Latina, Europa y Norteamérica no necesitan visa. Ciudadanos de otros países deben verificar en el sitio oficial de la PDI o embajada chilena.' },
+        { q: '¿Cuánto tiempo puedo quedarme en Chile como turista?',
+          a: '90 días corridos, prorrogables por otros 90 días ante el Departamento de Extranjería. Pasado ese plazo hay multa al salir.' },
+        { q: '¿Qué pasa si pierdo mi PNA (Tarjeta de Turismo)?',
+          a: 'Debes dirigirte a la PDI más cercana para obtener un duplicado. Sin PNA pueden multarte o retenerte al salir del país.' },
+        { q: '¿Puedo ingresar con el DNI o necesito pasaporte?',
+          a: 'Los ciudadanos de países del Mercosur y países asociados pueden ingresar con DNI vigente. Para el resto se requiere pasaporte válido.' },
+        { q: '¿Qué alimentos puedo traer a Chile?',
+          a: 'Están permitidos alimentos envasados industrialmente y cerrados. Están prohibidas frutas frescas, verduras, carnes sin procesar, semillas, miel y lácteos frescos. Siempre declara en el SAG.' },
+        { q: '¿Cuánto dinero puedo ingresar a Chile?',
+          a: 'Puedes ingresar cualquier cantidad de dinero, pero si superas los USD 10.000 (o equivalente) debes declararlo en Aduana.' },
+        { q: '¿El SOAP argentino/peruano/boliviano vale en Chile?',
+          a: 'No. El SOAP es obligatorio y debe ser chileno. Puedes contratarlo en línea antes de cruzar o en oficinas en la frontera.' },
+        { q: '¿Puedo ingresar con mascotas?',
+          a: 'Sí, pero necesitas certificado veterinario oficial, vacuna antirrábica vigente y autorización del SAG. Consulta los requisitos según el país de origen.' }
+      ],
+      en: [
+        { q: 'Do I need a visa to enter Chile?',
+          a: 'Most Latin American, European and North American countries do not need a visa. Citizens of other countries should check the official PDI website or Chilean embassy.' },
+        { q: 'How long can I stay in Chile as a tourist?',
+          a: '90 consecutive days, extendable for another 90 days at the Department of Immigration. After that period there is a fine when leaving.' },
+        { q: 'What happens if I lose my PNA (Tourist Card)?',
+          a: 'You must go to the nearest PDI office to get a duplicate. Without PNA you may be fined or detained when leaving the country.' },
+        { q: 'Can I enter with my ID card or do I need a passport?',
+          a: 'Citizens of Mercosur and associated countries can enter with a valid ID. For others, a valid passport is required.' },
+        { q: 'What food can I bring to Chile?',
+          a: 'Industrially packaged and sealed foods are allowed. Fresh fruits, vegetables, unprocessed meats, seeds, honey and fresh dairy are prohibited. Always declare at SAG.' },
+        { q: 'How much money can I bring into Chile?',
+          a: 'You can bring any amount of money, but if you exceed USD 10,000 (or equivalent) you must declare it at Customs.' },
+        { q: 'Is Argentine/Peruvian/Bolivian SOAP valid in Chile?',
+          a: 'No. SOAP insurance is mandatory and must be Chilean. You can purchase it online before crossing or at border offices.' },
+        { q: 'Can I enter with pets?',
+          a: 'Yes, but you need an official veterinary certificate, valid rabies vaccine and SAG authorization. Check requirements based on country of origin.' }
+      ],
+      pt: [
+        { q: 'Preciso de visto para entrar no Chile?',
+          a: 'A maioria dos países da América Latina, Europa e América do Norte não precisam de visto. Cidadãos de outros países devem verificar no site oficial da PDI ou embaixada chilena.' },
+        { q: 'Quanto tempo posso ficar no Chile como turista?',
+          a: '90 dias consecutivos, prorrogáveis por mais 90 dias no Departamento de Imigração. Após esse prazo há multa ao sair.' },
+        { q: 'O que acontece se eu perder meu PNA (Cartão de Turismo)?',
+          a: 'Você deve ir ao escritório da PDI mais próximo para obter uma segunda via. Sem PNA você pode ser multado ou detido ao sair do país.' },
+        { q: 'Posso entrar com RG ou preciso de passaporte?',
+          a: 'Cidadãos de países do Mercosul e países associados podem entrar com RG válido. Para os demais, é necessário passaporte válido.' },
+        { q: 'Quais alimentos posso trazer para o Chile?',
+          a: 'Alimentos industrialmente embalados e fechados são permitidos. Frutas frescas, verduras, carnes não processadas, sementes, mel e laticínios frescos são proibidos. Sempre declare no SAG.' },
+        { q: 'Quanto dinheiro posso trazer para o Chile?',
+          a: 'Você pode trazer qualquer quantia, mas se ultrapassar USD 10.000 (ou equivalente) deve declarar na Aduana.' },
+        { q: 'O SOAP argentino/peruano/boliviano vale no Chile?',
+          a: 'Não. O SOAP é obrigatório e deve ser chileno. Você pode contratá-lo online antes de cruzar ou nos escritórios na fronteira.' },
+        { q: 'Posso entrar com animais de estimação?',
+          a: 'Sim, mas você precisa de certificado veterinário oficial, vacina antirrábica válida e autorização do SAG. Consulte os requisitos de acordo com o país de origem.' }
+      ]
+    };
     const CULTURE_INFO = {
       es: [
         {icon:"🤝", title:"Saludos", text:"Un beso en la mejilla entre hombres y mujeres es normal. Entre hombres, apretón de manos."},
@@ -3576,11 +3786,19 @@
       renderReports(reportsCache);
       updatePassesDisplay();
       initKitContent();
+      initFAQ();
+
+      // Actualiza placeholder del buscador de pasos
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.placeholder = TRANSLATIONS[lang]?.['search-placeholder'] || '';
+      }
 
       // Actualiza lang y dir del documento dinámicamente
       const langMap = { es: 'es-CL', en: 'en-US', pt: 'pt-BR' };
       document.documentElement.lang = langMap[lang] || lang;
 
+      // Actualiza el título de la página según idioma
       // Actualiza el título de la página según idioma
       const titles = {
         es: 'Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso',
@@ -3588,6 +3806,15 @@
         pt: 'Chile Arrival 🇨🇱 | Seu Guia Completo de Entrada'
       };
       document.title = titles[lang] || titles.es;
+
+      // Actualiza meta description según idioma
+      const descriptions = {
+        es: 'Pasos fronterizos en tiempo real, tipo de cambio actualizado, checklist de viaje y todo lo que necesitas para ingresar a Chile.',
+        en: 'Real-time border crossings, updated exchange rate, travel checklist and everything you need to enter Chile.',
+        pt: 'Postos fronteiriços em tempo real, taxa de câmbio atualizada, checklist de viagem e tudo que você precisa para entrar no Chile.'
+      };
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', descriptions[lang] || descriptions.es);
     }
 
     function toggleLanguage() {
@@ -3710,7 +3937,7 @@
             warning.textContent = '⚠️ Sin conexión · Mostrando último tipo de cambio guardado';
             converterCard.querySelector('.relative').prepend(warning);
           }
-          showToast('📵 Usando tipo de cambio guardado', 3000);
+          showToast('📵 ' + (currentLang === 'es' ? 'Usando tipo de cambio guardado' : currentLang === 'pt' ? 'Usando taxa de câmbio salva' : 'Using saved exchange rate'), 3000);
           return false;
         }
         statusEl.innerHTML = '<i class="fas fa-times-circle text-red-400 text-[10px] mr-1"></i>' + t('error');
@@ -3759,7 +3986,107 @@
       const rate = exchangeRates[selectedCurrency];
       DOM_CACHE.clpResult.textContent = rate > 0 ? '$' + Math.round(val * rate).toLocaleString('es-CL') : '$---';
     }
+// Coordenadas geográficas de los pasos para clima
+    const PASS_COORDINATES = {
+      'Chacalluta':         { lat: -18.35, lon: -70.06 },
+      'Jama':               { lat: -23.25, lon: -67.07 },
+      'Los Libertadores':   { lat: -32.83, lon: -70.07 },
+      'Chungará':           { lat: -18.50, lon: -69.15 },
+      'Carririñe':          { lat: -39.83, lon: -71.83 },
+      'Cardenal Samoré':    { lat: -40.73, lon: -71.99 },
+      'Integración Austral':{ lat: -52.08, lon: -69.27 }
+    };
 
+    // Cache de clima por paso
+    const weatherCache = {};
+
+    async function fetchWeatherForPass(passName) {
+      if (weatherCache[passName]) return weatherCache[passName];
+      const coords = PASS_COORDINATES[passName];
+      if (!coords) return null;
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current_weather=true&hourly=snowfall&forecast_days=1`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const w = data.current_weather;
+        const result = {
+          temp: Math.round(w.temperature),
+          wind: Math.round(w.windspeed),
+          code: w.weathercode
+        };
+        weatherCache[passName] = result;
+        return result;
+      } catch(e) {
+        return null;
+      }
+    }
+
+    function getWeatherIcon(code) {
+      if (code === 0)              return '☀️';
+      if (code <= 2)               return '⛅';
+      if (code <= 3)               return '☁️';
+      if (code <= 49)              return '🌫️';
+      if (code <= 59)              return '🌦️';
+      if (code <= 69)              return '🌧️';
+      if (code <= 79)              return '🌨️';
+      if (code <= 84)              return '🌧️';
+      if (code <= 94)              return '❄️';
+      return '⛈️';
+    }
+
+    function getWeatherLabel(code, lang) {
+      const labels = {
+        es: { sun:'Despejado', cloud:'Nublado', fog:'Neblina', drizzle:'Llovizna',
+              rain:'Lluvia', snow:'Nieve', storm:'Tormenta' },
+        en: { sun:'Clear', cloud:'Cloudy', fog:'Fog', drizzle:'Drizzle',
+              rain:'Rain', snow:'Snow', storm:'Storm' },
+        pt: { sun:'Limpo', cloud:'Nublado', fog:'Névoa', drizzle:'Garoa',
+              rain:'Chuva', snow:'Neve', storm:'Tempestade' }
+      };
+      const l = labels[lang] || labels.es;
+      if (code === 0)  return l.sun;
+      if (code <= 3)   return l.cloud;
+      if (code <= 49)  return l.fog;
+      if (code <= 59)  return l.drizzle;
+      if (code <= 69)  return l.rain;
+      if (code <= 79)  return l.snow;
+      if (code <= 84)  return l.rain;
+      return l.storm;
+    }
+
+    async function injectWeatherIntoCards() {
+      const cards = document.querySelectorAll('#passesContainer [data-pass]');
+      for (const card of cards) {
+        const passName = Object.keys(PASS_COORDINATES).find(
+          name => card.getAttribute('data-pass') === name.toLowerCase()
+        );
+        if (!passName) continue;
+        const weather = await fetchWeatherForPass(passName);
+        if (!weather) continue;
+        const icon = getWeatherIcon(weather.code);
+        const label = getWeatherLabel(weather.code, currentLang);
+        const existing = card.querySelector('.weather-badge');
+        if (existing) existing.remove();
+        const badge = document.createElement('div');
+        badge.className = 'weather-badge';
+        badge.style.cssText = `
+          display:flex;align-items:center;gap:6px;
+          margin-top:10px;padding:8px 12px;
+          background:rgba(255,255,255,0.5);
+          border-radius:10px;font-size:12px;font-weight:700;
+          border:1px solid rgba(255,255,255,0.6);
+        `;
+        badge.innerHTML = `
+          <span style="font-size:18px">${icon}</span>
+          <span>${weather.temp}°C</span>
+          <span style="color:#64748b">·</span>
+          <span>${label}</span>
+          <span style="color:#64748b">·</span>
+          <span>💨 ${weather.wind} km/h</span>
+        `;
+        card.appendChild(badge);
+      }
+    }
     // ===== PASOS FRONTERIZOS =====
     const PASSES_FALLBACK = [
       {name:"Chacalluta", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
@@ -3894,6 +4221,9 @@
         <div class="space-y-4">
           ${openPasses.map(pass => renderPassCard(pass)).join('')}
         </div>`;
+
+      // Inyecta clima en las cards después de renderizar
+      setTimeout(() => injectWeatherIntoCards(), 300);
     }
 
     function renderPassCard(pass) {
@@ -3930,14 +4260,31 @@
         </div>`;
     }
 
-    function filterPasses() {
-  const search = DOM_CACHE.searchInput.value.toLowerCase().trim();
-  document.querySelectorAll('#passesContainer [data-pass]').forEach(pass => {
-    const matches = pass.getAttribute('data-pass').includes(search) ||
-                    pass.textContent.toLowerCase().includes(search);
-    pass.classList.toggle('hidden', !matches);
-  });
-}
+   function filterPasses() {
+      const search = DOM_CACHE.searchInput.value.toLowerCase().trim();
+
+      // Traducciones de términos comunes para búsqueda
+      const searchAliases = {
+        // Inglés → español
+        'open': 'abierto', 'closed': 'cerrado', 'border': 'paso',
+        'crossing': 'paso', 'north': 'norte', 'south': 'sur',
+        'argentina': 'argentina', 'peru': 'perú', 'bolivia': 'bolivia',
+        // Portugués → español
+        'aberto': 'abierto', 'fechado': 'cerrado', 'fronteira': 'paso',
+        'norte': 'norte', 'sul': 'sur'
+      };
+
+      const normalizedSearch = searchAliases[search] || search;
+
+      document.querySelectorAll('#passesContainer [data-pass]').forEach(pass => {
+        const matches =
+          pass.getAttribute('data-pass').includes(normalizedSearch) ||
+          pass.getAttribute('data-pass').includes(search) ||
+          pass.textContent.toLowerCase().includes(normalizedSearch) ||
+          pass.textContent.toLowerCase().includes(search);
+        pass.classList.toggle('hidden', !matches);
+      });
+    }
 
     function populateReportPassSelect() {
       const select = document.getElementById('reportPass');
@@ -4007,16 +4354,18 @@
       }
 
       const typeClass = {
-        'Demora':'type-delay','Delay':'type-delay',
-        'Cierre':'type-close','Closure':'type-close',
-        'Accidente':'type-accident','Accident':'type-accident',
-        'Clima':'type-weather','Weather':'type-weather',
-        'Otro':'type-other','Other':'type-other'
+        'Demora':'type-delay','Delay':'type-delay','Demora':'type-delay',
+        'Cierre':'type-close','Closure':'type-close','Fechamento':'type-close',
+        'Accidente':'type-accident','Accident':'type-accident','Acidente':'type-accident',
+        'Clima':'type-weather','Weather':'type-weather','Clima':'type-weather',
+        'Otro':'type-other','Other':'type-other','Outro':'type-other'
       };
       const typeIcon = {
-        'Demora':'🟡','Delay':'🟡','Cierre':'🔴','Closure':'🔴',
-        'Accidente':'🚗','Accident':'🚗','Clima':'🌨️','Weather':'🌨️',
-        'Otro':'📢','Other':'📢'
+        'Demora':'🟡','Delay':'🟡','Demora':'🟡',
+        'Cierre':'🔴','Closure':'🔴','Fechamento':'🔴',
+        'Accidente':'🚗','Accident':'🚗','Acidente':'🚗',
+        'Clima':'🌨️','Weather':'🌨️',
+        'Otro':'📢','Other':'📢','Outro':'📢'
       };
 
       container.innerHTML = reports.slice(0, 5).map(report => `
@@ -4058,20 +4407,31 @@ function canSubmitReport() {
       const message = document.getElementById('reportMessage').value;
 
       if (!pass || !type) {
-        showToast('⚠️ ' + (currentLang === 'es' ? 'Completa todos los campos requeridos' : 'Complete all required fields'), 3000);
+        showToast('⚠️ ' + (currentLang === 'es'
+          ? 'Completa todos los campos requeridos'
+          : currentLang === 'pt'
+          ? 'Preencha todos os campos obrigatórios'
+          : 'Complete all required fields'), 3000);
         return;
       }
 
-      const now = new Date();
+     // Normaliza el tipo siempre a español para consistencia en BD
+      const typeToEs = {
+        'Delay':'Demora','Closure':'Cierre','Accident':'Accidente',
+        'Weather':'Clima','Other':'Otro',
+        'Demora':'Demora','Cierre':'Cierre','Accidente':'Accidente',
+        'Clima':'Clima','Otro':'Otro',
+        'Fechamento':'Cierre','Acidente':'Accidente','Outro':'Otro'
+      };
       const reportData = {
         timestamp: now.toISOString(),
-        paso: pass, tipo: type, mensaje: message,
+        paso: pass, tipo: typeToEs[type] || type, mensaje: message,
         votos: 1, vigente: 'SI', fecha: now.toLocaleDateString('es-CL')
       };
 
       const submitBtn = event.target.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + (currentLang === 'es' ? 'Enviando...' : 'Sending...');
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + (currentLang === 'es' ? 'Enviando...' : currentLang === 'pt' ? 'Enviando...' : 'Sending...');
       submitBtn.disabled = true;
 
       try {
@@ -4091,9 +4451,11 @@ function canSubmitReport() {
 
         // Confetti y mensaje honesto
         confetti({particleCount:120, spread:80, origin:{y:0.7}, colors:['#0039a6','#d52b1e','#ffffff','#f59e0b']});
-        showToast(
+       showToast(
           currentLang === 'es'
             ? '✅ Reporte enviado. Visible para otros viajeros.'
+            : currentLang === 'pt'
+            ? '✅ Relato enviado. Visível para outros viajantes.'
             : '✅ Report submitted. Visible to other travelers.',
           3000
         );
@@ -4139,12 +4501,12 @@ function renderNotificationToggle() {
         <i class="fas fa-bell text-blue-600 text-sm"></i>
         <span class="text-sm font-bold" style="color: var(--text-primary)">
           ${unread > 0
-            ? `${unread} ${currentLang === 'es' ? 'cambio(s) sin leer' : 'unread change(s)'}`
-            : currentLang === 'es' ? 'Todo al día ✅' : 'All caught up ✅'}
+            ? `${unread} ${currentLang === 'es' ? 'cambio(s) sin leer' : currentLang === 'pt' ? 'mudança(s) não lida(s)' : 'unread change(s)'}`
+            : currentLang === 'es' ? 'Todo al día ✅' : currentLang === 'pt' ? 'Tudo em dia ✅' : 'All caught up ✅'}
         </span>
       </div>
       <span class="text-xs font-bold text-blue-600">
-        ${history.length} ${currentLang === 'es' ? 'total' : 'total'}
+        ${history.length} ${currentLang === 'es' ? 'total' : currentLang === 'pt' ? 'total' : 'total'}
       </span>
     </div>`;
 }
@@ -4168,13 +4530,13 @@ function renderNotificationToggle() {
     // FIX: función que faltaba
     function clearNotificationHistory() {
       showConfirm(
-        currentLang === 'es' ? '¿Limpiar todo el historial?' : 'Clear all history?',
+        currentLang === 'es' ? '¿Limpiar todo el historial?' : currentLang === 'pt' ? 'Limpar todo o histórico?' : 'Clear all history?',
         () => {
           localStorage.removeItem('notificationHistory');
           updateNotificationBadge();
           renderNotificationToggle();
           renderNotificationHistory();
-          showToast('🗑️ ' + (currentLang === 'es' ? 'Historial limpiado' : 'History cleared'), 2000);
+          showToast('🗑️ ' + (currentLang === 'es' ? 'Historial limpiado' : currentLang === 'pt' ? 'Histórico limpo' : 'History cleared'), 2000);
         }
       );
     }
@@ -4252,11 +4614,27 @@ function renderNotificationToggle() {
       }
     }
 
-    function updateChecklistProgress() {
+   function updateChecklistProgress() {
       const total = checklistState.length;
       const checked = checklistState.filter(i => i.checked).length;
       DOM_CACHE.checklistProgress.textContent = `${checked}/${total}`;
-      DOM_CACHE.progressFill.style.width = `${Math.round((checked / total) * 100)}%`;
+      const pct = Math.round((checked / total) * 100);
+      DOM_CACHE.progressFill.style.width = `${pct}%`;
+
+      // Confetti al completar el 100%
+      if (checked === total && total > 0) {
+        confetti({
+          particleCount: 180,
+          spread: 100,
+          origin: { y: 0.6 },
+          colors: ['#0039a6','#d52b1e','#ffffff','#f59e0b','#10b981']
+        });
+        showToast(
+          currentLang === 'es' ? '🎉 ¡Checklist completo! Listo para viajar' :
+          currentLang === 'pt' ? '🎉 Checklist completo! Pronto para viajar' :
+          '🎉 Checklist complete! Ready to travel', 3500
+        );
+      }
     }
 function showConfirm(message, onConfirm) {
   const overlay = document.createElement('div');
@@ -4269,10 +4647,10 @@ function showConfirm(message, onConfirm) {
     <p class="font-bold text-sm mb-6" style="color:var(--text-primary);line-height:1.6">${message}</p>
     <div style="display:flex;gap:10px">
       <button id="confirmNo"  style="flex:1;padding:12px;border:2px solid #e2e8f0;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;background:transparent;color:var(--text-primary)">
-        ${currentLang === 'es' ? 'Cancelar' : 'Cancel'}
+        ${currentLang === 'es' ? 'Cancelar' : currentLang === 'pt' ? 'Cancelar' : 'Cancel'}
       </button>
       <button id="confirmYes" style="flex:1;padding:12px;border:none;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;background:linear-gradient(135deg,#0039a6,#1e40af);color:white">
-        ${currentLang === 'es' ? 'Confirmar' : 'Confirm'}
+        ${currentLang === 'es' ? 'Confirmar' : currentLang === 'pt' ? 'Confirmar' : 'Confirm'}
       </button>
     </div>`;
 
@@ -4285,8 +4663,8 @@ function showConfirm(message, onConfirm) {
 }
 
    function resetChecklist() {
-  showConfirm(
-    currentLang === 'es' ? '¿Reiniciar todo el checklist?' : 'Reset all checklist?',
+ showConfirm(
+    currentLang === 'es' ? '¿Reiniciar todo el checklist?' : currentLang === 'pt' ? 'Reiniciar toda a lista?' : 'Reset all checklist?',
     () => {
       checklistState = [...CHECKLIST_ITEMS[currentLang]];
       localStorage.setItem('checklistState', JSON.stringify(checklistState));
@@ -4337,6 +4715,8 @@ function showConfirm(message, onConfirm) {
         numberEl.textContent = '90';
         expiryEl.textContent = currentLang === 'es'
           ? '⚠️ La fecha no puede ser futura'
+          : currentLang === 'pt'
+          ? '⚠️ A data não pode ser futura'
           : '⚠️ Date cannot be in the future';
         warningEl.classList.add('hidden');
         return;
@@ -4350,13 +4730,15 @@ function showConfirm(message, onConfirm) {
         numberEl.textContent = '0';
         expiryEl.textContent = currentLang === 'es'
           ? '⛔ Visa vencida hace ' + Math.abs(daysRemaining) + ' días'
+          : currentLang === 'pt'
+          ? '⛔ Visto vencido há ' + Math.abs(daysRemaining) + ' dias'
           : '⛔ Visa expired ' + Math.abs(daysRemaining) + ' days ago';
         warningEl.classList.remove('hidden');
       } else {
         const expiry = new Date(year, month - 1, day + 90);
-        const locale = currentLang === 'es' ? 'es-CL' : 'en-US';
+        const locale = currentLang === 'es' ? 'es-CL' : currentLang === 'pt' ? 'pt-BR' : 'en-US';
         numberEl.textContent = daysRemaining;
-        expiryEl.textContent = (currentLang === 'es' ? 'Vence ' : 'Expires ') +
+        expiryEl.textContent = (currentLang === 'es' ? 'Vence ' : currentLang === 'pt' ? 'Vence ' : 'Expires ') +
           expiry.toLocaleDateString(locale, {year:'numeric', month:'long', day:'numeric'});
         warningEl.classList.toggle('hidden', daysRemaining > 15);
       }
@@ -4419,7 +4801,43 @@ function showConfirm(message, onConfirm) {
       const tips = DAILY_TIPS[currentLang];
       DOM_CACHE.dailyTip.textContent = tips[new Date().getDate() % tips.length];
     }
+// ===== RELOJ CHILE =====
+    function updateChileClock() {
+      const el = document.getElementById('chileTime');
+      if (!el) return;
+      const now = new Date().toLocaleTimeString('es-CL', {
+        timeZone: 'America/Santiago',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      el.textContent = now;
+    }
+    // ===== FAQ =====
+    function initFAQ() {
+      const container = document.getElementById('faqContainer');
+      if (!container) return;
+      const items = FAQ_DATA[currentLang] || FAQ_DATA.es;
+      container.innerHTML = items.map((item, i) => `
+        <div class="faq-item" id="faq-${i}">
+          <button class="faq-question" onclick="toggleFAQ(${i})">
+            <span>${item.q}</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">${item.a}</div>
+        </div>`).join('');
+    }
 
+    function toggleFAQ(index) {
+      const item = document.getElementById(`faq-${index}`);
+      if (!item) return;
+      const isOpen = item.classList.contains('open');
+      // Cierra todos
+      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+      // Abre el seleccionado si estaba cerrado
+      if (!isOpen) item.classList.add('open');
+    }
     // ===== SERVICE WORKER =====
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -4428,14 +4846,23 @@ function showConfirm(message, onConfirm) {
           .catch(err => console.warn('⚠️ SW Error:', err));
       });
     }
-
+// Botón volver arriba — aparece al bajar 300px
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scrollTopBtn');
+      if (!btn) return;
+      if (window.scrollY > 300) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    });
     // ===== CONEXIÓN =====
     window.addEventListener('online', () => {
-      showToast('✅ ' + (currentLang === 'es' ? 'Conexión restaurada' : 'Connection restored'), 2000);
+      showToast('✅ ' + (currentLang === 'es' ? 'Conexión restaurada' : currentLang === 'pt' ? 'Conexão restaurada' : 'Connection restored'), 2000);
       fetchAllData();
     });
     window.addEventListener('offline', () => {
-      showToast('📵 ' + (currentLang === 'es' ? 'Sin conexión - Modo offline' : 'Offline mode'), 3000);
+      showToast('📵 ' + (currentLang === 'es' ? 'Sin conexión - Modo offline' : currentLang === 'pt' ? 'Sem conexão - Modo offline' : 'Offline mode'), 3000);
     });
      let lastFetchTime = Date.now();
 function fetchAllData() {
@@ -4479,15 +4906,22 @@ function fetchAllData() {
       if (savedLang === 'es' || savedLang === 'en' || savedLang === 'pt') currentLang = savedLang;
      translatePage(currentLang);
 
-DOM_CACHE.entryDate.max = new Date().toISOString().split('T')[0];
+// Limita la fecha máxima al día de hoy — compatible con iOS
+const todayStr = new Date().toISOString().split('T')[0];
+DOM_CACHE.entryDate.max = todayStr;
+DOM_CACHE.entryDate.setAttribute('max', todayStr);
 const savedEntryDate = localStorage.getItem('entryDate');
 if (savedEntryDate) {
   DOM_CACHE.entryDate.value = savedEntryDate;
   calculateDaysRemaining();
 }
 
-createSnowflakes(); // ← esta SÍ se queda, translatePage no la llama
+createSnowflakes();
+initFAQ(); // ← esta SÍ se queda, translatePage no la llama
 // Leer parámetro ?tab= de la URL para shortcuts del homescreen
+// Inicia el reloj de Chile
+      updateChileClock();
+      setInterval(updateChileClock, 1000);
 const urlParams = new URLSearchParams(window.location.search);
 const tabParam  = urlParams.get('tab');
 const validTabs = ['home','viaje','utiles','docs','info','kit'];
@@ -4569,7 +5003,18 @@ try {
 
   </script>
 
-  <script type="module" src="firebase-config.js"></script>
+  <script>
+    // Carga firebase-config.js solo si está disponible
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'module';
+      s.src = 'firebase-config.js';
+      s.onerror = function() {
+        console.warn('firebase-config.js no encontrado — funciones Firebase desactivadas');
+      };
+      document.body.appendChild(s);
+    })();
+  </script>
 
 </body>
 </html>
