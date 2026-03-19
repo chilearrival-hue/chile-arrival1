@@ -1,5 +1,5 @@
 // ===== sw.js — Chile Arrival Service Worker =====
-const APP_VERSION   = 'chile-arrival-v1.0.0';
+const APP_VERSION   = 'chile-arrival-v1.1.0';
 const STATIC_CACHE  = `${APP_VERSION}-static`;
 const DYNAMIC_CACHE = `${APP_VERSION}-dynamic`;
 const API_CACHE     = `${APP_VERSION}-api`;
@@ -8,9 +8,10 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/firebase-config.js',
   '/icons/icon-180x180.png',
   '/icons/icon-32x32.png',
-  'https://cdn.tailwindcss.com',
+  'https://cdn.tailwindcss.com/3.4.1',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap',
   'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js'

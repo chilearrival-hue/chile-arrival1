@@ -7,7 +7,7 @@ const firebaseConfig = {
   projectId: "chile-arrival-839a1",
   storageBucket: "chile-arrival-839a1.appspot.com",
   messagingSenderId: "1098395537488",
-  appId: "TU_APPID_REAL"  // ← el que copiaste en el fix anterior
+  appId: "1:1008043594423:web:a3f4e72ba07dedc6483332"  // ← el que copiaste en el fix anterior
 };
 
 const app      = initializeApp(firebaseConfig);
