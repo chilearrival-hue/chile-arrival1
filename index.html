@@ -2671,7 +2671,40 @@
           <span class="text-xs font-black text-slate-900 text-center" data-i18n="customs">Aduana<br>Chile</span>
         </a>
       </div>
-
+<div class="card-glass chile-flag p-6">
+  <h3 class="card-title-enhanced flex items-center gap-2 mb-4">
+    <i class="fas fa-chart-bar text-blue-600"></i>
+    <span>Tu actividad</span>
+  </h3>
+  <div id="statsContainer"></div>
+</div>
+<div class="card-glass chile-flag p-6">
+  <h3 class="card-title-enhanced flex items-center gap-2 mb-4">
+    <i class="fas fa-share-alt text-blue-600"></i>
+    <span>Compartir app</span>
+  </h3>
+  <p class="small-text-enhanced mb-4">Ayudá a otros viajeros compartiéndola</p>
+  <div class="grid grid-cols-3 gap-3">
+    <button onclick="shareApp('whatsapp')"
+      class="flex flex-col items-center gap-2 p-3 rounded-xl font-bold text-xs transition-all hover:scale-105"
+      style="background:rgba(37,211,102,0.15);color:#25d366;border:1px solid rgba(37,211,102,0.3)">
+      <i class="fab fa-whatsapp text-2xl"></i>
+      WhatsApp
+    </button>
+    <button onclick="shareApp('native')"
+      class="flex flex-col items-center gap-2 p-3 rounded-xl font-bold text-xs transition-all hover:scale-105"
+      style="background:rgba(0,57,166,0.1);color:var(--chile-blue);border:1px solid rgba(0,57,166,0.2)">
+      <i class="fas fa-share-alt text-2xl"></i>
+      <span>Compartir</span>
+    </button>
+    <button onclick="shareApp('copy')"
+      class="flex flex-col items-center gap-2 p-3 rounded-xl font-bold text-xs transition-all hover:scale-105"
+      style="background:rgba(100,116,139,0.1);color:#64748b;border:1px solid rgba(100,116,139,0.2)">
+      <i class="fas fa-link text-2xl"></i>
+      <span>Copiar link</span>
+    </button>
+  </div>
+</div>
       <div class="card-glass tip-card p-6">
         <div class="flex items-start gap-4">
           <div
@@ -2708,6 +2741,27 @@
   </div>
   <div id="mapContainer" class="hidden" style="height:300px;border-radius:12px;overflow:hidden;">
     <div id="passesMap" style="height:100%;width:100%;"></div>
+  </div>
+</div>
+<div id="travelModeCard" class="card-glass p-4 mb-4">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-car text-white"></i>
+      </div>
+      <div>
+        <h3 class="card-title-enhanced">Modo Viaje Activo</h3>
+        <p class="small-text-enhanced">Detecta el paso más cercano</p>
+      </div>
+    </div>
+    <button onclick="toggleTravelMode()"
+      id="travelModeBtn"
+      class="text-xs bg-green-600 text-white px-3 py-2 rounded-lg font-bold hover:bg-green-700 transition-all">
+      <i class="fas fa-location-arrow"></i> Activar
+    </button>
+  </div>
+  <div id="travelModeResult" class="hidden mt-4 p-4 rounded-xl"
+    style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3)">
   </div>
 </div>
       <div class="search-box">
@@ -3829,6 +3883,162 @@
     </div>
   `;
 }
+// ===== PWA INSTALL =====
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  showInstallBanner();
+});
+
+window.addEventListener('appinstalled', () => {
+  hideInstallBanner();
+  deferredInstallPrompt = null;
+  showToast('🎉 ' + (currentLang === 'es' ? '¡App instalada correctamente!' :
+            currentLang === 'pt' ? 'App instalado com sucesso!' :
+            'App installed successfully!'), 3000);
+});
+
+function showInstallBanner() {
+  if (localStorage.getItem('installBannerDismissed')) return;
+  if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+  const existing = document.getElementById('installBanner');
+  if (existing) return;
+
+  const texts = {
+    es: { title: '📲 Instalar Chile Arrival', sub: 'Acceso rápido desde tu pantalla de inicio', btn: 'Instalar' },
+    en: { title: '📲 Install Chile Arrival', sub: 'Quick access from your home screen', btn: 'Install' },
+    pt: { title: '📲 Instalar Chile Arrival', sub: 'Acesso rápido da sua tela inicial', btn: 'Instalar' }
+  };
+  const l = texts[currentLang] || texts.es;
+
+  const banner = document.createElement('div');
+  banner.id = 'installBanner';
+  banner.className = 'notif-banner';
+  banner.style.cssText = 'background:linear-gradient(135deg,#0039a6,#1e40af);margin-bottom:16px;';
+  banner.innerHTML = `
+    <div class="notif-banner-text">
+      ${l.title}
+      <span>${l.sub}</span>
+    </div>
+    <button class="notif-banner-btn" onclick="installApp()">
+      ${l.btn}
+    </button>
+    <button onclick="hideInstallBanner(true)"
+      style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:20px;cursor:pointer;padding:0 4px;line-height:1;">
+      &times;
+    </button>`;
+
+  const homeSection = document.getElementById('home');
+  if (homeSection) homeSection.prepend(banner);
+}
+
+function hideInstallBanner(dismissed = false) {
+  document.getElementById('installBanner')?.remove();
+  if (dismissed) localStorage.setItem('installBannerDismissed', '1');
+}
+
+async function installApp() {
+  if (!deferredInstallPrompt) {
+    showToast(currentLang === 'es' ? '💡 Usá el menú del navegador para instalar' :
+              currentLang === 'pt' ? '💡 Use o menu do navegador para instalar' :
+              '💡 Use the browser menu to install', 4000);
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  const result = await deferredInstallPrompt.userChoice;
+  if (result.outcome === 'accepted') {
+    deferredInstallPrompt = null;
+  }
+}
+// ===== COMPARTIR APP =====
+function shareApp(method) {
+  const texts = {
+    es: '🇨🇱 *Chile Arrival* — La mejor app para cruzar la frontera a Chile.\n✅ Pasos en tiempo real\n💱 Tipo de cambio actualizado\n📋 Checklist de viaje\n\n👉 ',
+    en: '🇨🇱 *Chile Arrival* — The best app to cross the border into Chile.\n✅ Real-time crossings\n💱 Updated exchange rate\n📋 Travel checklist\n\n👉 ',
+    pt: '🇨🇱 *Chile Arrival* — O melhor app para cruzar a fronteira do Chile.\n✅ Postos em tempo real\n💱 Taxa de câmbio atualizada\n📋 Checklist de viagem\n\n👉 '
+  };
+  const url = 'https://chile-arrival-839a1.web.app/';
+  const text = (texts[currentLang] || texts.es) + url;
+
+  if (method === 'whatsapp') {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  } else if (method === 'native') {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Chile Arrival 🇨🇱',
+        text: texts[currentLang] || texts.es,
+        url: url
+      }).catch(() => {});
+    } else {
+      copyAppLink();
+    }
+  } else if (method === 'copy') {
+    copyAppLink();
+  }
+}
+
+function copyAppLink() {
+  const url = 'https://chile-arrival-839a1.web.app/';
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('🔗 ' + (currentLang === 'es' ? 'Link copiado' :
+              currentLang === 'pt' ? 'Link copiado' : 'Link copied'), 2000);
+  }).catch(() => {
+    // Fallback para navegadores que no soportan clipboard
+    const el = document.createElement('textarea');
+    el.value = url;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('🔗 ' + (currentLang === 'es' ? 'Link copiado' :
+              currentLang === 'pt' ? 'Link copiado' : 'Link copied'), 2000);
+  });
+}
+// ===== ESTADÍSTICAS =====
+function initStats() {
+  // Suma una visita cada vez que se abre la app
+  const visits = parseInt(localStorage.getItem('appVisits') || '0') + 1;
+  localStorage.setItem('appVisits', visits.toString());
+  renderStats();
+}
+
+function getStats() {
+  return {
+    visits: parseInt(localStorage.getItem('appVisits') || '0'),
+    reports: parseInt(localStorage.getItem('totalReportsSent') || '0'),
+    checksCompleted: parseInt(localStorage.getItem('totalChecksCompleted') || '0')
+  };
+}
+
+function renderStats() {
+  const container = document.getElementById('statsContainer');
+  if (!container) return;
+  const stats = getStats();
+  const labels = {
+    es: { visits: 'Visitas', reports: 'Reportes enviados', checks: 'Checks completados' },
+    en: { visits: 'Visits', reports: 'Reports sent', checks: 'Checks completed' },
+    pt: { visits: 'Visitas', reports: 'Relatos enviados', checks: 'Checks completados' }
+  };
+  const l = labels[currentLang] || labels.es;
+  container.innerHTML = `
+    <div class="grid grid-cols-3 gap-3">
+      <div class="text-center p-3 rounded-xl" style="background:rgba(0,57,166,0.08)">
+        <p class="text-2xl font-black" style="color:var(--chile-blue)">${stats.visits}</p>
+        <p class="text-xs font-bold mt-1" style="color:#64748b">${l.visits}</p>
+      </div>
+      <div class="text-center p-3 rounded-xl" style="background:rgba(16,185,129,0.08)">
+        <p class="text-2xl font-black text-green-600">${stats.reports}</p>
+        <p class="text-xs font-bold mt-1" style="color:#64748b">${l.reports}</p>
+      </div>
+      <div class="text-center p-3 rounded-xl" style="background:rgba(245,158,11,0.08)">
+        <p class="text-2xl font-black text-yellow-600">${stats.checksCompleted}</p>
+        <p class="text-xs font-bold mt-1" style="color:#64748b">${l.checks}</p>
+      </div>
+    </div>`;
+}
     // ===== TRADUCCIÓN =====
     function translatePage(lang) {
       currentLang = lang;
@@ -4166,8 +4376,20 @@ if (clpEl) clpEl.style.opacity = '0.4';
       {name:"Chungará", region:"Arica y Parinacota", country:"Bolivia", hours:"24h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
       {name:"Carririñe", region:"Los Rios", country:"Argentina", hours:"", status:"Cerrado", observations:"", reason:"Trabajos del MOP - Cerrado hasta Abril", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
       {name:"Cardenal Samoré", region:"Los Lagos", country:"Argentina", hours:"8-19h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Integración Austral", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"8-22h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"}
-    ];
+      {name:"Integración Austral", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"8-22h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
+      {name:"Pino Hachado", region:"La Araucanía", country:"Argentina", hours:"8-21h", status:"Abierto", observations:"Ruta ripio en sector argentino", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Icalma", region:"La Araucanía", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Paso turístico, baja circulación", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Mamuil Malal", region:"La Araucanía", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Zona volcán Lanín, muy turístico", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Huahum", region:"Los Ríos", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Conecta con San Martín de los Andes", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"San Sebastián", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"24h", status:"Abierto", observations:"Estratégico para Tierra del Fuego", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Chile Chico", region:"Aysén", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Conecta con Los Antiguos, Argentina", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Futaleufú", region:"Los Lagos", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Zona de rafting, muy turístico", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Colchane", region:"Tarapacá", country:"Bolivia", hours:"8-20h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Visviri", region:"Arica y Parinacota", country:"Bolivia", hours:"8-18h", status:"Abierto", observations:"Paso tripartito Chile-Bolivia-Perú", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Santa Rosa", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"Frontera con Tacna, Perú", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
+{name:"Concordia", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"Paso peatonal y vehicular", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"}
+   
+];
 
     // FIX CRÍTICO #1, #2, #3: función reescrita correctamente
     async function fetchBorderPassesFromSheet() {
@@ -4430,18 +4652,151 @@ const openPasses = BORDER_PASSES
     latest.toLocaleDateString(currentLang === 'es' ? 'es-CL' : 'en-US',
       {year:'numeric', month:'long', day:'numeric'});
 }
+// ===== MODO VIAJE =====
+let travelModeActive = false;
+let travelModeInterval = null;
+
+function toggleTravelMode() {
+  if (travelModeActive) {
+    stopTravelMode();
+  } else {
+    startTravelMode();
+  }
+}
+
+function startTravelMode() {
+  if (!navigator.geolocation) {
+    showToast('📵 ' + (currentLang === 'es' ? 'Tu dispositivo no soporta GPS' :
+              currentLang === 'pt' ? 'Seu dispositivo não suporta GPS' :
+              'Your device does not support GPS'), 3000);
+    return;
+  }
+
+  const btn = document.getElementById('travelModeBtn');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+  btn.disabled = true;
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      travelModeActive = true;
+      btn.innerHTML = '<i class="fas fa-stop"></i> Detener';
+      btn.disabled = false;
+      btn.classList.replace('bg-green-600', 'bg-red-600');
+      btn.classList.replace('hover:bg-green-700', 'hover:bg-red-700');
+      findNearestPass(position.coords.latitude, position.coords.longitude);
+
+      // Actualiza cada 2 minutos
+      travelModeInterval = setInterval(() => {
+        navigator.geolocation.getCurrentPosition(pos => {
+          findNearestPass(pos.coords.latitude, pos.coords.longitude);
+        });
+      }, 120000);
+    },
+    error => {
+      btn.innerHTML = '<i class="fas fa-location-arrow"></i> Activar';
+      btn.disabled = false;
+      showToast('⚠️ ' + (currentLang === 'es' ? 'No se pudo obtener ubicación' :
+                currentLang === 'pt' ? 'Não foi possível obter localização' :
+                'Could not get location'), 3000);
+    }
+  );
+}
+
+function stopTravelMode() {
+  travelModeActive = false;
+  clearInterval(travelModeInterval);
+  const btn = document.getElementById('travelModeBtn');
+  btn.innerHTML = '<i class="fas fa-location-arrow"></i> Activar';
+  btn.classList.replace('bg-red-600', 'bg-green-600');
+  btn.classList.replace('hover:bg-red-700', 'hover:bg-green-700');
+  document.getElementById('travelModeResult').classList.add('hidden');
+  showToast('🛑 ' + (currentLang === 'es' ? 'Modo viaje desactivado' :
+            currentLang === 'pt' ? 'Modo viagem desativado' :
+            'Travel mode off'), 2000);
+}
+
+function findNearestPass(userLat, userLon) {
+  if (!BORDER_PASSES.length) return;
+
+  let nearest = null;
+  let minDist = Infinity;
+
+  BORDER_PASSES.forEach(pass => {
+    const coords = PASS_LOCATIONS[pass.name];
+    if (!coords) return;
+    const dist = getDistanceKm(userLat, userLon, coords.lat, coords.lon);
+    if (dist < minDist) {
+      minDist = dist;
+      nearest = { ...pass, distance: Math.round(dist) };
+    }
+  });
+
+  if (!nearest) return;
+
+  const isOpen = nearest.status === 'Abierto';
+  const resultEl = document.getElementById('travelModeResult');
+  resultEl.classList.remove('hidden');
+  resultEl.innerHTML = `
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <p class="text-xs font-black uppercase mb-1" style="color:#059669">
+          ${currentLang === 'es' ? '📍 Paso más cercano' : currentLang === 'pt' ? '📍 Posto mais próximo' : '📍 Nearest crossing'}
+        </p>
+        <p class="font-black text-base" style="color:var(--text-primary)">${nearest.name}</p>
+        <p class="text-xs font-semibold mt-1" style="color:#64748b">${nearest.region}</p>
+        <p class="text-xs font-bold mt-2" style="color:${isOpen ? '#059669' : '#dc2626'}">
+          ${isOpen ? '✅ ' + t('open') : '🔴 ' + t('closed')}
+          ${nearest.hours ? ' · ' + nearest.hours : ''}
+        </p>
+      </div>
+      <div class="text-right flex-shrink-0">
+        <p class="text-2xl font-black" style="color:#059669">${nearest.distance}</p>
+        <p class="text-xs font-bold" style="color:#64748b">km</p>
+      </div>
+    </div>`;
+
+  // Centra el mapa en el paso más cercano si está abierto
+  if (mapInitialized && mapInstance && PASS_LOCATIONS[nearest.name]) {
+    const coords = PASS_LOCATIONS[nearest.name];
+    mapInstance.setView([coords.lat, coords.lon], 7);
+  }
+}
+
+function getDistanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
 // ===== MAPA =====
 let mapInstance = null;
 let mapInitialized = false;
 
 const PASS_LOCATIONS = {
-  'Chacalluta':          { lat: -18.35, lon: -70.06 },
-  'Jama':                { lat: -23.25, lon: -67.07 },
-  'Los Libertadores':    { lat: -32.83, lon: -70.07 },
-  'Chungará':            { lat: -18.50, lon: -69.15 },
-  'Carririñe':           { lat: -39.83, lon: -71.83 },
-  'Cardenal Samoré':     { lat: -40.73, lon: -71.99 },
-  'Integración Austral': { lat: -52.08, lon: -69.27 }
+  // Argentina
+  'Chacalluta':            { lat: -18.35, lon: -70.06 },
+  'Los Libertadores':      { lat: -32.83, lon: -70.07 },
+  'Jama':                  { lat: -23.25, lon: -67.07 },
+  'Cardenal Samoré':       { lat: -40.73, lon: -71.99 },
+  'Carririñe':             { lat: -39.83, lon: -71.83 },
+  'Integración Austral':   { lat: -52.08, lon: -69.27 },
+  'Pino Hachado':          { lat: -38.65, lon: -70.90 },
+  'Icalma':                { lat: -38.77, lon: -71.18 },
+  'Mamuil Malal':          { lat: -39.33, lon: -71.57 },
+  'Huahum':                { lat: -39.80, lon: -71.62 },
+  'San Sebastián':         { lat: -53.27, lon: -68.60 },
+  'Chile Chico':           { lat: -46.54, lon: -71.73 },
+  'Futaleufú':             { lat: -43.18, lon: -71.87 },
+  // Bolivia
+  'Chungará':              { lat: -18.50, lon: -69.15 },
+  'Colchane':              { lat: -19.28, lon: -68.63 },
+  'Visviri':               { lat: -17.60, lon: -69.47 },
+  // Perú
+  'Santa Rosa':            { lat: -18.33, lon: -70.37 },
+  'Concordia':             { lat: -18.47, lon: -70.32 }
 };
 
 function toggleMap() {
@@ -4728,6 +5083,9 @@ function canSubmitReport() {
         closeReportModal();
         document.getElementById('reportForm').reset();
         localStorage.setItem('lastReportTime', Date.now().toString());
+        const totalReports = parseInt(localStorage.getItem('totalReportsSent') || '0') + 1;
+localStorage.setItem('totalReportsSent', totalReports.toString());
+renderStats();
 
         // Confetti y mensaje honesto
         confetti({particleCount:120, spread:80, origin:{y:0.7}, colors:['#0039a6','#d52b1e','#ffffff','#f59e0b']});
@@ -4912,6 +5270,8 @@ function renderNotificationToggle() {
 
       // Confetti al completar el 100%
       if (checked === total && total > 0) {
+        const totalChecks = parseInt(localStorage.getItem('totalChecksCompleted') || '0') + 1;
+localStorage.setItem('totalChecksCompleted', totalChecks.toString());
         confetti({
           particleCount: 180,
           spread: 100,
@@ -5443,11 +5803,20 @@ if (savedEntryDate) {
 }
 
 createSnowflakes();
+initStats();
+// Muestra banner de instalación si corresponde
+if (!window.matchMedia('(display-mode: standalone)').matches) {
+  setTimeout(() => showInstallBanner(), 3000);
+}
 initFAQ(); // ← esta SÍ se queda, translatePage no la llama
 // Leer parámetro ?tab= de la URL para shortcuts del homescreen
 // Inicia el reloj de Chile
       updateChileClock();
       setInterval(updateChileClock, 1000);
+      // Restaura modo viaje si estaba activo
+if (localStorage.getItem('travelModeWasActive') === 'true') {
+  setTimeout(() => startTravelMode(), 2000);
+}
 const urlParams = new URLSearchParams(window.location.search);
 const tabParam  = urlParams.get('tab');
 const validTabs = ['home','viaje','utiles','docs','info','kit'];
