@@ -3600,171 +3600,149 @@
   const container = document.getElementById('kitContentContainer');
   if (!container) return;
   container.innerHTML = `
-    <!-- Hero kit -->
-    <div class="card-glass p-5 mb-3 glass-blue">
-      <p class="text-[11px] font-black uppercase text-blue-100 mb-1">${t('kit-badge')}</p>
-      <h2 class="text-xl font-black text-white leading-tight mb-1">${t('kit-title')}</h2>
-      <p class="text-xs text-blue-100/90 font-semibold">${t('kit-subtitle')}</p>
-    </div>
+    <div class="space-y-4 px-1">
 
-    <!-- Header sección -->
-    <div class="px-1 pt-2 pb-2">
-      <h2 class="text-lg font-black" style="color: var(--text-primary)">${t('kit-section-title')}</h2>
-      <p class="text-xs text-gray-400 mt-0.5">${t('kit-section-sub')}</p>
-    </div>
+      <!-- Hero kit -->
+      <div class="card-glass glass-blue p-5 rounded-2xl">
+        <p class="text-[11px] font-black uppercase text-blue-100 mb-1 tracking-wide">${t('kit-badge')}</p>
+        <h2 class="text-xl font-black text-white leading-tight mb-1">${t('kit-title')}</h2>
+        <p class="text-xs text-blue-100/90 font-semibold">${t('kit-subtitle')}</p>
+      </div>
 
-    <!-- eSIM -->
-    <div class="px-4 mb-3">
+      <!-- Header sección -->
+      <div class="px-1">
+        <h2 class="text-base font-black" style="color:var(--text-primary)">${t('kit-section-title')}</h2>
+        <p class="text-xs mt-0.5" style="color:#94a3b8">${t('kit-section-sub')}</p>
+      </div>
+
+      <!-- eSIM -->
       <a href="https://www.airalo.com" target="_blank" rel="noopener sponsored"
          class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
-        <div class="relative p-4 flex items-center gap-4"
-             style="background: linear-gradient(135deg, #7c3aed, #4338ca)">
+        <div class="p-4 flex items-center gap-4"
+             style="background:linear-gradient(135deg,#7c3aed,#4338ca)">
           <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
             <i class="fas fa-sim-card text-white text-2xl"></i>
           </div>
-          <div class="flex-1">
-            <p class="text-white font-black text-base">${t('kit-esim-title')}</p>
-            <p class="text-indigo-200 text-xs">${t('kit-esim-sub')}</p>
+          <div class="flex-1 min-w-0">
+            <p class="text-white font-black text-sm">${t('kit-esim-title')}</p>
+            <p class="text-indigo-200 text-xs mt-0.5">${t('kit-esim-sub')}</p>
             <p class="text-white/80 text-xs mt-1">${t('kit-esim-desc')}</p>
           </div>
           <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
         </div>
       </a>
-    </div>
 
-    <!-- Seguro -->
-    <div class="px-4 mb-3">
+      <!-- Seguro -->
       <a href="https://www.iatiseguros.com" target="_blank" rel="noopener sponsored"
          class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
-        <div class="relative p-4 flex items-center gap-4"
-             style="background: linear-gradient(135deg, #059669, #0f766e)">
+        <div class="p-4 flex items-center gap-4"
+             style="background:linear-gradient(135deg,#059669,#0f766e)">
           <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
             <i class="fas fa-shield-alt text-white text-2xl"></i>
           </div>
-          <div class="flex-1">
-            <p class="text-white font-black text-base">${t('kit-insurance-title')}</p>
-            <p class="text-emerald-100 text-xs">${t('kit-insurance-sub')}</p>
+          <div class="flex-1 min-w-0">
+            <p class="text-white font-black text-sm">${t('kit-insurance-title')}</p>
+            <p class="text-emerald-100 text-xs mt-0.5">${t('kit-insurance-sub')}</p>
             <p class="text-white/80 text-xs mt-1">${t('kit-insurance-desc')}</p>
           </div>
           <i class="fas fa-chevron-right text-white/60 text-sm flex-shrink-0"></i>
         </div>
       </a>
-    </div>
 
-    <!-- Wise -->
-    <div class="px-4 mb-3">
-      <div class="rounded-2xl overflow-hidden shadow-md border border-gray-200">
+      <!-- Wise -->
+      <div class="rounded-2xl overflow-hidden shadow-md" style="border:1px solid rgba(0,0,0,0.08)">
         <div class="p-4 flex items-center gap-3"
-             style="background: linear-gradient(135deg, #0f766e, #14b8a6)">
+             style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
           <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
             <i class="fas fa-exchange-alt text-white text-lg"></i>
           </div>
-          <div>
+          <div class="min-w-0">
             <p class="text-white font-black text-sm">${t('kit-wise-title')}</p>
-            <p class="text-teal-100 text-xs mt-0.5">${t('kit-wise-sub')}</p>
+            <p class="text-teal-100 text-xs mt-0.5 leading-snug">${t('kit-wise-sub')}</p>
           </div>
         </div>
-        <div class="px-4 py-3 bg-white dark:bg-gray-800">
-          <p class="text-xs font-semibold mb-1" style="color:var(--text-primary)">✓ ${t('kit-wise-b1')}</p>
-          <p class="text-xs font-semibold mb-1" style="color:var(--text-primary)">✓ ${t('kit-wise-b2')}</p>
-          <p class="text-xs font-semibold"       style="color:var(--text-primary)">✓ ${t('kit-wise-b3')}</p>
-        </div>
-        <div class="p-3 bg-slate-50">
+        <div class="p-4 space-y-1.5" style="background:var(--card-bg)">
+          <p class="text-xs font-semibold" style="color:var(--text-primary)">✓ ${t('kit-wise-b1')}</p>
+          <p class="text-xs font-semibold" style="color:var(--text-primary)">✓ ${t('kit-wise-b2')}</p>
+          <p class="text-xs font-semibold" style="color:var(--text-primary)">✓ ${t('kit-wise-b3')}</p>
           <a href="https://wise.com" target="_blank" rel="noopener sponsored"
-             class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm text-white font-bold active:scale-95 transition-all"
-             style="background: linear-gradient(135deg, #0f766e, #14b8a6)">
+             class="mt-3 flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm text-white font-bold active:scale-95 transition-all"
+             style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
             <span><i class="fas fa-paper-plane mr-2"></i>${t('kit-wise-btn')}</span>
-            <span class="text-xs bg-white/20 px-2 py-1 rounded-full">+ ${currentLang === 'es' ? 'Sin comisión' : currentLang === 'pt' ? 'Sem taxa' : 'No fees'}</span>
+            <span class="text-xs bg-white/20 px-2 py-1 rounded-full">${currentLang === 'pt' ? 'Sem taxa' : currentLang === 'en' ? 'No fees' : 'Sin comisión'}</span>
           </a>
         </div>
       </div>
-    </div>
 
-    <!-- Hoteles -->
-    <div class="px-4 mb-3">
-      <div class="rounded-2xl overflow-hidden shadow-md border border-gray-200">
+      <!-- Hoteles -->
+      <div class="rounded-2xl overflow-hidden shadow-md" style="border:1px solid rgba(0,0,0,0.08)">
         <div class="p-4 flex items-center gap-3"
-             style="background: linear-gradient(135deg, #1e40af, #3b82f6)">
+             style="background:linear-gradient(135deg,#1e40af,#3b82f6)">
           <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
             <i class="fas fa-bed text-white text-lg"></i>
           </div>
-          <div>
+          <div class="min-w-0">
             <p class="text-white font-black text-sm">${t('kit-hotel-title')}</p>
-            <p class="text-blue-100 text-xs mt-0.5">${t('kit-hotel-sub')}</p>
+            <p class="text-blue-100 text-xs mt-0.5 leading-snug">${t('kit-hotel-sub')}</p>
           </div>
         </div>
-        <a href="https://www.booking.com/city/cl/osorno.html" target="_blank" rel="noopener sponsored"
-           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 transition">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">🏨</span>
-            <div>
-              <p class="text-sm font-semibold text-gray-800">${t('kit-hotel-osorno')}</p>
-              <p class="text-xs text-gray-400">${t('kit-hotel-osorno-sub')}</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </a>
-        <a href="https://www.booking.com/city/cl/puerto-montt.html" target="_blank" rel="noopener sponsored"
-           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 transition">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">🏨</span>
-            <div>
-              <p class="text-sm font-semibold text-gray-800">${t('kit-hotel-pto')}</p>
-              <p class="text-xs text-gray-400">${t('kit-hotel-pto-sub')}</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </a>
-        <a href="https://www.booking.com/city/ar/san-carlos-de-bariloche.html" target="_blank" rel="noopener sponsored"
-           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 transition">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">🏨</span>
-            <div>
-              <p class="text-sm font-semibold text-gray-800">${t('kit-hotel-bari')}</p>
-              <p class="text-xs text-gray-400">${t('kit-hotel-bari-sub')}</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- Transporte -->
-    <div class="px-4 mb-3">
-      <div class="rounded-2xl shadow-sm overflow-hidden border border-gray-200">
-        <div class="p-4 flex items-center gap-2"
-             style="background: linear-gradient(135deg, #ea580c, #f97316)">
-          <i class="fas fa-route text-white"></i>
-          <span class="font-bold text-white text-sm">${t('kit-transport-title')}</span>
+        <div style="background:var(--card-bg)">
+          ${[
+            { href:'https://www.booking.com/city/cl/osorno.html', title:t('kit-hotel-osorno'), sub:t('kit-hotel-osorno-sub') },
+            { href:'https://www.booking.com/city/cl/puerto-montt.html', title:t('kit-hotel-pto'), sub:t('kit-hotel-pto-sub') },
+            { href:'https://www.booking.com/city/ar/san-carlos-de-bariloche.html', title:t('kit-hotel-bari'), sub:t('kit-hotel-bari-sub') }
+          ].map((h, i, arr) => `
+            <a href="${h.href}" target="_blank" rel="noopener sponsored"
+               class="flex items-center justify-between px-4 py-3 transition active:bg-blue-50"
+               style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
+              <div class="flex items-center gap-3">
+                <span class="text-xl">🏨</span>
+                <div>
+                  <p class="text-sm font-bold" style="color:var(--text-primary)">${h.title}</p>
+                  <p class="text-xs" style="color:#94a3b8">${h.sub}</p>
+                </div>
+              </div>
+              <i class="fas fa-chevron-right text-xs" style="color:#94a3b8"></i>
+            </a>`).join('')}
         </div>
-        <a href="https://www.rentalcars.com" target="_blank" rel="noopener sponsored"
-           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 transition">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">🚗</span>
-            <div>
-              <p class="text-sm font-semibold text-gray-800">${t('kit-car-title')}</p>
-              <p class="text-xs text-gray-400">${t('kit-car-sub')}</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </a>
-        <a href="https://www.busbud.com" target="_blank" rel="noopener sponsored"
-           class="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 transition">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">🚌</span>
-            <div>
-              <p class="text-sm font-semibold text-gray-800">${t('kit-bus-title')}</p>
-              <p class="text-xs text-gray-400">${t('kit-bus-sub')}</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
-        </a>
       </div>
-    </div>
 
-    <!-- Disclaimer -->
-    <div class="px-4 mb-6">
-      <p class="text-xs text-gray-400 text-center">${t('kit-disclaimer')}</p>
+      <!-- Transporte -->
+      <div class="rounded-2xl overflow-hidden shadow-md" style="border:1px solid rgba(0,0,0,0.08)">
+        <div class="p-4 flex items-center gap-3"
+             style="background:linear-gradient(135deg,#ea580c,#f97316)">
+          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-route text-white text-lg"></i>
+          </div>
+          <div>
+            <p class="text-white font-black text-sm">${t('kit-transport-title')}</p>
+          </div>
+        </div>
+        <div style="background:var(--card-bg)">
+          ${[
+            { href:'https://www.rentalcars.com', emoji:'🚗', title:t('kit-car-title'), sub:t('kit-car-sub') },
+            { href:'https://www.busbud.com', emoji:'🚌', title:t('kit-bus-title'), sub:t('kit-bus-sub') }
+          ].map((tr, i, arr) => `
+            <a href="${tr.href}" target="_blank" rel="noopener sponsored"
+               class="flex items-center justify-between px-4 py-3 transition active:bg-orange-50"
+               style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
+              <div class="flex items-center gap-3">
+                <span class="text-xl">${tr.emoji}</span>
+                <div>
+                  <p class="text-sm font-bold" style="color:var(--text-primary)">${tr.title}</p>
+                  <p class="text-xs" style="color:#94a3b8">${tr.sub}</p>
+                </div>
+              </div>
+              <i class="fas fa-chevron-right text-xs" style="color:#94a3b8"></i>
+            </a>`).join('')}
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="px-2 pb-4">
+        <p class="text-xs text-center" style="color:#94a3b8;line-height:1.6">${t('kit-disclaimer')}</p>
+      </div>
+
     </div>
   `;
 }
