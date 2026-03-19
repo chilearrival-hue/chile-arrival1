@@ -2554,7 +2554,7 @@ function loadConfetti(callback) {
             </h3>
             <p class="small-text-enhanced mt-1" data-i18n="reports-subtitle">Información en tiempo real</p>
           </div>
-          <button onclick="refreshReports()" class="text-xs text-blue-600 font-bold hover:underline">
+          <button id="refreshBtn" onclick="refreshReports()"> class="text-xs text-blue-600 font-bold hover:underline">
             <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">Actualizar</span>
           </button>
         </div>
@@ -4517,21 +4517,7 @@ function renderStats() {
       </div>
     </div>`;
 }
-    // ===== TRADUCCIÓN =====
-    function translatePage(lang) {
-      currentLang = lang;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (TRANSLATIONS[lang]?.[key]) el.innerHTML = TRANSLATIONS[lang][key];
-      });
-      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        if (TRANSLATIONS[lang]?.[key]) el.placeholder = TRANSLATIONS[lang][key];
-      });
-      initChecklist();
-      showDailyTip();
-      initCultureContent();
-      function initPriceGuide() {
+  function initPriceGuide() {
   const container = document.getElementById('priceGuideContainer');
   if (!container) return;
   const guide = PRICE_GUIDE[currentLang] || PRICE_GUIDE.es;
@@ -4551,6 +4537,21 @@ function renderStats() {
       </div>
     </div>`).join('');
 }
+    // ===== TRADUCCIÓN =====
+    function translatePage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TRANSLATIONS[lang]?.[key]) el.innerHTML = TRANSLATIONS[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (TRANSLATIONS[lang]?.[key]) el.placeholder = TRANSLATIONS[lang][key];
+      });
+      initChecklist();
+      showDailyTip();
+      initCultureContent();
+      initPriceGuide();
       initSlangContent();
       renderReports(reportsCache);
       updatePassesDisplay();
@@ -4695,7 +4696,6 @@ if (clpEl) clpEl.style.opacity = '0.4';
           document.querySelector('.cache-warning')?.remove();
           statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
           timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
-          if (clpEl) clpEl.style.opacity = '1';
           if (clpEl) clpEl.style.opacity = '1';
           showRateChange(); convertMoney();renderQuickSummary(); return true;
         } catch(e) { console.warn('API primaria falló, intentando backup...'); }
@@ -5102,16 +5102,17 @@ const openPasses = BORDER_PASSES
 </div>
           </div>
           <div class="grid grid-cols-2 gap-3 text-xs">
-            <div class="pass-info-box">
-  <p class="pass-info-label">${t('schedule')}</p>
-  <p class="pass-info-value">${sanitizeInput(pass.hours)}</p>
-  ${getOpenNowBadge(pass.hours)}
+  <div class="pass-info-box">
+    <p class="pass-info-label">${t('schedule')}</p>
+    <p class="pass-info-value">${sanitizeInput(pass.hours)}</p>
+    ${getOpenNowBadge(pass.hours)}
+  </div>
+  <div class="pass-info-box">
+    <p class="pass-info-label">${t('region')}</p>
+    <p class="pass-info-value">${sanitizeInput(pass.region)}</p>
+  </div>
 </div>
-            <div class="pass-info-box">
-              <p class="pass-info-label">${t('schedule')}</p>
-              <p class="pass-info-value">${sanitizeInput(pass.hours)}</p>
-            </div>
-          </div>
+
           ${hasObs ? `
             <div class="pass-observations-box">
               <div class="flex items-start gap-3">
@@ -5199,10 +5200,10 @@ function startTravelMode() {
 
   navigator.geolocation.getCurrentPosition(
     position => {
-      travelModeActive = true;
-      btn.innerHTML = '<i class="fas fa-stop"></i> Detener';
-      btn.disabled = false;
-      btn.classList.replace('bg-green-600', 'bg-red-600');
+     travelModeActive = true;
+localStorage.setItem('travelModeWasActive', 'true'); // ← línea nueva
+btn.innerHTML = '<i class="fas fa-stop"></i> Detener';
+btn.disabled = false;
       btn.classList.replace('hover:bg-green-700', 'hover:bg-red-700');
       findNearestPass(position.coords.latitude, position.coords.longitude);
 
@@ -5225,7 +5226,8 @@ function startTravelMode() {
 
 function stopTravelMode() {
   travelModeActive = false;
-  clearInterval(travelModeInterval);
+clearInterval(travelModeInterval);
+localStorage.removeItem('travelModeWasActive'); // ← línea nueva
   const btn = document.getElementById('travelModeBtn');
   btn.innerHTML = '<i class="fas fa-location-arrow"></i> Activar';
   btn.classList.replace('bg-red-600', 'bg-green-600');
@@ -5932,12 +5934,12 @@ renderStats();
 }
 
    function refreshReports() {
-  const btn = document.querySelector('button[onclick="refreshReports()"]');
+  const btn = document.getElementById('refreshBtn');
   if (btn) {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     btn.disabled = true;
     setTimeout(() => {
-      btn.innerHTML = '<i class="fas fa-sync-alt"></i> <span data-i18n="refresh">' + t('refresh') + '</span>';
+      btn.innerHTML = '<i class="fas fa-sync-alt"></i> ' + t('refresh');
       btn.disabled = false;
     }, 3000);
   }
@@ -5946,6 +5948,7 @@ renderStats();
   fetchExchangeRates();
   showToast('🔄 ' + t('refresh'), 2000);
 }
+
 function renderNotificationToggle() {
   const container = document.getElementById('notificationToggleContainer');
   if (!container) return;
@@ -6780,7 +6783,7 @@ setTimeout(() => initOnboarding(), 1000);
 if (!window.matchMedia('(display-mode: standalone)').matches) {
   setTimeout(() => showInstallBanner(), 3000);
 }
-initFAQ(); // ← esta SÍ se queda, translatePage no la llama
+initFAQ(); // initFAQ() ya se llama dentro de translatePage() — no duplicar
 // Leer parámetro ?tab= de la URL para shortcuts del homescreen
 // Inicia el reloj de Chile
       updateChileClock();
