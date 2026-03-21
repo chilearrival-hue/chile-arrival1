@@ -3146,7 +3146,7 @@ function loadConfetti(callback) {
       <span id="closedPassesIndicator" class="notification-dot hidden"></span>
     </button>
     <button onclick="showTab('viaje', document.querySelector('.nav-btn[data-tab=viaje]'))"
-      <i class="fas fa-route"></i>
+<i class="fas fa-road"></i>
       <span data-i18n="nav-travel">Viaje</span>
     </button>
     <button onclick="showTab('utiles',this)" class="nav-btn" data-tab="utiles">
@@ -5680,13 +5680,16 @@ function initMapCore() {
   if (!mapEl) return;
 
   if (mapInitialized && mapInstance) {
-    mapInstance.invalidateSize(true);
-    updateMapMarkers();
+    setTimeout(() => {
+      mapInstance.invalidateSize(true);
+      updateMapMarkers();
+    }, 300);
     return;
   }
 
   mapEl.style.height = '300px';
   mapEl.style.width = '100%';
+  mapEl.style.display = 'block';
 
   try {
     mapInstance = L.map('passesMap', {
@@ -5700,19 +5703,22 @@ function initMapCore() {
       crossOrigin: true
     }).addTo(mapInstance);
 
-    mapInstance.whenReady(() => {
-      setTimeout(() => {
-        mapInstance.invalidateSize(true);
-        updateMapMarkers();
-      }, 300);
-    });
-
     mapInitialized = true;
+
+    setTimeout(() => {
+      mapInstance.invalidateSize(true);
+      updateMapMarkers();
+    }, 500);
 
   } catch(e) {
     console.error('Error iniciando mapa:', e);
   }
 }
+```
+
+**Paso 3:** Ahora busca este texto:
+```
+requestAnimationFrame(() => setTimeout(() => initMap(), 800));
 // ===== FAVORITOS =====
 function getFavorites() {
   return JSON.parse(localStorage.getItem('favoritePasses') || '[]');
