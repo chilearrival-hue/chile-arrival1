@@ -2554,7 +2554,7 @@ function loadConfetti(callback) {
             </h3>
             <p class="small-text-enhanced mt-1" data-i18n="reports-subtitle">Información en tiempo real</p>
           </div>
-          <button id="refreshBtn" onclick="refreshReports()"> class="text-xs text-blue-600 font-bold hover:underline">
+          <button id="refreshBtn" onclick="refreshReports()" class="text-xs text-blue-600 font-bold hover:underline">
             <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">Actualizar</span>
           </button>
         </div>
@@ -3145,7 +3145,7 @@ function loadConfetti(callback) {
       <span data-i18n="nav-home">Inicio</span>
       <span id="closedPassesIndicator" class="notification-dot hidden"></span>
     </button>
-    <button onclick="showTab('viaje',this)" class="nav-btn" data-tab="viaje">
+    <button onclick="showTab('viaje', document.querySelector('.nav-btn[data-tab=viaje]'))"
       <i class="fas fa-route"></i>
       <span data-i18n="nav-travel">Viaje</span>
     </button>
@@ -5022,7 +5022,7 @@ BOB: Math.round(data2.dolar.valor / 7.0)
                   </div>` : ''}
               </div>`).join('')}
           </div>
-          <button onclick="showTab('viaje')"
+          <button onclick="showTab('viaje', document.querySelector('.nav-btn[data-tab=viaje]'))"
             class="mt-4 w-full text-xs bg-red-600 text-white px-4 py-2.5 rounded-lg font-bold hover:bg-red-700 transition-all">
             ${t('view-all')}
           </button>
@@ -5601,7 +5601,7 @@ function toggleMap() {
     container.classList.remove('hidden');
     btn.innerHTML = '<i class="fas fa-times"></i> Cerrar mapa';
     // Espera más tiempo para que el DOM esté listo
-    setTimeout(() => initMap(), 400);
+    setTimeout(() => initMap(), 600);
   } else {
     container.classList.add('hidden');
     btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
@@ -6786,7 +6786,6 @@ setTimeout(() => initOnboarding(), 1000);
 if (!window.matchMedia('(display-mode: standalone)').matches) {
   setTimeout(() => showInstallBanner(), 3000);
 }
-initFAQ(); // initFAQ() ya se llama dentro de translatePage() — no duplicar
 // Leer parámetro ?tab= de la URL para shortcuts del homescreen
 // Inicia el reloj de Chile
       updateChileClock();
