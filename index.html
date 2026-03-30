@@ -41,6 +41,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
@@ -5665,21 +5667,6 @@ function updateMapMarkers() {
 function initMap() {
   const mapEl = document.getElementById('passesMap');
   if (!mapEl) return;
-
-  // Carga Leaflet solo cuando se necesita
-  if (typeof L === 'undefined') {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    document.head.appendChild(link);
-
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    script.onload = () => initMapCore();
-    document.head.appendChild(script);
-    return;
-  }
-
   initMapCore();
 }
 
