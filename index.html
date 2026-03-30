@@ -4775,6 +4775,7 @@ function renderStats() {
       renderReports(reportsCache);
       updatePassesDisplay();
       initKitContent();
+      initCurrencyTabs();
       initFAQ();
       showPushBanner();
       renderTollsCalculator();
@@ -4896,6 +4897,23 @@ async function fetchARSRate() {
     }
     return 900; // fallback estimado
   }
+}
+function initCurrencyTabs() {
+  const container = document.querySelector('.currency-tabs');
+  if (!container) return;
+  const currencies = [
+    { code: 'USD', label: 'USD 💵' },
+    { code: 'EUR', label: 'EUR 💶' },
+    { code: 'ARS', label: 'ARS 🇦🇷' },
+    { code: 'BRL', label: 'BRL 🇧🇷' },
+    { code: 'PEN', label: 'PEN 🇵🇪' },
+    { code: 'BOB', label: 'BOB 🇧🇴' }
+  ];
+  container.innerHTML = currencies.map(c => `
+    <button class="currency-tab ${c.code === selectedCurrency ? 'active' : ''}"
+      onclick="selectCurrency('${c.code}', this)">
+      ${c.label}
+    </button>`).join('');
 }
     // ===== TIPO DE CAMBIO =====
     async function fetchExchangeRates() {
@@ -5076,7 +5094,7 @@ if (selCurEl) selCurEl.textContent = currency + ' ' + symbols[currency];
     async function injectWeatherIntoCards() {
       const cards = document.querySelectorAll('#passesContainer [data-pass]');
       for (const card of cards) {
-        const passName = Object.keys(PASS_COORDINATES).find(
+        const passName = Object.keys(PASS_LOCATIONS).find(
           name => card.getAttribute('data-pass') === name.toLowerCase()
         );
         if (!passName) continue;
@@ -5238,7 +5256,7 @@ if (selCurEl) selCurEl.textContent = currency + ' ' + symbols[currency];
                   </div>` : ''}
               </div>`).join('')}
           </div>
-          <button onclick="showTab('viaje')"
+          <button onclick="showTab('viaje', document.querySelector('.nav-btn[data-tab=viaje]'))"
             class="mt-4 w-full text-xs bg-red-600 text-white px-4 py-2.5 rounded-lg font-bold hover:bg-red-700 transition-all">
             ${t('view-all')}
           </button>
@@ -5420,10 +5438,11 @@ function startTravelMode() {
   navigator.geolocation.getCurrentPosition(
     position => {
      travelModeActive = true;
-localStorage.setItem('travelModeWasActive', 'true'); // ← línea nueva
+localStorage.setItem('travelModeWasActive', 'true');
 btn.innerHTML = '<i class="fas fa-stop"></i> Detener';
 btn.disabled = false;
-      btn.classList.replace('hover:bg-green-700', 'hover:bg-red-700');
+btn.classList.replace('bg-green-600', 'bg-red-600');
+btn.classList.replace('hover:bg-green-700', 'hover:bg-red-700');
       findNearestPass(position.coords.latitude, position.coords.longitude);
 
       // Actualiza cada 2 minutos
@@ -5757,15 +5776,18 @@ function getOpenNowBadge(hoursStr) {
 // ===== FILTRO POR PAÍS =====
 let activeCountryFilter = 'todos';
 
+// ✅ DESPUÉS
 function filterByCountry(country, button) {
   activeCountryFilter = country;
 
   // Actualiza botones
   document.querySelectorAll('.filter-country-btn').forEach(btn => {
+    btn.classList.remove('active-filter');
     btn.style.background = 'transparent';
     btn.style.color = '#64748b';
     btn.style.borderColor = '#e2e8f0';
   });
+  button.classList.add('active-filter');
   button.style.background = '#0039a6';
   button.style.color = 'white';
   button.style.borderColor = '#0039a6';
@@ -6083,6 +6105,17 @@ function canSubmitReport() {
     return false;
   }
   return true;
+}
+function loadConfetti(callback) {
+  if (typeof confetti === 'function') {
+    callback();
+    return;
+  }
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js';
+  script.onload = callback;
+  script.onerror = () => console.warn('No se pudo cargar confetti');
+  document.head.appendChild(script);
 }
     async function submitReport(event) {
       event.preventDefault();
@@ -6988,6 +7021,8 @@ scheduleExpiryReminder(entryDate);
      let lastFetchTime = Date.now();
 function fetchAllData() {
   lastFetchTime = Date.now();
+  initCurrencyTabs();
+fetchExchangeRates();
   fetchExchangeRates();
   fetchBorderPassesFromSheet();
   fetchReportsFromSheet();
