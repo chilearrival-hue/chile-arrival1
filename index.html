@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es" id="htmlRoot">
 
+
 <head>
+  <meta charset="UTF-8">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9499117035060563"
      crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
   <meta name="theme-color" content="#0039a6" id="themeColorMeta">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,7 +23,8 @@
   <meta property="og:description" content="Pasos fronterizos en tiempo real, tipo de cambio actualizado, checklist de viaje y todo lo que necesitas para ingresar a Chile.">
   <meta property="og:image" content="https://chile-arrival-839a1.web.app/screenshots/home.png">
   <meta property="og:image:width" content="857">
-  <meta property="og:image:height" content="1600">
+    <meta property="og:image:height" content="1600">
+  <meta property="og:image:alt" content="Chile Arrival - Guía completa para ingresar a Chile">
   <meta property="og:locale" content="es_CL">
   <meta property="og:locale:alternate" content="en_US">
   <meta property="og:locale:alternate" content="pt_BR">
@@ -33,6 +35,7 @@
   <meta name="twitter:title" content="Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso">
   <meta name="twitter:description" content="Pasos fronterizos en tiempo real, tipo de cambio actualizado y todo lo que necesitas para ingresar a Chile.">
   <meta name="twitter:image" content="https://chile-arrival-839a1.web.app/screenshots/home.png">
+   <link rel="canonical" href="https://chile-arrival-839a1.web.app/">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
@@ -42,7 +45,7 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
@@ -123,10 +126,20 @@ function loadConfetti(callback) {
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
     }
 
+        .card-glass {
+      background: rgba(255, 255, 255, .75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .5);
+      box-shadow: 0 4px 16px rgba(31, 38, 135, .1);
+      border-radius: 20px;
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      will-change: transform;
+    }
+
     .card-glass:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(31, 38, 135, .15);
-      will-change: transform;
     }
 
     [data-theme="dark"] .card-glass:hover {
@@ -976,6 +989,9 @@ function loadConfetti(callback) {
       background: rgba(0, 57, 166, .1);
       transform: translateX(5px)
     }
+        [data-theme="dark"] .checklist-item:hover {
+      background: rgba(96, 165, 250, .15);
+    }
 
     .checklist-item.checked {
       opacity: .6
@@ -1111,8 +1127,8 @@ function loadConfetti(callback) {
       border: 2px solid rgba(255, 255, 255, .3);
     }
 
-    .fuel-result-value {
-      font-size: 42px;
+        .fuel-result-value {
+      font-size: clamp(28px, 9vw, 42px);
       font-weight: 900;
       color: white;
       line-height: 1.1
@@ -1147,7 +1163,7 @@ function loadConfetti(callback) {
       margin-bottom: var(--spacing-xl)
     }
 
-    .currency-tab {
+        .currency-tab {
       background: rgba(255, 255, 255, .15);
       border: 2px solid rgba(255, 255, 255, .3);
       color: white;
@@ -1159,6 +1175,7 @@ function loadConfetti(callback) {
       transition: all var(--transition-speed) ease;
       -webkit-tap-highlight-color: transparent;
       line-height: 1.2;
+      will-change: transform, background;
     }
 
     .currency-tab:hover {
@@ -1183,10 +1200,11 @@ function loadConfetti(callback) {
       line-height: 1.2;
     }
 
-    .input-money:focus {
+        .input-money:focus {
       outline: none;
       background: rgba(255, 255, 255, .25);
-      transform: scale(1.05)
+      border-color: rgba(255, 255, 255, .8);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, .2);
     }
 
     /* Calculadora de días */
@@ -1229,16 +1247,16 @@ function loadConfetti(callback) {
       cursor: pointer
     }
 
-        .days-result {
-      font-size: clamp(32px, 10vw, 48px);
+            .days-result {
+      font-size: clamp(28px, 9vw, 48px);
       font-weight: 900;
       line-height: 1.1
     }
 
     /* Toast mejorado */
-    .toast {
+        .toast {
       position: fixed;
-      bottom: 100px;
+      bottom: 165px;
       right: 20px;
       background: linear-gradient(135deg, #10b981, #059669);
       color: white;
@@ -1451,8 +1469,16 @@ function loadConfetti(callback) {
       backdrop-filter: blur(5px);
     }
 
+        .modal {
+      display: flex;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
     .modal.show {
-      display: flex
+      opacity: 1;
+      pointer-events: all;
     }
 
     .modal-content {
@@ -2018,19 +2044,19 @@ function loadConfetti(callback) {
         height: 56px
       }
 
-      .whatsapp-btn {
-        bottom: 82px;
+            .whatsapp-btn {
+        bottom: 80px;
         right: 18px
       }
 
       .report-btn {
-        bottom: 82px;
-        right: 86px
+        bottom: 80px;
+        right: 84px
       }
 
       .notification-btn {
-        bottom: 82px;
-        right: 154px
+        bottom: 80px;
+        right: 150px
       }
 
       .whatsapp-btn i,
@@ -2045,21 +2071,34 @@ function loadConfetti(callback) {
         right: 70px
       }
 
-      .nav-btn {
+                  .nav-btn {
         height: 58px;
-        gap: 2px
+        gap: 3px
       }
 
       .nav-btn i {
-        font-size: 16px
+        font-size: 15px
       }
 
       .nav-btn span {
-        font-size: 8px
+        font-size: 7.5px
       }
 
       .nav-container {
-        padding: 0 2px
+        padding: 0 1px
+      }
+    }
+        @media(max-width:360px) {
+      .nav-btn i {
+        font-size: 14px
+      }
+
+      .nav-btn span {
+        font-size: 7px
+      }
+
+      .nav-btn {
+        gap: 2px
       }
     }
 
@@ -2096,9 +2135,9 @@ function loadConfetti(callback) {
       color: #f1f5f9 !important;
     }
     /* Botón volver arriba */
-    .scroll-top-btn {
+        .scroll-top-btn {
       position: fixed;
-      bottom: 95px;
+      bottom: 155px;
       left: 20px;
       width: 44px;
       height: 44px;
@@ -2200,8 +2239,8 @@ function loadConfetti(callback) {
     [data-theme="dark"] .faq-answer {
       color: #cbd5e1;
     }
-    .faq-item.open .faq-answer {
-      max-height: 300px;
+        .faq-item.open .faq-answer {
+      max-height: 600px;
       padding: 0 18px 16px;
     }
     /* Banner activar notificaciones */
@@ -2247,11 +2286,12 @@ function loadConfetti(callback) {
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     /* Skeleton Loader */
-    .skeleton {
+        .skeleton {
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
       background-size: 200% 100%;
       animation: loading 1.5s ease-in-out infinite;
       border-radius: 8px;
+      will-change: background-position;
     }
 
     [data-theme="dark"] .skeleton {
@@ -2389,7 +2429,10 @@ function loadConfetti(callback) {
       border-color: #334155 !important;
     }
     /* Dark mode — cards Kit Viajero con bg inline reemplazado */
-[data-theme="dark"] .bg-white {
+[data-theme="dark"] #kit .bg-white,
+[data-theme="dark"] #home .bg-white,
+[data-theme="dark"] #viaje .bg-white,
+[data-theme="dark"] #utiles .bg-white {
   background: #1e293b !important;
 }
 [data-theme="dark"] .border-gray-200 {
@@ -2398,7 +2441,139 @@ function loadConfetti(callback) {
 [data-theme="dark"] .bg-slate-50 {
   background: #0f172a !important;
 }
+    .filter-country-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      background: transparent;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
 
+    .filter-country-btn.active-filter {
+      background: var(--chile-blue);
+      border-color: var(--chile-blue);
+      color: white;
+    }
+
+    [data-theme="dark"] .filter-country-btn {
+      border-color: #475569;
+      color: #94a3b8;
+    }
+
+    [data-theme="dark"] .filter-country-btn.active-filter {
+      background: var(--chile-blue);
+      border-color: var(--chile-blue);
+      color: white;
+    }
+        .share-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid;
+    }
+    .share-btn:hover { transform: scale(1.05) }
+
+    .share-btn-whatsapp {
+      background: rgba(37,211,102,0.15);
+      color: #25d366;
+      border-color: rgba(37,211,102,0.3);
+    }
+    .share-btn-native {
+      background: rgba(0,57,166,0.1);
+      color: var(--chile-blue);
+      border-color: rgba(0,57,166,0.2);
+    }
+    .share-btn-copy {
+      background: rgba(100,116,139,0.1);
+      color: #64748b;
+      border-color: rgba(100,116,139,0.2);
+    }
+
+    [data-theme="dark"] .share-btn-whatsapp {
+      background: rgba(37,211,102,0.2);
+      color: #4ade80;
+      border-color: rgba(37,211,102,0.4);
+    }
+    [data-theme="dark"] .share-btn-native {
+      background: rgba(96,165,250,0.15);
+      color: #60a5fa;
+      border-color: rgba(96,165,250,0.3);
+    }
+    [data-theme="dark"] .share-btn-copy {
+      background: rgba(148,163,184,0.15);
+      color: #94a3b8;
+      border-color: rgba(148,163,184,0.3);
+    }
+    /* Dark mode — Trámites (PDI, Aduana, SAG) */
+    [data-theme="dark"] .bg-blue-50 {
+      background: rgba(30, 58, 138, 0.4) !important;
+    }
+    [data-theme="dark"] .bg-blue-50 p,
+    [data-theme="dark"] .bg-blue-50 span {
+      color: #93c5fd !important;
+    }
+
+    [data-theme="dark"] .bg-red-50 {
+      background: rgba(127, 29, 29, 0.4) !important;
+    }
+    [data-theme="dark"] .bg-red-50 p,
+    [data-theme="dark"] .bg-red-50 span,
+    [data-theme="dark"] .bg-red-50 strong {
+      color: #fca5a5 !important;
+    }
+
+    [data-theme="dark"] .bg-green-50 {
+      background: rgba(6, 78, 59, 0.4) !important;
+    }
+    [data-theme="dark"] .bg-green-50 p,
+    [data-theme="dark"] .bg-green-50 span {
+      color: #6ee7b7 !important;
+    }
+
+    [data-theme="dark"] .text-blue-800,
+    [data-theme="dark"] .text-red-800,
+    [data-theme="dark"] .text-green-800 {
+      color: #f1f5f9 !important;
+    }
+
+    [data-theme="dark"] .border-red-200 {
+      border-color: rgba(239, 68, 68, 0.3) !important;
+    }
+    .warning-banner {
+      background: linear-gradient(to right, #dc2626, #b91c1c);
+      padding: 16px;
+      border-radius: 12px;
+      color: white;
+      text-align: center;
+    }
+        .slang-search-input {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      outline: none;
+    }
+
+    .slang-search-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .slang-search-input:focus {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
   </style>
 </head>
 
@@ -2432,7 +2607,10 @@ function loadConfetti(callback) {
   <!-- Modal de reportes -->
   <div id="reportModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
-      <h3 class="text-2xl font-black mb-4 text-center" data-i18n="report-modal-title">🚨 Reportar Situación</h3>
+            <div class="flex justify-between items-center mb-4">
+        <h3 class="text-2xl font-black text-center flex-1" data-i18n="report-modal-title">🚨 Reportar Situación</h3>
+        <button onclick="closeReportModal()" class="text-3xl font-bold text-slate-400 hover:text-slate-600 ml-2" aria-label="Cerrar">&times;</button>
+      </div>
       <p class="text-sm font-semibold text-center mb-6 opacity-80" data-i18n="report-modal-subtitle">Ayuda a otros
         viajeros compartiendo información actual</p>
       <form id="reportForm" onsubmit="submitReport(event)">
@@ -2709,21 +2887,15 @@ function loadConfetti(callback) {
   </h3>
   <p class="small-text-enhanced mb-4">Ayudá a otros viajeros compartiéndola</p>
   <div class="grid grid-cols-3 gap-3">
-    <button onclick="shareApp('whatsapp')"
-      class="flex flex-col items-center gap-2 p-3 rounded-xl font-bold text-xs transition-all hover:scale-105"
-      style="background:rgba(37,211,102,0.15);color:#25d366;border:1px solid rgba(37,211,102,0.3)">
+        <button onclick="shareApp('whatsapp')" class="share-btn share-btn-whatsapp">
       <i class="fab fa-whatsapp text-2xl"></i>
       WhatsApp
     </button>
-    <button onclick="shareApp('native')"
-      class="flex flex-col items-center gap-2 p-3 rounded-xl font-bold text-xs transition-all hover:scale-105"
-      style="background:rgba(0,57,166,0.1);color:var(--chile-blue);border:1px solid rgba(0,57,166,0.2)">
+    <button onclick="shareApp('native')" class="share-btn share-btn-native">
       <i class="fas fa-share-alt text-2xl"></i>
       <span>Compartir</span>
     </button>
-    <button onclick="shareApp('copy')"
-      class="flex flex-col items-center gap-2 p-3 rounded-xl font-bold text-xs transition-all hover:scale-105"
-      style="background:rgba(100,116,139,0.1);color:#64748b;border:1px solid rgba(100,116,139,0.2)">
+    <button onclick="shareApp('copy')" class="share-btn share-btn-copy">
       <i class="fas fa-link text-2xl"></i>
       <span>Copiar link</span>
     </button>
@@ -2791,34 +2963,22 @@ function loadConfetti(callback) {
 <div class="flex gap-2 flex-wrap mb-4">
   <button onclick="filterByCountry('todos', this)"
     id="filter-todos"
-    class="filter-country-btn active-filter"
-    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #0039a6;
-           background:#0039a6;color:white;font-size:12px;font-weight:800;
-           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    class="filter-country-btn active-filter">
     🌎 Todos
   </button>
   <button onclick="filterByCountry('Argentina', this)"
     id="filter-argentina"
-    class="filter-country-btn"
-    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #e2e8f0;
-           background:transparent;color:#64748b;font-size:12px;font-weight:800;
-           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    class="filter-country-btn">
     🇦🇷 Argentina
   </button>
   <button onclick="filterByCountry('Bolivia', this)"
     id="filter-bolivia"
-    class="filter-country-btn"
-    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #e2e8f0;
-           background:transparent;color:#64748b;font-size:12px;font-weight:800;
-           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    class="filter-country-btn">
     🇧🇴 Bolivia
   </button>
   <button onclick="filterByCountry('Perú', this)"
     id="filter-peru"
-    class="filter-country-btn"
-    style="flex:1;padding:8px 4px;border-radius:12px;border:2px solid #e2e8f0;
-           background:transparent;color:#64748b;font-size:12px;font-weight:800;
-           cursor:pointer;transition:all 0.2s;min-width:60px;">
+    class="filter-country-btn">
     🇵🇪 Perú
   </button>
 </div>
@@ -2853,8 +3013,7 @@ function loadConfetti(callback) {
           <div class="flex items-center gap-3 justify-center">
             <div class="flex flex-col items-center">
               <span id="selectedCurrency" class="text-xs uppercase font-bold text-blue-100 mb-2">USD 💵</span>
-              <input type="number" id="currencyInput" value="1" min="0" step="0.01" oninput="convertMoney()"
-                class="input-money">
+              <input type="number" inputmode="decimal" id="currencyInput" value="1" min="0" step="0.01" oninput="convertMoney()" class="input-money">
             </div>
             <div class="mt-6">
               <i class="fas fa-exchange-alt text-blue-200 text-xl"></i>
@@ -2896,19 +3055,19 @@ function loadConfetti(callback) {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
   <div class="fuel-input-group">
     <label data-i18n="fuel-distance">Distancia</label>
-    <input type="number" id="fuelDistance" placeholder="500" min="0" oninput="calculateFuelCost()">
+    <input type="number" inputmode="decimal" id="fuelDistance" placeholder="500" min="0" oninput="calculateFuelCost()">
   </div>
   <div class="fuel-input-group">
     <label data-i18n="fuel-consumption">Consumo</label>
-    <input type="number" id="fuelConsumption" placeholder="12" min="1" step="0.1" oninput="calculateFuelCost()">
+    <input type="number" inputmode="decimal" id="fuelConsumption" placeholder="12" min="1" step="0.1" oninput="calculateFuelCost()">
   </div>
   <div class="fuel-input-group">
     <label data-i18n="fuel-price">Precio</label>
-    <input type="number" id="fuelPrice" placeholder="1400" min="0" oninput="calculateFuelCost()">
+    <input type="number" inputmode="decimal" id="fuelPrice" placeholder="1400" min="0" oninput="calculateFuelCost()">
   </div>
   <div class="fuel-input-group">
     <label data-i18n="fuel-tolls">Peajes</label>
-    <input type="number" id="fuelTolls" placeholder="15000" min="0" oninput="calculateFuelCost()">
+    <input type="number" inputmode="decimal" id="fuelTolls" placeholder="15000" min="0" oninput="calculateFuelCost()">
   </div>
 </div>
           <div id="fuelResultContainer" class="fuel-result hidden">
@@ -3034,7 +3193,7 @@ function loadConfetti(callback) {
                 </div>
               </div>
             </div>
-            <div class="bg-gradient-to-r from-red-600 to-red-700 p-4 rounded-xl text-white">
+            <div class="warning-banner">
               <p class="font-bold text-sm text-center" data-i18n="customs-note">⚠️ Importación temporal: 90 días
                 corridos máximo</p>
             </div>
@@ -3063,7 +3222,7 @@ function loadConfetti(callback) {
               <p><span data-i18n="sag-item2">Prohibido: frutas frescas, semillas, carnes sin procesar, miel,
                   lácteos</span></p>
             </div>
-            <div class="bg-gradient-to-r from-red-600 to-red-700 p-5 rounded-xl text-white text-center">
+            <div class="warning-banner">
               <p class="font-black text-base mb-2" data-i18n="sag-important">🚨 MUY IMPORTANTE</p>
               <p class="text-sm font-bold leading-relaxed" data-i18n="sag-warning">
                 Si traes alimentos, <u>DECLARA SIEMPRE</u>.<br>
@@ -3089,7 +3248,12 @@ function loadConfetti(callback) {
               <p class="text-xs text-slate-500 font-semibold" data-i18n="faq-subtitle">Todo lo que necesitas saber</p>
             </div>
           </div>
-          <div id="faqContainer"></div>
+                    <div id="faqContainer">
+            <div class="text-center py-8 text-slate-400" id="faqFallback">
+              <i class="fas fa-circle-notch fa-spin text-2xl mb-3"></i>
+              <p class="text-sm font-semibold">Cargando preguntas frecuentes...</p>
+            </div>
+          </div>
         </div>
     </section>
 
@@ -3117,14 +3281,14 @@ function loadConfetti(callback) {
         <p class="text-center text-sm opacity-95 font-bold" data-i18n="slang-subtitle">Modismos que debes conocer</p>
         <div class="relative mt-4">
           <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white/60 text-sm"></i>
-          <input
+                    <input
             type="text"
+            inputmode="search"
             id="slangSearch"
             oninput="filterSlang()"
             data-i18n-placeholder="slang-search"
             placeholder="Buscar modismo..."
-            class="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm font-semibold"
-            style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);color:white;"
+            class="slang-search-input w-full pl-9 pr-4 py-2.5 rounded-xl text-sm font-semibold"
           >
         </div>
       </div>
@@ -3139,10 +3303,10 @@ function loadConfetti(callback) {
 </section>
       </main>
   <!-- Navigation -->
-  <div class="nav-wrapper">
+    <div class="nav-wrapper" role="navigation" aria-label="Navegación principal">
     <nav class="nav-container">
-    <button onclick="showTab('home',this)" class="nav-btn active-tab" data-tab="home">
-      <i class="fas fa-home"></i>
+        <button onclick="showTab('home',this)" class="nav-btn active-tab" data-tab="home" aria-label="Inicio">
+      <i class="fas fa-home" aria-hidden="true"></i>
       <span data-i18n="nav-home">Inicio</span>
       <span id="closedPassesIndicator" class="notification-dot hidden"></span>
     </button>
@@ -3171,10 +3335,10 @@ function loadConfetti(callback) {
 
   <script>
     // ===== CONFIGURACIÓN =====
-    const CONFIG = {
+        const CONFIG = {
       WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxZha_wgj93Alh-OWWuxNjHvW6Tb_lL4gSc6Qm29jgEYAjIlvLYxl8vgzxv8WTLEC_F/exec',
-      UPDATE_INTERVAL: 300000,
-      CACHE_DURATION: 3600000,
+      UPDATE_INTERVAL: 300000,   // 5 min — frecuencia de fetch a la API
+      CACHE_DURATION: 300000,    // 5 min — tiempo máximo de datos en caché
     };
 
     // ===== CACHÉ DE ELEMENTOS DOM =====
@@ -3185,28 +3349,32 @@ function loadConfetti(callback) {
       checklistContainer: null, progressFill: null, checklistProgress: null,
       dailyTip: null, lastUpdate: null, themeIcon: null, notificationBadge: null,
       toast: null, toastMessage: null,
-      init() {
-        this.searchInput       = document.getElementById('searchInput');
-        this.passesContainer   = document.getElementById('passesContainer');
-        this.reportsContainer  = document.getElementById('reportsContainer');
-        this.closedPassesSection = document.getElementById('closedPassesSection');
-        this.currencyInput     = document.getElementById('currencyInput');
-        this.clpResult         = document.getElementById('clpResult');
-        this.rateStatus        = document.getElementById('rateStatus');
-        this.rateTimestamp     = document.getElementById('rateTimestamp');
-        this.entryDate         = document.getElementById('entryDate');
-        this.daysResult        = document.getElementById('daysResult');
-        this.checklistContainer= document.getElementById('checklistContainer');
-        this.progressFill      = document.getElementById('progressFill');
-        this.checklistProgress = document.getElementById('checklistProgress');
-        this.dailyTip          = document.getElementById('dailyTip');
-        this.lastUpdate        = document.getElementById('lastUpdate');
-        this.themeIcon         = document.getElementById('themeIcon');
-        this.notificationBadge = document.getElementById('notificationBadge');
-        this.toast             = document.getElementById('toast');
-        this.toastMessage      = document.getElementById('toastMessage');
+            init() {
+        const ids = [
+          'searchInput','passesContainer','reportsContainer','closedPassesSection',
+          'currencyInput','clpResult','rateStatus','rateTimestamp','entryDate',
+          'daysResult','checklistContainer','progressFill','checklistProgress',
+          'dailyTip','lastUpdate','themeIcon','notificationBadge','toast','toastMessage'
+        ];
+        const keyMap = {
+          'searchInput':'searchInput','passesContainer':'passesContainer',
+          'reportsContainer':'reportsContainer','closedPassesSection':'closedPassesSection',
+          'currencyInput':'currencyInput','clpResult':'clpResult',
+          'rateStatus':'rateStatus','rateTimestamp':'rateTimestamp',
+          'entryDate':'entryDate','daysResult':'daysResult',
+          'checklistContainer':'checklistContainer','progressFill':'progressFill',
+          'checklistProgress':'checklistProgress','dailyTip':'dailyTip',
+          'lastUpdate':'lastUpdate','themeIcon':'themeIcon',
+          'notificationBadge':'notificationBadge','toast':'toast',
+          'toastMessage':'toastMessage'
+        };
+        ids.forEach(id => {
+          this[keyMap[id]] = document.getElementById(id);
+          if (!this[keyMap[id]]) console.warn(`[DOM_CACHE] Elemento no encontrado: #${id}`);
+        });
       }
     };
+    
 
     // ===== TRADUCCIONES =====
     const TRANSLATIONS = {
@@ -3525,6 +3693,14 @@ function loadConfetti(callback) {
         'faq-subtitle': 'Tudo que você precisa saber'
       }
     };
+        // ===== VALIDADOR i18n (solo desarrollo) =====
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      const keys_es = Object.keys(TRANSLATIONS.es);
+      ['en', 'pt'].forEach(lang => {
+        const missing = keys_es.filter(k => !Object.keys(TRANSLATIONS[lang]).includes(k));
+        if (missing.length) console.warn(`[i18n] Keys faltantes en '${lang}':`, missing);
+      });
+    }
 
     // ===== DATOS TRADUCIBLES =====
     const CHECKLIST_ITEMS = {
@@ -3890,11 +4066,12 @@ function loadConfetti(callback) {
       { name:"Hotel 3 estrellas", price:"$50.000–$90.000 CLP" },
       { name:"Airbnb (departamento)", price:"$35.000–$70.000 CLP" }
     ]},
-    { icon:"⛽", category:"Combustible", items:[
-      { name:"Gasolina 93 octanos", price:"~$1.050 CLP/L" },
-      { name:"Gasolina 95 octanos", price:"~$1.100 CLP/L" },
-      { name:"Gasolina 97 octanos", price:"~$1.180 CLP/L" },
-      { name:"Diésel", price:"~$960 CLP/L" }
+            { icon:"⛽", category:"Combustible · Mar 2026", items:[
+      { name:"Gasolina 93 octanos", price:"~$1.080 CLP/L" },
+      { name:"Gasolina 95 octanos", price:"~$1.130 CLP/L" },
+      { name:"Gasolina 97 octanos", price:"~$1.210 CLP/L" },
+      { name:"Diésel", price:"~$990 CLP/L" },
+      { name:"📍 Ver precios en tu ciudad", price:"bencinaenlinea.cl", link:"https://www.bencinaenlinea.cl" }
     ]}
   ],
   en: [
@@ -3918,11 +4095,12 @@ function loadConfetti(callback) {
       { name:"3-star hotel", price:"$50,000–$90,000 CLP" },
       { name:"Airbnb (apartment)", price:"$35,000–$70,000 CLP" }
     ]},
-    { icon:"⛽", category:"Fuel", items:[
-      { name:"Gasoline 93 octane", price:"~$1,050 CLP/L" },
-      { name:"Gasoline 95 octane", price:"~$1,100 CLP/L" },
-      { name:"Gasoline 97 octane", price:"~$1,180 CLP/L" },
-      { name:"Diesel", price:"~$960 CLP/L" }
+        { icon:"⛽", category:"Fuel · Mar 2026", items:[
+      { name:"Gasoline 93 octane", price:"~$1,080 CLP/L" },
+      { name:"Gasoline 95 octane", price:"~$1,130 CLP/L" },
+      { name:"Gasoline 97 octane", price:"~$1,210 CLP/L" },
+      { name:"Diesel", price:"~$990 CLP/L" },
+      { name:"📍 Check prices in your city", price:"bencinaenlinea.cl", link:"https://www.bencinaenlinea.cl" }
     ]}
   ],
   pt: [
@@ -3946,11 +4124,12 @@ function loadConfetti(callback) {
       { name:"Hotel 3 estrelas", price:"$50.000–$90.000 CLP" },
       { name:"Airbnb (apartamento)", price:"$35.000–$70.000 CLP" }
     ]},
-    { icon:"⛽", category:"Combustível", items:[
-      { name:"Gasolina 93 octanas", price:"~$1.050 CLP/L" },
-      { name:"Gasolina 95 octanas", price:"~$1.100 CLP/L" },
-      { name:"Gasolina 97 octanas", price:"~$1.180 CLP/L" },
-      { name:"Diesel", price:"~$960 CLP/L" }
+        { icon:"⛽", category:"Combustível · Mar 2026", items:[
+      { name:"Gasolina 93 octanas", price:"~$1.080 CLP/L" },
+      { name:"Gasolina 95 octanas", price:"~$1.130 CLP/L" },
+      { name:"Gasolina 97 octanas", price:"~$1.210 CLP/L" },
+      { name:"Diesel", price:"~$990 CLP/L" },
+      { name:"📍 Ver preços na sua cidade", price:"bencinaenlinea.cl", link:"https://www.bencinaenlinea.cl" }
     ]}
   ]
 };
@@ -3958,7 +4137,19 @@ function loadConfetti(callback) {
     // ===== VARIABLES GLOBALES =====
     let currentLang = 'es';
     let BORDER_PASSES = [];
-    let exchangeRates = {USD:0, EUR:0, ARS:0, BRL:0, PEN:0, BOB:0};
+        let exchangeRates = {USD:0, EUR:0, ARS:0, BRL:0, PEN:0, BOB:0};
+
+    // Intentar cargar caché inmediatamente al arrancar
+    (function loadCachedRates() {
+      const cached = localStorage.getItem('exchangeRates');
+      if (cached) {
+        try {
+          exchangeRates = JSON.parse(cached);
+        } catch(e) {
+          localStorage.removeItem('exchangeRates');
+        }
+      }
+    })();
     let previousRates = null;
     let selectedCurrency = 'USD';
     let checklistState = [];
@@ -3970,15 +4161,19 @@ function loadConfetti(callback) {
     const BLOCKED_WORDS = ['idiota', 'estúpido', 'imbécil', 'mierda', 'pendejo',
                            'idiot', 'stupid', 'asshole', 'bastard'];
 
-    function sanitizeInput(str) {
+        function sanitizeInput(str) {
       if (!str || typeof str !== 'string') return '';
-      const temp = document.createElement('div');
-      temp.textContent = str.trim().substring(0, 500);
-      let clean = temp.innerHTML;
+      let clean = str.trim().substring(0, 500);
       BLOCKED_WORDS.forEach(word => {
         clean = clean.replace(new RegExp(word, 'gi'), '***');
       });
-      return clean;
+      // Escapar caracteres HTML peligrosos
+      return clean
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
     }
 
     // ===== UTILIDADES =====
@@ -4011,7 +4206,12 @@ function loadConfetti(callback) {
     const debouncedFilterPasses = debounce(() => filterPasses(), 300);
 
     // ===== MANEJO DE ERRORES =====
-    function showError(message, retry = false) {
+        function showError(message, retry = false) {
+      // Backdrop
+      const backdrop = document.createElement('div');
+      backdrop.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9998;';
+      document.body.appendChild(backdrop);
+
       const container = document.createElement('div');
       container.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.3);z-index:9999;max-width:90%;text-align:center;';
       const safeMsg = document.createElement('p');
@@ -4026,11 +4226,14 @@ function loadConfetti(callback) {
         btn.onclick = () => location.reload();
         container.appendChild(btn);
       }
-      document.body.appendChild(container);
-      setTimeout(() => container.remove(), 5000);
+            document.body.appendChild(container);
+      setTimeout(() => {
+        container.remove();
+        backdrop.remove();
+      }, 5000);
     }
 
-    async function fetchWithRetry(url, options = {}, maxRetries = 3, timeoutMs = 8000) {
+        async function fetchWithRetry(url, options = {}, maxRetries = 3, timeoutMs = 8000) {
       for (let i = 0; i < maxRetries; i++) {
         try {
           const controller = new AbortController();
@@ -4041,7 +4244,14 @@ function loadConfetti(callback) {
           if (i === maxRetries - 1) throw new Error(`HTTP ${response.status}`);
         } catch (error) {
           if (i === maxRetries - 1) throw error;
-          await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i)));
+          const delay = 1000 * Math.pow(2, i); // 1s, 2s, 4s
+          if (i > 0) showToast(
+            currentLang === 'pt' ? `Reconectando... (${i+1}/${maxRetries})` :
+            currentLang === 'en' ? `Retrying... (${i+1}/${maxRetries})` :
+            `Reintentando... (${i+1}/${maxRetries})`,
+            delay
+          );
+          await new Promise(r => setTimeout(r, delay));
         }
       }
     }
@@ -4065,7 +4275,8 @@ function loadConfetti(callback) {
       </div>
 
       <!-- eSIM -->
-      <a href="https://www.airalo.com" target="_blank" rel="noopener sponsored"
+            <a href="https://www.airalo.com" target="_blank" rel="noopener sponsored"
+         aria-label="eSIM Airalo - Datos en Chile y Argentina"
          class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
         <div class="p-4 flex items-center gap-4"
              style="background:linear-gradient(135deg,#7c3aed,#4338ca)">
@@ -4082,7 +4293,8 @@ function loadConfetti(callback) {
       </a>
 
       <!-- Seguro -->
-      <a href="https://www.iatiseguros.com" target="_blank" rel="noopener sponsored"
+            <a href="https://www.iatiseguros.com" target="_blank" rel="noopener sponsored"
+         aria-label="iati Seguros - Seguro de viaje internacional"
          class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
         <div class="p-4 flex items-center gap-4"
              style="background:linear-gradient(135deg,#059669,#0f766e)">
@@ -4114,7 +4326,8 @@ function loadConfetti(callback) {
           <p class="text-xs font-semibold" style="color:var(--text-primary)">✓ ${t('kit-wise-b1')}</p>
           <p class="text-xs font-semibold" style="color:var(--text-primary)">✓ ${t('kit-wise-b2')}</p>
           <p class="text-xs font-semibold" style="color:var(--text-primary)">✓ ${t('kit-wise-b3')}</p>
-          <a href="https://wise.com" target="_blank" rel="noopener sponsored"
+                    <a href="https://wise.com" target="_blank" rel="noopener sponsored"
+             aria-label="Wise - Enviar dinero sin comisiones ocultas"
              class="mt-3 flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm text-white font-bold active:scale-95 transition-all"
              style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
             <span><i class="fas fa-paper-plane mr-2"></i>${t('kit-wise-btn')}</span>
@@ -4141,7 +4354,8 @@ function loadConfetti(callback) {
             { href:'https://www.booking.com/city/cl/puerto-montt.html', title:t('kit-hotel-pto'), sub:t('kit-hotel-pto-sub') },
             { href:'https://www.booking.com/city/ar/san-carlos-de-bariloche.html', title:t('kit-hotel-bari'), sub:t('kit-hotel-bari-sub') }
           ].map((h, i, arr) => `
-            <a href="${h.href}" target="_blank" rel="noopener sponsored"
+                        <a href="${h.href}" target="_blank" rel="noopener sponsored"
+               aria-label="${h.title}"
                class="flex items-center justify-between px-4 py-3 transition active:bg-blue-50"
                style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
               <div class="flex items-center gap-3">
@@ -4172,7 +4386,8 @@ function loadConfetti(callback) {
             { href:'https://www.rentalcars.com', emoji:'🚗', title:t('kit-car-title'), sub:t('kit-car-sub') },
             { href:'https://www.busbud.com', emoji:'🚌', title:t('kit-bus-title'), sub:t('kit-bus-sub') }
           ].map((tr, i, arr) => `
-            <a href="${tr.href}" target="_blank" rel="noopener sponsored"
+                        <a href="${tr.href}" target="_blank" rel="noopener sponsored"
+               aria-label="${tr.title}"
                class="flex items-center justify-between px-4 py-3 transition active:bg-orange-50"
                style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
               <div class="flex items-center gap-3">
@@ -4523,19 +4738,23 @@ function renderStats() {
   const guide = PRICE_GUIDE[currentLang] || PRICE_GUIDE.es;
 
   container.innerHTML = guide.map(section => `
-    <div class="mb-4">
-      <p class="text-sm font-black mb-2" style="color:var(--text-primary)">
-        ${section.icon} ${section.category}
-      </p>
-      <div class="space-y-1">
-        ${section.items.map(item => `
-          <div class="flex justify-between items-center py-2 px-3 rounded-lg"
-            style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.05)">
-            <span class="text-xs font-semibold" style="color:var(--text-primary)">${item.name}</span>
-            <span class="text-xs font-black" style="color:#0039a6">${item.price}</span>
-          </div>`).join('')}
-      </div>
-    </div>`).join('');
+  <div class="mb-4">
+    <p class="text-sm font-black mb-2" style="color:var(--text-primary)">${section.icon} ${section.category}</p>
+    <div class="space-y-1">
+      ${section.items.map(item => item.link
+        ? `<a href="${item.link}" target="_blank" rel="noopener"
+              class="flex justify-between items-center py-2 px-3 rounded-lg transition active:scale-95"
+              style="background:rgba(0,57,166,0.06);border:1px solid rgba(0,57,166,0.15)">
+             <span class="text-xs font-semibold" style="color:var(--text-primary)">${item.name}</span>
+             <span class="text-xs font-black" style="color:#0039a6">${item.price} →</span>
+           </a>`
+        : `<div class="flex justify-between items-center py-2 px-3 rounded-lg" style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.05)">
+             <span class="text-xs font-semibold" style="color:var(--text-primary)">${item.name}</span>
+             <span class="text-xs font-black" style="color:#0039a6">${item.price}</span>
+           </div>`
+      ).join('')}
+    </div>
+  </div>`).join('')
 }
     // ===== TRADUCCIÓN =====
     function translatePage(lang) {
@@ -6562,10 +6781,12 @@ scheduleExpiryReminder(entryDate);
       el.textContent = now;
     }
     // ===== FAQ =====
-    function initFAQ() {
+        function initFAQ() {
       const container = document.getElementById('faqContainer');
       if (!container) return;
-      const items = FAQ_DATA[currentLang] || FAQ_DATA.es;
+      const fallback = document.getElementById('faqFallback');
+      if (fallback) fallback.remove();
+      const items = FAQDATA[currentLang] || FAQDATA.es;
       container.innerHTML = items.map((item, i) => `
         <div class="faq-item" id="faq-${i}">
           <button class="faq-question" onclick="toggleFAQ(${i})">
