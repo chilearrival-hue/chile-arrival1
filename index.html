@@ -5691,7 +5691,7 @@ function initMapCore() {
       mapInstance = L.map('passesMap', {
         zoomControl: true,
         preferCanvas: true
-      }).setView([-35, -70], 4);
+      }).setView([-38, -70], 5);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap',
@@ -5702,9 +5702,18 @@ function initMapCore() {
       mapInitialized = true;
 
       // Fuerza el recálculo de tamaño y agrega los pines
-      setTimeout(() => {
+     setTimeout(() => {
         mapInstance.invalidateSize(true);
         updateMapMarkers();
+        // Ajusta el zoom para mostrar todos los pines
+        const bounds = [];
+        BORDER_PASSES.forEach(pass => {
+          const coords = PASS_LOCATIONS[pass.name];
+          if (coords) bounds.push([coords.lat, coords.lon]);
+        });
+        if (bounds.length > 0) {
+          mapInstance.fitBounds(bounds, { padding: [30, 30] });
+        }
       }, 400);
 
     } catch(e) {
