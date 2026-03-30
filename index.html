@@ -2841,15 +2841,9 @@ function loadConfetti(callback) {
               </p>
             </div>
           </div>
-          <div class="currency-tabs">
-            <button class="currency-tab active" onclick="selectCurrency('USD',this)">USD 💵</button>
-            <button class="currency-tab" onclick="selectCurrency('EUR',this)">EUR 💶</button>
-            <button class="currency-tab" onclick="selectCurrency('ARS',this)">ARS 🇦🇷</button>
-            <button class="currency-tab" onclick="selectCurrency('BRL',this)">BRL 🇧🇷</button>
-            <button class="currency-tab" onclick="selectCurrency('PEN',this)">PEN 🇵🇪</button>
-            <button class="currency-tab" onclick="selectCurrency('BOB',this)">BOB 🇧🇴</button>
+          <div class="currency-tabs" style="gap:6px;margin-bottom:12px;">
           </div>
-          <div class="flex items-center gap-5 justify-center">
+          <div class="flex items-center gap-3 justify-center">
             <div class="flex flex-col items-center">
               <span id="selectedCurrency" class="text-xs uppercase font-bold text-blue-100 mb-2">USD 💵</span>
               <input type="number" id="currencyInput" value="1" min="0" step="0.01" oninput="convertMoney()"
@@ -2866,18 +2860,18 @@ function loadConfetti(callback) {
               </div>
             </div>
           </div>
-          <div id="exchangeDetails" class="mt-4 text-center text-blue-100 text-xs font-semibold opacity-90">
+          <div id="exchangeDetails" class="mt-2 text-center text-blue-100 text-xs font-semibold opacity-90">
             <p id="rateSource" data-i18n="rate-source">Fuente: Banco Central de Chile</p>
             <p id="rateTime" class="mt-1"><span data-i18n="last-update">Última actualización:</span> <span
                 id="rateTimestamp">--:--</span></p>
           </div>
-         <div class="mt-5">
-  <p style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.7);
-            text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;text-align:center;">
+         <div class="mt-3">
+  <p style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.7);
+            text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;text-align:center;">
     <span id="compareAllLabel">Comparar todas</span>
     · <span id="perUnitLabel" style="font-weight:600;opacity:0.8">por 1 unidad</span>
   </p>
-  <div id="currencyComparisonContainer"></div>
+  <div id="currencyComparisonContainer" style="display:grid;grid-template-columns:1fr 1fr;gap:4px;"></div>
 </div>
 
           <p class="text-center text-blue-100 text-[10px] mt-3 font-semibold" data-i18n="rate-disclaimer">Tasa oficial •
