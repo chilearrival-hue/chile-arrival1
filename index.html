@@ -2888,19 +2888,19 @@ function loadConfetti(callback) {
           <p class="text-sm text-white/95 mb-3 font-bold" data-i18n="fuel-subtitle">Estima el costo total de tu viaje</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
   <div class="fuel-input-group">
-    <label data-i18n="fuel-distance">Distancia (km)</label>
+    <label data-i18n="fuel-distance">Distancia</label>
     <input type="number" id="fuelDistance" placeholder="500" min="0" oninput="calculateFuelCost()">
   </div>
   <div class="fuel-input-group">
-    <label data-i18n="fuel-consumption">Consumo (km/L)</label>
+    <label data-i18n="fuel-consumption">Consumo</label>
     <input type="number" id="fuelConsumption" placeholder="12" min="1" step="0.1" oninput="calculateFuelCost()">
   </div>
   <div class="fuel-input-group">
-    <label data-i18n="fuel-price">Precio (CLP/L)</label>
+    <label data-i18n="fuel-price">Precio</label>
     <input type="number" id="fuelPrice" placeholder="1400" min="0" oninput="calculateFuelCost()">
   </div>
   <div class="fuel-input-group">
-    <label data-i18n="fuel-tolls">Peajes (CLP)</label>
+    <label data-i18n="fuel-tolls">Peajes</label>
     <input type="number" id="fuelTolls" placeholder="15000" min="0" oninput="calculateFuelCost()">
   </div>
 </div>
@@ -3224,7 +3224,7 @@ function loadConfetti(callback) {
         'rate-source': 'Fuente: Banco Central de Chile', 'last-update': 'Última actualización:',
         'rate-disclaimer': 'Tasa oficial • No incluye comisiones bancarias',
         'fuel-title': 'Calculadora de Combustible', 'fuel-subtitle': 'Estima el costo total de tu viaje',
-        'fuel-distance': 'Distancia del viaje (km)', 'fuel-consumption': 'Consumo vehículo (km/litro)',
+        'fuel-distance': 'Distancia (km)', 'fuel-consumption': 'Consumo vehículo (km/litro)',
         'fuel-price': 'Precio combustible (CLP/litro)', 'fuel-tolls': 'Peajes estimados (CLP)',
         'fuel-total': 'COSTO TOTAL ESTIMADO:', 'fuel-liters': 'Litros necesarios:',
         'fuel-gas-cost': 'Costo combustible:', 'fuel-tolls-cost': 'Costo peajes:',
@@ -3329,7 +3329,7 @@ function loadConfetti(callback) {
         'rate-source': 'Source: Central Bank of Chile', 'last-update': 'Last update:',
         'rate-disclaimer': 'Official rate • Bank fees not included',
         'fuel-title': 'Fuel Calculator', 'fuel-subtitle': 'Estimate your trip total cost',
-        'fuel-distance': 'Trip distance (km)', 'fuel-consumption': 'Vehicle consumption (km/liter)',
+        'fuel-distance': 'Distance (km)', 'fuel-consumption': 'Vehicle consumption (km/liter)',
         'fuel-price': 'Fuel price (CLP/liter)', 'fuel-tolls': 'Estimated tolls (CLP)',
         'fuel-total': 'ESTIMATED TOTAL COST:', 'fuel-liters': 'Liters needed:',
         'fuel-gas-cost': 'Fuel cost:', 'fuel-tolls-cost': 'Tolls cost:',
@@ -3433,7 +3433,7 @@ function loadConfetti(callback) {
         'rate-source': 'Fonte: Banco Central do Chile', 'last-update': 'Última atualização:',
         'rate-disclaimer': 'Taxa oficial • Não inclui tarifas bancárias',
         'fuel-title': 'Calculadora de Combustível', 'fuel-subtitle': 'Estime o custo total da viagem',
-        'fuel-distance': 'Distância da viagem (km)', 'fuel-consumption': 'Consumo do veículo (km/litro)',
+        'fuel-distance': 'Distância (km)', 'fuel-consumption': 'Consumo do veículo (km/litro)',
         'fuel-price': 'Preço do combustível (CLP/litro)', 'fuel-tolls': 'Pedágios estimados (CLP)',
         'fuel-total': 'CUSTO TOTAL ESTIMADO:', 'fuel-liters': 'Litros necessários:',
         'fuel-gas-cost': 'Custo combustível:', 'fuel-tolls-cost': 'Custo pedágios:',
@@ -4524,7 +4524,7 @@ function renderStats() {
         ${section.items.map(item => `
           <div class="flex justify-between items-center py-2 px-3 rounded-lg"
             style="background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.05)">
-            <span class="text-xs font-semibold" style="color:#475569">${item.name}</span>
+            <span class="text-xs font-semibold" style="color:var(--text-primary)">${item.name}</span>
             <span class="text-xs font-black" style="color:#0039a6">${item.price}</span>
           </div>`).join('')}
       </div>
@@ -4551,6 +4551,7 @@ function renderStats() {
       initKitContent();
       initFAQ();
       showPushBanner();
+      renderTollsCalculator();
 
       // Actualiza placeholder del buscador de pasos
       const searchInput = document.getElementById('searchInput');
@@ -5202,7 +5203,7 @@ btn.disabled = false;
       }, 120000);
     },
     error => {
-      btn.innerHTML = '<i class="fas fa-location-arrow"></i> Activar';
+      btn.innerHTML = '<i class="fas fa-location-arrow"></i> ' + (currentLang === 'es' ? 'Activar' : currentLang === 'pt' ? 'Ativar' : 'Enable');
       btn.disabled = false;
       showToast('⚠️ ' + (currentLang === 'es' ? 'No se pudo obtener ubicación' :
                 currentLang === 'pt' ? 'Não foi possível obter localização' :
@@ -5650,7 +5651,7 @@ function updateMapMarkers() {
           <p style="font-weight:900;font-size:13px;margin:0 0 4px">${pass.name}</p>
           <p style="font-size:11px;color:#64748b;margin:0 0 4px">${pass.region}</p>
           <p style="font-size:12px;font-weight:700;color:${color};margin:0 0 4px">
-            ${isOpen ? '✅ Abierto' : '🔴 Cerrado'}
+            ${isOpen ? '✅ ' + t('open') : '🔴 ' + t('closed')}
           </p>
           ${hours ? `<p style="font-size:11px;color:#64748b;margin:0">${hours}</p>` : ''}
         </div>`);
@@ -6464,8 +6465,8 @@ scheduleExpiryReminder(entryDate);
           <div class="flex items-start gap-4">
             <div class="text-4xl">${item.icon}</div>
             <div>
-              <h4 class="font-black text-base text-slate-900 mb-2">${item.title}</h4>
-              <p class="text-sm font-semibold text-slate-700 leading-relaxed">${item.text}</p>
+              <h4 class="font-black text-base mb-2" style="color:var(--text-primary)">${item.title}</h4>
+              <p class="text-sm font-semibold leading-relaxed" style="color:#64748b">${item.text}</p>
             </div>
           </div>
         </div>`).join('');
@@ -6488,9 +6489,9 @@ scheduleExpiryReminder(entryDate);
       emptyEl?.classList.add('hidden');
       container.innerHTML = items.map(item => `
         <div class="card-glass p-5">
-          <p class="font-black text-lg text-blue-600 mb-2">${item.word}</p>
-          <p class="text-sm font-bold text-slate-700 mb-2">${item.meaning}</p>
-          <p class="text-xs font-semibold text-slate-500 italic">"${item.example}"</p>
+          <p class="font-black text-lg mb-2" style="color:var(--chile-blue)">${item.word}</p>
+          <p class="text-sm font-bold mb-2" style="color:var(--text-primary)">${item.meaning}</p>
+          <p class="text-xs font-semibold italic" style="color:#94a3b8">"${item.example}"</p>
         </div>`).join('');
     }
 
