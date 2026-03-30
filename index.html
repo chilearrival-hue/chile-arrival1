@@ -6786,7 +6786,7 @@ scheduleExpiryReminder(entryDate);
       if (!container) return;
       const fallback = document.getElementById('faqFallback');
       if (fallback) fallback.remove();
-      const items = FAQDATA[currentLang] || FAQDATA.es;
+      const items = FAQ_DATA[currentLang] || FAQ_DATA.es;
       container.innerHTML = items.map((item, i) => `
         <div class="faq-item" id="faq-${i}">
           <button class="faq-question" onclick="toggleFAQ(${i})">
