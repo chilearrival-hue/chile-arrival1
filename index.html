@@ -2554,7 +2554,7 @@ function loadConfetti(callback) {
             </h3>
             <p class="small-text-enhanced mt-1" data-i18n="reports-subtitle">Información en tiempo real</p>
           </div>
-          <button id="refreshBtn" onclick="refreshReports()"> class="text-xs text-blue-600 font-bold hover:underline">
+          <button id="refreshBtn" onclick="refreshReports()" class="text-xs text-blue-600 font-bold hover:underline">
             <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">Actualizar</span>
           </button>
         </div>
@@ -4790,22 +4790,12 @@ BOB: Math.round(data2.dolar.valor / 7.0)
       renderCurrencyComparison();
     }
 // Coordenadas geográficas de los pasos para clima
-    const PASS_COORDINATES = {
-      'Chacalluta':         { lat: -18.35, lon: -70.06 },
-      'Jama':               { lat: -23.25, lon: -67.07 },
-      'Los Libertadores':   { lat: -32.83, lon: -70.07 },
-      'Chungará':           { lat: -18.50, lon: -69.15 },
-      'Carririñe':          { lat: -39.83, lon: -71.83 },
-      'Cardenal Samoré':    { lat: -40.73, lon: -71.99 },
-      'Integración Austral':{ lat: -52.08, lon: -69.27 }
-    };
-
     // Cache de clima por paso
     const weatherCache = {};
 
     async function fetchWeatherForPass(passName) {
       if (weatherCache[passName]) return weatherCache[passName];
-      const coords = PASS_COORDINATES[passName];
+      const coords = PASS_LOCATIONS[passName];
       if (!coords) return null;
       try {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current_weather=true&hourly=snowfall&forecast_days=1`;
@@ -5680,38 +5670,42 @@ function initMapCore() {
   if (!mapEl) return;
 
   if (mapInitialized && mapInstance) {
-    mapInstance.invalidateSize(true);
-    updateMapMarkers();
+    setTimeout(() => {
+      mapInstance.invalidateSize(true);
+      updateMapMarkers();
+    }, 200);
     return;
   }
 
   mapEl.style.height = '300px';
   mapEl.style.width = '100%';
 
-  try {
-    mapInstance = L.map('passesMap', {
-      zoomControl: true,
-      preferCanvas: true
-    }).setView([-35, -70], 4);
+  // Espera a que el contenedor tenga dimensiones reales
+  setTimeout(() => {
+    try {
+      mapInstance = L.map('passesMap', {
+        zoomControl: true,
+        preferCanvas: true
+      }).setView([-35, -70], 4);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap',
-      maxZoom: 18,
-      crossOrigin: true
-    }).addTo(mapInstance);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        maxZoom: 18,
+        crossOrigin: true
+      }).addTo(mapInstance);
 
-    mapInstance.whenReady(() => {
+      mapInitialized = true;
+
+      // Fuerza el recálculo de tamaño y agrega los pines
       setTimeout(() => {
         mapInstance.invalidateSize(true);
         updateMapMarkers();
-      }, 300);
-    });
+      }, 400);
 
-    mapInitialized = true;
-
-  } catch(e) {
-    console.error('Error iniciando mapa:', e);
-  }
+    } catch(e) {
+      console.error('Error iniciando mapa:', e);
+    }
+  }, 300);
 }
 // ===== FAVORITOS =====
 function getFavorites() {
@@ -5815,7 +5809,10 @@ const typeIcon = {
           <div class="report-votes flex justify-between items-center">
   <span>👍 ${report.votos} ${t('confirms')}</span>
   <button
-    onclick="shareReport('${sanitizeInput(report.paso)}','${sanitizeInput(report.tipo)}','${sanitizeInput(report.mensaje || '')}')"
+    data-paso="${sanitizeInput(report.paso)}"
+    data-tipo="${sanitizeInput(report.tipo)}"
+    data-mensaje="${sanitizeInput(report.mensaje || '').replace(/"/g, '&quot;')}"
+    onclick="shareReport(this.dataset.paso, this.dataset.tipo, this.dataset.mensaje)"
     style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:800;color:#25d366;display:flex;align-items:center;gap:4px;">
     <i class="fab fa-whatsapp" style="font-size:16px"></i>
     ${currentLang === 'pt' ? 'Compartilhar' : currentLang === 'en' ? 'Share' : 'Compartir'}
@@ -6400,7 +6397,9 @@ function loadHistoryDate(dateStr) {
   const [year, month, day] = entryDate.split('-').map(Number);
 
   // Validación de rango de fecha
-  if (year < 2000 || year > new Date().getFullYear()) {
+ const entryDateObj = new Date(year, month - 1, day);
+const todayCheck = new Date(); todayCheck.setHours(0,0,0,0);
+if (year < 2000 || entryDateObj > todayCheck) {
     showToast('⚠️ Ingresá una fecha válida de entrada', 3000);
     return;
   }
@@ -6786,9 +6785,6 @@ setTimeout(() => initOnboarding(), 1000);
 if (!window.matchMedia('(display-mode: standalone)').matches) {
   setTimeout(() => showInstallBanner(), 3000);
 }
-initFAQ(); // initFAQ() ya se llama dentro de translatePage() — no duplicar
-// Leer parámetro ?tab= de la URL para shortcuts del homescreen
-// Inicia el reloj de Chile
       updateChileClock();
       setInterval(updateChileClock, 1000);
       // Restaura modo viaje si estaba activo
@@ -6848,28 +6844,6 @@ try {
 } catch(e) {
   console.warn('AdSense no disponible:', e);
 }// Click fuera del contenido cierra el modal
-    });
-// ===== LOGIN GOOGLE =====
-    function handleLogin() {
-      showToast(currentLang === 'es' ? '🔄 Conectando con Google...' : '🔄 Connecting with Google...', 2000);
-    }
-
-    function handleLogout() {
-      document.getElementById('userMenu')?.classList.add('hidden');
-      showToast(currentLang === 'es' ? '👋 Sesión cerrada' : '👋 Logged out', 2000);
-    }
-
-    function toggleUserMenu() {
-      document.getElementById('userMenu')?.classList.toggle('hidden');
-    }
-
-    // Cierra el menú si el usuario hace clic fuera
-    document.addEventListener('click', (e) => {
-      const panel = document.getElementById('userPanel');
-      const menu  = document.getElementById('userMenu');
-      if (panel && menu && !panel.contains(e.target)) {
-        menu.classList.add('hidden');
-      }
     });
         window.addEventListener('error', (e) => { console.error('Error capturado:', e.message); });
     window.addEventListener('unhandledrejection', (e) => { console.error('Promise rechazada:', e.reason); });
