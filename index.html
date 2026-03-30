@@ -6,7 +6,7 @@
      crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-  <meta name="theme-color" content="#0039a6">
+  <meta name="theme-color" content="#0039a6" id="themeColorMeta">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Chile Arrival">
@@ -47,6 +47,11 @@
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
   <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+<script>
+  tailwind.config = {
+    future: { hoverOnlyWhenSupported: true }
+  }
+</script>
   <script>
 function loadConfetti(callback) {
   if (typeof confetti !== 'undefined') { callback(); return; }
@@ -104,6 +109,7 @@ function loadConfetti(callback) {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.6;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* Glass Effect mejorado */
@@ -170,9 +176,10 @@ function loadConfetti(callback) {
 /* Alineación: todas las cards del Kit Viajero a la misma altura */
 #kit .px-4.mb-3 > a,
 #kit .px-4.mb-3 > div {
-  min-height: 80px !important;
+  min-height: 100px !important;
   display: flex !important;
   align-items: stretch !important;
+  height: 100% !important;
 }
 
 /* La card de Alojamiento y Transporte (blancas) también alineadas */
@@ -1222,8 +1229,8 @@ function loadConfetti(callback) {
       cursor: pointer
     }
 
-    .days-result {
-      font-size: 48px;
+        .days-result {
+      font-size: clamp(32px, 10vw, 48px);
       font-weight: 900;
       line-height: 1.1
     }
@@ -1344,20 +1351,20 @@ function loadConfetti(callback) {
       -webkit-tap-highlight-color: transparent;
     }
 
-    .whatsapp-btn {
-      bottom: 85px;
+        .whatsapp-btn {
+      bottom: 90px;
       right: 20px;
       background: #25d366
     }
 
     .report-btn {
-      bottom: 85px;
+      bottom: 90px;
       right: 90px;
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%)
     }
 
     .notification-btn {
-      bottom: 85px;
+      bottom: 90px;
       right: 160px;
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)
     }
@@ -4602,7 +4609,8 @@ function renderStats() {
     tab.classList.remove('active');
   });
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-tab'));
-  document.getElementById(tabId).classList.add('active');
+  const tabEl = document.getElementById(tabId);
+if (tabEl) tabEl.classList.add('active');
 
   // Si no se pasa botón, lo busca automáticamente por data-tab
   const btn = buttonElement || document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
@@ -4619,15 +4627,18 @@ function renderStats() {
     function toggleDarkMode() {
       const body = document.body;
       const icon = DOM_CACHE.themeIcon;
+      const meta = document.getElementById('themeColorMeta');
       const isDark = body.getAttribute('data-theme') === 'dark';
       if (isDark) {
         body.removeAttribute('data-theme');
         icon.classList.replace('fa-sun', 'fa-moon');
         localStorage.setItem('theme', 'light');
+        if (meta) meta.content = '#0039a6';
       } else {
         body.setAttribute('data-theme', 'dark');
         icon.classList.replace('fa-moon', 'fa-sun');
         localStorage.setItem('theme', 'dark');
+        if (meta) meta.content = '#0f172a';
       }
     }
 
@@ -4772,7 +4783,8 @@ BOB: Math.round(data2.dolar.valor / 7.0)
     function selectCurrency(currency, button) {
       selectedCurrency = currency;
       const symbols = {USD:'💵', EUR:'💶', ARS:'🇦🇷', BRL:'🇧🇷', PEN:'🇵🇪', BOB:'🇧🇴'};
-      document.getElementById('selectedCurrency').textContent = currency + ' ' + symbols[currency];
+      const selCurEl = document.getElementById('selectedCurrency');
+if (selCurEl) selCurEl.textContent = currency + ' ' + symbols[currency];
       document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
       button.classList.add('active');
       showRateChange(); convertMoney();
@@ -5220,7 +5232,8 @@ localStorage.removeItem('travelModeWasActive'); // ← línea nueva
   btn.innerHTML = '<i class="fas fa-location-arrow"></i> Activar';
   btn.classList.replace('bg-red-600', 'bg-green-600');
   btn.classList.replace('hover:bg-red-700', 'hover:bg-green-700');
-  document.getElementById('travelModeResult').classList.add('hidden');
+  const travelEl = document.getElementById('travelModeResult');
+if (travelEl) travelEl.classList.add('hidden');
   showToast('🛑 ' + (currentLang === 'es' ? 'Modo viaje desactivado' :
             currentLang === 'pt' ? 'Modo viagem desativado' :
             'Travel mode off'), 2000);
@@ -5393,9 +5406,12 @@ function showTollResult() {
   const route = routes[parseInt(idx)];
   if (!route) return;
 
-  document.getElementById('tollVia').textContent = route.via;
-  document.getElementById('tollKm').textContent = route.km + ' km';
-  document.getElementById('tollCost').textContent = '$' + route.cost.toLocaleString('es-CL');
+  const tollViaEl = document.getElementById('tollVia');
+const tollKmEl = document.getElementById('tollKm');
+const tollCostEl = document.getElementById('tollCost');
+if (tollViaEl) tollViaEl.textContent = route.via;
+if (tollKmEl) tollKmEl.textContent = route.km + ' km';
+if (tollCostEl) tollCostEl.textContent = '$' + route.cost.toLocaleString('es-CL');
   result.classList.remove('hidden');
 
   // Rellena automáticamente el campo de peajes en la calculadora de combustible
@@ -5457,7 +5473,8 @@ function renderCurrencyComparison() {
 
 function selectCurrencyFromComparison(code) {
   selectedCurrency = code;
-  const btn = document.querySelector(`.currency-tab[onclick*="${code}"]`);
+  const btn = [...document.querySelectorAll('.currency-tab')]
+    .find(el => el.getAttribute('onclick')?.includes(`'${code}'`));
   if (btn) {
     document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
@@ -5851,9 +5868,13 @@ function canSubmitReport() {
     async function submitReport(event) {
       event.preventDefault();
       if (!canSubmitReport()) return;
-      const pass = document.getElementById('reportPass').value;
-      const type = document.getElementById('reportType').value;
-      const message = document.getElementById('reportMessage').value;
+      const passEl = document.getElementById('reportPass');
+      const typeEl = document.getElementById('reportType');
+      const messageEl = document.getElementById('reportMessage');
+      if (!passEl || !typeEl || !messageEl) return;
+      const pass = passEl.value;
+      const type = typeEl.value;
+      const message = messageEl.value;
 
       if (!pass || !type) {
         showToast('⚠️ ' + (currentLang === 'es'
@@ -5926,10 +5947,15 @@ renderStats();
       }
     }
 
-    function openReportModal()  { document.getElementById('reportModal').classList.add('show'); }
+    function openReportModal()  {
+      const m = document.getElementById('reportModal');
+      if (m) m.classList.add('show');
+    }
     function closeReportModal() {
-      document.getElementById('reportModal').classList.remove('show');
-      document.getElementById('reportForm').reset();
+      const m = document.getElementById('reportModal');
+      const f = document.getElementById('reportForm');
+      if (m) m.classList.remove('show');
+      if (f) f.reset();
       document.querySelectorAll('.report-type-option').forEach(el => el.classList.remove('selected'));
     }
 
@@ -5981,7 +6007,8 @@ function renderNotificationToggle() {
 
     // ===== NOTIFICACIONES — FIX CRÍTICO #4, #5, #6 =====
     function openNotificationHistory() {
-      document.getElementById('notificationHistoryModal').classList.add('show');
+      const nm = document.getElementById('notificationHistoryModal');
+      if (nm) nm.classList.add('show');
       const history = JSON.parse(localStorage.getItem('notificationHistory') || '[]');
       const updated = history.map(n => ({...n, read: true}));
       localStorage.setItem('notificationHistory', JSON.stringify(updated));
@@ -5992,7 +6019,8 @@ function renderNotificationToggle() {
 
     // FIX: función que faltaba
     function closeNotificationHistory() {
-      document.getElementById('notificationHistoryModal').classList.remove('show');
+      const nm = document.getElementById('notificationHistoryModal');
+      if (nm) nm.classList.remove('show');
     }
 
     // FIX: función que faltaba
@@ -6359,11 +6387,16 @@ function loadHistoryDate(dateStr) {
 }
     // ===== CALCULADORAS =====
    function calculateFuelCost() {
-  const distance    = parseFloat(document.getElementById('fuelDistance').value) || 0;
-  const consumption = parseFloat(document.getElementById('fuelConsumption').value) || 0;
-  const price       = parseFloat(document.getElementById('fuelPrice').value) || 0;
-  const tolls       = parseFloat(document.getElementById('fuelTolls').value) || 0;
+  const distEl      = document.getElementById('fuelDistance');
+  const consEl      = document.getElementById('fuelConsumption');
+  const priceEl     = document.getElementById('fuelPrice');
+  const tollsEl     = document.getElementById('fuelTolls');
   const resultEl    = document.getElementById('fuelResultContainer');
+  if (!distEl || !consEl || !priceEl || !tollsEl || !resultEl) return;
+  const distance    = parseFloat(distEl.value) || 0;
+  const consumption = parseFloat(consEl.value) || 0;
+  const price       = parseFloat(priceEl.value) || 0;
+  const tolls       = parseFloat(tollsEl.value) || 0;
 
   // Validaciones
   if (distance < 0 || consumption < 0 || price < 0 || tolls < 0) {
@@ -6460,7 +6493,9 @@ scheduleExpiryReminder(entryDate);
 
     // ===== CONTENIDO ESTÁTICO =====
     function initCultureContent() {
-      document.getElementById('cultureInfo').innerHTML = CULTURE_INFO[currentLang].map(item => `
+      const cultureEl = document.getElementById('cultureInfo');
+      if (!cultureEl) return;
+      cultureEl.innerHTML = CULTURE_INFO[currentLang].map(item => `
         <div class="card-glass p-5">
           <div class="flex items-start gap-4">
             <div class="text-4xl">${item.icon}</div>
