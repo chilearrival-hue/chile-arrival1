@@ -2887,25 +2887,24 @@ function loadConfetti(callback) {
           </h3>
           <p class="text-sm text-white/95 mb-5 font-bold" data-i18n="fuel-subtitle">Estima el costo total de tu viaje
           </p>
-          <div class="space-y-3">
-            <div class="fuel-input-group">
-              <label data-i18n="fuel-distance">Distancia del viaje (km)</label>
-              <input type="number" id="fuelDistance" placeholder="500" min="0" oninput="calculateFuelCost()">
-            </div>
-            <div class="fuel-input-group">
-              <label data-i18n="fuel-consumption">Consumo vehículo (km/litro)</label>
-              <input type="number" id="fuelConsumption" placeholder="12" min="1" step="0.1"
-                oninput="calculateFuelCost()">
-            </div>
-            <div class="fuel-input-group">
-              <label data-i18n="fuel-price">Precio combustible (CLP/litro)</label>
-              <input type="number" id="fuelPrice" placeholder="1400" min="0" oninput="calculateFuelCost()">
-            </div>
-            <div class="fuel-input-group">
-              <label data-i18n="fuel-tolls">Peajes estimados (CLP)</label>
-              <input type="number" id="fuelTolls" placeholder="15000" min="0" oninput="calculateFuelCost()">
-            </div>
-          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+  <div class="fuel-input-group">
+    <label data-i18n="fuel-distance">Distancia (km)</label>
+    <input type="number" id="fuelDistance" placeholder="500" min="0" oninput="calculateFuelCost()">
+  </div>
+  <div class="fuel-input-group">
+    <label data-i18n="fuel-consumption">Consumo (km/L)</label>
+    <input type="number" id="fuelConsumption" placeholder="12" min="1" step="0.1" oninput="calculateFuelCost()">
+  </div>
+  <div class="fuel-input-group">
+    <label data-i18n="fuel-price">Precio (CLP/L)</label>
+    <input type="number" id="fuelPrice" placeholder="1400" min="0" oninput="calculateFuelCost()">
+  </div>
+  <div class="fuel-input-group">
+    <label data-i18n="fuel-tolls">Peajes (CLP)</label>
+    <input type="number" id="fuelTolls" placeholder="15000" min="0" oninput="calculateFuelCost()">
+  </div>
+</div>
           <div id="fuelResultContainer" class="fuel-result hidden">
             <p class="text-sm font-bold text-white/90 mb-2" data-i18n="fuel-total">COSTO TOTAL ESTIMADO:</p>
             <p class="fuel-result-value">$<span id="fuelTotalCost">0</span></p>
