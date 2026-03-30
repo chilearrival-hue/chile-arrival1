@@ -5590,8 +5590,26 @@ function toggleMap() {
   if (isHidden) {
     container.classList.remove('hidden');
     btn.innerHTML = '<i class="fas fa-times"></i> Cerrar mapa';
-    // Espera más tiempo para que el DOM esté listo
-    setTimeout(() => initMap(), 400);
+
+    // Precarga Leaflet apenas abre el contenedor
+    if (typeof L === 'undefined') {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      script.onload = () => {
+        setTimeout(() => initMapCore(), 500);
+      };
+      script.onerror = () => {
+        container.innerHTML = '<p style="text-align:center;padding:20px;color:#ef4444;font-weight:700">⚠️ No se pudo cargar el mapa. Verificá tu conexión.</p>';
+      };
+      document.head.appendChild(script);
+    } else {
+      setTimeout(() => initMapCore(), 500);
+    }
   } else {
     container.classList.add('hidden');
     btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
