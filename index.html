@@ -5242,15 +5242,15 @@ function convertFromCLP() {
   if (!amountEl || !resultEl) return;
 
   const amount = parseFloat(amountEl.value) || 0;
-  if (amount <= 0) { resultEl.classList.add('hidden'); return; }
+  if (amount <= 0) { resultEl.innerHTML = ''; return; }
 
   const currencies = [
-    { code:'USD', flag:'🇺🇸', name:'Dólar' },
-    { code:'ARS', flag:'🇦🇷', name:'Peso Arg.' },
-    { code:'BRL', flag:'🇧🇷', name:'Real' },
-    { code:'EUR', flag:'🇪🇺', name:'Euro' },
-    { code:'PEN', flag:'🇵🇪', name:'Sol' },
-    { code:'BOB', flag:'🇧🇴', name:'Boliviano' }
+    { code:'USD', flag:'🇺🇸', name:'USD' },
+    { code:'ARS', flag:'🇦🇷', name:'ARS' },
+    { code:'BRL', flag:'🇧🇷', name:'BRL' },
+    { code:'EUR', flag:'🇪🇺', name:'EUR' },
+    { code:'PEN', flag:'🇵🇪', name:'PEN' },
+    { code:'BOB', flag:'🇧🇴', name:'BOB' }
   ];
 
   const rows = currencies.map(c => {
@@ -5258,26 +5258,25 @@ function convertFromCLP() {
     if (!rate || rate <= 0) return '';
     const converted = (amount / rate).toFixed(2);
     return `
-      <div style="
-        display:flex;align-items:center;justify-content:space-between;
-        padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:20px;">${c.flag}</span>
-          <span style="font-size:13px;font-weight:700;color:var(--text-primary);">${c.name}</span>
-        </div>
-        <span style="font-size:15px;font-weight:900;color:#0039a6;">
-          ${c.code} ${parseFloat(converted).toLocaleString('es-CL', {minimumFractionDigits:2, maximumFractionDigits:2})}
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;">
+        <span style="font-size:12px;color:rgba(255,255,255,0.8);font-weight:700;">
+          ${c.flag} ${c.name}
+        </span>
+        <span style="font-size:13px;font-weight:900;color:white;">
+          ${parseFloat(converted).toLocaleString('es-CL', {minimumFractionDigits:2, maximumFractionDigits:2})}
         </span>
       </div>`;
   }).join('');
 
   resultEl.innerHTML = `
-    <div class="card-glass p-4" style="margin-top:12px;">
-      <p style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:4px;">
-        ${amount.toLocaleString('es-CL')} CLP equivale a:
-      </p>
+    <div style="
+      margin-top:10px;
+      background:rgba(255,255,255,0.1);
+      border-radius:12px;
+      padding:10px 14px;">
       ${rows}
     </div>`;
+    
   resultEl.classList.remove('hidden');
 }
     function convertMoney() {
