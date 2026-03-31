@@ -4157,6 +4157,16 @@ function loadConfetti(callback) {
     let ratesLastUpdate = null;
     let updateIntervalId = null;
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
     // ===== MODERACIÓN =====
     const BLOCKED_WORDS = ['idiota', 'estúpido', 'imbécil', 'mierda', 'pendejo',
                            'idiot', 'stupid', 'asshole', 'bastard'];
@@ -4174,16 +4184,6 @@ function loadConfetti(callback) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#x27;');
-
-        function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
-}
     }
 
     // ===== UTILIDADES =====
