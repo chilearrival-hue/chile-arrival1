@@ -8,7 +8,8 @@
      crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
   <meta name="theme-color" content="#0039a6" id="themeColorMeta">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Chile Arrival">
  <meta name="description"
@@ -2578,6 +2579,64 @@ function loadConfetti(callback) {
 </head>
 
 <body>
+  <!-- SPLASH SCREEN -->
+<div id="splashScreen" style="
+  position:fixed;inset:0;z-index:999999;
+  background:linear-gradient(135deg,#0039a6 0%,#1e40af 50%,#d52b1e 100%);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:opacity 0.5s ease, visibility 0.5s ease;">
+
+  <!-- Logo -->
+  <div style="font-size:72px;margin-bottom:16px;animation:splashBounce 0.8s ease;">
+    🇨🇱
+  </div>
+
+  <!-- Título -->
+  <h1 style="
+    color:white;font-size:28px;font-weight:900;
+    margin:0 0 6px;letter-spacing:-0.5px;">
+    Chile Arrival
+  </h1>
+
+  <!-- Subtítulo -->
+  <p style="
+    color:rgba(255,255,255,0.8);
+    font-size:13px;font-weight:600;
+    margin:0 0 40px;">
+    Tu guía de ingreso a Chile
+  </p>
+
+  <!-- Barra de carga -->
+  <div style="
+    width:200px;height:4px;
+    background:rgba(255,255,255,0.2);
+    border-radius:4px;overflow:hidden;">
+    <div id="splashBar" style="
+      height:100%;width:0%;
+      background:white;
+      border-radius:4px;
+      transition:width 0.3s ease;">
+    </div>
+  </div>
+
+  <!-- Texto de carga -->
+  <p id="splashText" style="
+    color:rgba(255,255,255,0.6);
+    font-size:11px;font-weight:700;
+    margin-top:12px;letter-spacing:0.5px;
+    text-transform:uppercase;">
+    Cargando...
+  </p>
+</div>
+
+<style>
+@keyframes splashBounce {
+  0%   { transform:scale(0.5); opacity:0; }
+  70%  { transform:scale(1.1); opacity:1; }
+  100% { transform:scale(1);   opacity:1; }
+}
+</style>
   <!-- Botón volver arriba -->
   <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
     <i class="fas fa-chevron-up"></i>
@@ -5186,7 +5245,7 @@ if (selCurEl) selCurEl.textContent = currency + ' ' + symbols[currency];
       {name:"Jama", region:"Antofagasta", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
       {name:"Los Libertadores", region:"Valparaíso", country:"Argentina", hours:"24h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
       {name:"Chungará", region:"Arica y Parinacota", country:"Bolivia", hours:"24h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Carririñe", region:"Los Rios", country:"Argentina", hours:"", status:"Cerrado", observations:"", reason:"Trabajos del MOP - Cerrado hasta Abril", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
+      {name:"Carririñe", region:"Los Ríos", country:"Argentina", hours:"", status:"Cerrado", observations:"", reason:"Trabajos del MOP - Cerrado hasta Abril", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
       {name:"Cardenal Samoré", region:"Los Lagos", country:"Argentina", hours:"8-19h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
       {name:"Integración Austral", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"8-22h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
       {name:"Pino Hachado", region:"La Araucanía", country:"Argentina", hours:"8-21h", status:"Abierto", observations:"Ruta ripio en sector argentino", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
@@ -6308,7 +6367,6 @@ renderStats();
   }
   fetchReportsFromSheet();
   fetchBorderPassesFromSheet();
-  fetchExchangeRates();
   showToast('🔄 ' + t('refresh'), 2000);
 }
 
@@ -6450,7 +6508,9 @@ function renderChecklistProfile(activeProfile) {
       ${p.label[currentLang] || p.label.es}
     </button>`).join('');
 
+ if (DOM_CACHE.checklistContainer) {
   DOM_CACHE.checklistContainer.before(selector);
+}
 }
 
 function switchChecklistProfile(profile) {
@@ -6576,8 +6636,13 @@ function scheduleExpiryReminder(entryDateStr) {
   const daysUntilReminder = Math.floor((reminder - today) / 86400000);
 
   // Guarda la fecha de recordatorio
-  localStorage.setItem('expiryReminderDate', reminder.toISOString().split('T')[0]);
-  localStorage.setItem('expiryDate', expiry.toISOString().split('T')[0]);
+  const padDate = n => String(n).padStart(2, '0');
+
+const reminderStr = `${reminder.getFullYear()}-${padDate(reminder.getMonth()+1)}-${padDate(reminder.getDate())}`;
+const expiryStr   = `${expiry.getFullYear()}-${padDate(expiry.getMonth()+1)}-${padDate(expiry.getDate())}`;
+
+localStorage.setItem('expiryReminderDate', reminderStr);
+localStorage.setItem('expiryDate', expiryStr);
 
   // Si el recordatorio es hoy o ya pasó, muestra alerta inmediata
   if (daysUntilReminder <= 0) {
@@ -6735,17 +6800,26 @@ function loadHistoryDate(dateStr) {
   // Validaciones
   if (distance < 0 || consumption < 0 || price < 0 || tolls < 0) {
     resultEl.classList.add('hidden');
-    showToast('⚠️ Los valores no pueden ser negativos', 3000);
+    showToast(
+  currentLang === 'en' ? '⚠️ Values cannot be negative' :
+  currentLang === 'pt' ? '⚠️ Os valores não podem ser negativos' :
+  '⚠️ Los valores no pueden ser negativos', 3000);
     return;
   }
   if (consumption > 0 && consumption < 1) {
     resultEl.classList.add('hidden');
-    showToast('⚠️ El consumo mínimo es 1 km/litro', 3000);
+    showToast(
+  currentLang === 'en' ? '⚠️ Minimum consumption is 1 km/liter' :
+  currentLang === 'pt' ? '⚠️ O consumo mínimo é 1 km/litro' :
+  '⚠️ El consumo mínimo es 1 km/litro', 3000);
     return;
   }
   if (distance > 50000) {
     resultEl.classList.add('hidden');
-    showToast('⚠️ La distancia parece demasiado grande', 3000);
+    showToast(
+  currentLang === 'en' ? '⚠️ Distance seems too large' :
+  currentLang === 'pt' ? '⚠️ A distância parece muito grande' :
+  '⚠️ La distancia parece demasiado grande', 3000);
     return;
   }
 
@@ -7104,6 +7178,21 @@ scheduleExpiryReminder(entryDate);
       showToast('📵 ' + (currentLang === 'es' ? 'Sin conexión - Modo offline' : currentLang === 'pt' ? 'Sem conexão - Modo offline' : 'Offline mode'), 3000);
     });
      let lastFetchTime = Date.now();
+     // ===== SPLASH SCREEN =====
+function updateSplash(pct, text) {
+  const bar  = document.getElementById('splashBar');
+  const txt  = document.getElementById('splashText');
+  if (bar) bar.style.width = pct + '%';
+  if (txt) txt.textContent = text;
+}
+
+function hideSplash() {
+  const splash = document.getElementById('splashScreen');
+  if (!splash) return;
+  splash.style.opacity = '0';
+  splash.style.visibility = 'hidden';
+  setTimeout(() => splash.remove(), 500);
+}
 function fetchAllData() {
   lastFetchTime = Date.now();
   initCurrencyTabs();
@@ -7159,8 +7248,6 @@ if (savedEntryDate) {
 
 createSnowflakes();
 initStats();
-initPriceGuide();
-renderTollsCalculator();
 checkExpiryOnLoad();
 setTimeout(() => initOnboarding(), 1000);
 // Muestra banner de instalación si corresponde
@@ -7186,9 +7273,18 @@ if (tabParam && validTabs.includes(tabParam)) {
   }
 }
 
-fetchExchangeRates();
-fetchBorderPassesFromSheet();
-fetchReportsFromSheet();
+// Secuencia de carga con splash
+updateSplash(20, 'Conectando...');
+fetchExchangeRates().then(() => {
+  updateSplash(50, 'Cargando pasos...');
+  return fetchBorderPassesFromSheet();
+}).then(() => {
+  updateSplash(80, 'Cargando reportes...');
+  return fetchReportsFromSheet();
+}).finally(() => {
+  updateSplash(100, '¡Listo!');
+  setTimeout(() => hideSplash(), 600);
+});
 
     updateIntervalId = setInterval(() => {
   if (!document.hidden) {
