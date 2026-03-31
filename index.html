@@ -6288,14 +6288,16 @@ function toggleFavorite(passName) {
   }
   localStorage.setItem('favoritePasses', JSON.stringify(favs));
   renderOpenPassesInViaje();
-  document.addEventListener('click', function(e) {
+}
+
+// Event listener fuera de la función, se ejecuta una sola vez
+document.addEventListener('click', function(e) {
   const btn = e.target.closest('.fav-toggle-btn');
   if (btn) {
     e.stopPropagation();
     toggleFavorite(btn.dataset.passname);
   }
 });
-}
 // ===== COMPARTIR =====
 function shareReport(paso, tipo, mensaje) {
   const icons = {
