@@ -2575,6 +2575,22 @@ function loadConfetti(callback) {
       background: rgba(255, 255, 255, 0.3);
       border-color: rgba(255, 255, 255, 0.6);
     }
+    .country-filter-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 2px solid rgba(0,0,0,0.1);
+  background: white;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #334155;
+}
+.country-filter-btn.active {
+  background: #16a34a;
+  color: white;
+  border-color: #16a34a;
+}
   </style>
 </head>
 
@@ -3056,6 +3072,12 @@ function loadConfetti(callback) {
         <input type="text" id="searchInput" onkeyup="debouncedFilterPasses()" data-i18n-placeholder="search-placeholder"
           placeholder="Buscar por nombre o región...">
       </div>
+      <div id="countryFilter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;margin-top:8px;">
+  <button onclick="filterByCountry('all')" class="country-filter-btn active" data-country="all">🌎 Todos</button>
+  <button onclick="filterByCountry('Argentina')" class="country-filter-btn" data-country="Argentina">🇦🇷 Argentina</button>
+  <button onclick="filterByCountry('Bolivia')" class="country-filter-btn" data-country="Bolivia">🇧🇴 Bolivia</button>
+  <button onclick="filterByCountry('Perú')" class="country-filter-btn" data-country="Perú">🇵🇪 Perú</button>
+</div>
       <div id="passesContainer" class="space-y-4"></div>
     </section>
 
@@ -5619,7 +5641,16 @@ const openPasses = BORDER_PASSES
             </div>` : ''}
         </div>`;
     }
-
+function filterByCountry(country) {
+  document.querySelectorAll('.country-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.country === country);
+  });
+  document.querySelectorAll('#passesContainer [data-pass]').forEach(card => {
+    if (country === 'all') { card.classList.remove('hidden'); return; }
+    const matches = card.textContent.includes(country);
+    card.classList.toggle('hidden', !matches);
+  });
+}
    function filterPasses() {
       const search = DOM_CACHE.searchInput.value.toLowerCase().trim();
 
