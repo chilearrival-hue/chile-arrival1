@@ -5378,6 +5378,20 @@ if (existingShare) existingShare.remove();
       <span>💨 ${weather.wind} km/h</span>
     `;
     card.appendChild(badge);
+
+// Re-inyecta botón compartir si fue eliminado
+if (!card.querySelector('.share-btn')) {
+  const passName = card.querySelector('h4')?.textContent.replace('⭐','').trim();
+  const passData = BORDER_PASSES.find(p => p.name === passName);
+  if (passData) {
+    const shareBtn = document.createElement('button');
+    shareBtn.className = 'share-btn';
+    shareBtn.style.cssText = 'margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;';
+    shareBtn.innerHTML = '📤 Compartir estado';
+    shareBtn.onclick = () => sharePass(passData.name, passData.status, passData.hours, passData.observations || '');
+    card.appendChild(shareBtn);
+  }
+}
   }));
 }
     // ===== PASOS FRONTERIZOS =====
