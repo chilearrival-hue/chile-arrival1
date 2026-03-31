@@ -4795,25 +4795,9 @@ function renderStats() {
     // ===== TRADUCCIÓN =====
     function translatePage(lang) {
       currentLang = lang;
-      // Keys que legítimamente contienen HTML (<strong>, <br>, <u>, etc.)
-const HTML_TRANSLATION_KEYS = [
-  'pdi-item1','pdi-item2','pdi-item3','pdi-item4','pdi-item5',
-  'sag-warning','sag-items','customs-list',
-  'kit-wise-b1','kit-wise-b2','kit-wise-b3',
-  'visa-info','docs-note'
-  // Agrega aquí cualquier key cuya traducción tenga etiquetas HTML
-];
-
-document.querySelectorAll('[data-i18n]').forEach(el => {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
   const key = el.getAttribute('data-i18n');
-  const value = TRANSLATIONS[lang]?.[key];
-  if (!value) return;
-
-  if (HTML_TRANSLATION_KEYS.includes(key)) {
-    el.innerHTML = value; // solo las que realmente necesitan HTML
-  } else {
-    el.textContent = value; // el resto: seguro contra XSS
-  }
+  if (TRANSLATIONS[lang]?.[key]) el.innerHTML = TRANSLATIONS[lang][key];
 });
       document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
