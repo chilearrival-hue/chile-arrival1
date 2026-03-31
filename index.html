@@ -5617,6 +5617,12 @@ const openPasses = BORDER_PASSES
                 </div>
               </div>
             </div>` : ''}
+            <button onclick="sharePass('${sanitizeInput(pass.name)}','${sanitizeInput(pass.status)}','${sanitizeInput(pass.hours)}','${sanitizeInput(pass.observations || '')}')"
+  style="margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;
+  border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;gap:6px;">
+  <i class="fab fa-whatsapp"></i> Compartir estado
+</button>
         </div>`;
     }
    function filterPasses() {
@@ -6038,6 +6044,13 @@ function getOpenNowBadge(hoursStr) {
 }
 // ===== FILTRO POR PAÍS =====
 let activeCountryFilter = 'todos';
+
+function sharePass(name, status, hours, obs) {
+  const emoji = status === 'Abierto' ? '✅' : '🔴';
+  const obsText = obs && obs.trim() ? '📌 ' + obs + '\n' : '';
+  const text = `${emoji} *Paso ${name}* — ${status}\n🕐 Horario: ${hours || 'No disponible'}\n${obsText}📱 Vía PasosCL App`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+}
 
 // ✅ DESPUÉS
 function filterByCountry(country, button) {
