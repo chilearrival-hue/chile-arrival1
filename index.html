@@ -3101,19 +3101,16 @@ function loadConfetti(callback) {
                 id="rateTimestamp">--:--</span></p>
           </div>
          <div class="mt-3">
-          <!-- Conversión inversa CLP → otras monedas -->
+         <!-- Conversión inversa CLP → otras monedas -->
 <div class="mt-4 pt-4" style="border-top:1px solid rgba(255,255,255,0.2);">
-  <p class="text-xs uppercase font-bold text-blue-100 mb-3 text-center">
-    💵
-    ${currentLang === 'pt' ? 'Converter CLP para outras moedas' :
-      currentLang === 'en' ? 'Convert CLP to other currencies' :
-      'Convertir CLP a otras monedas'}
+  <p class="text-xs uppercase font-bold text-blue-100 mb-3 text-center" data-i18n="clp-convert-title">
+    💵 Convertir CLP a otras monedas
   </p>
   <div style="display:flex;gap:8px;align-items:center;justify-content:center;">
     <div style="position:relative;">
       <span style="
         position:absolute;left:12px;top:50%;transform:translateY(-50%);
-        font-size:11px;font-weight:800;color:#64748b;">CLP</span>
+        font-size:11px;font-weight:800;color:rgba(255,255,255,0.7);">CLP</span>
       <input
         id="clpAmount"
         type="number"
@@ -3125,7 +3122,7 @@ function loadConfetti(callback) {
         style="padding-left:44px;">
     </div>
   </div>
-  <div id="clpResultContainer" class="hidden"></div>
+  <div id="clpResultContainer"></div>
 </div>
   <p style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.7);
             text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;text-align:center;">
