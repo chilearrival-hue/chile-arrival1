@@ -6622,6 +6622,71 @@ function showConfirm(message, onConfirm) {
     }
   );
 }
+
+function renderVisaProgressBar(daysLeft) {
+  // Elimina barra anterior si existe
+  document.getElementById('visaProgressBar')?.remove();
+
+  const pct   = Math.min(Math.round((daysLeft / 90) * 100), 100);
+  const color = daysLeft <= 10 ? '#dc2626'
+              : daysLeft <= 30 ? '#f59e0b'
+              : '#10b981';
+  const label = daysLeft <= 10
+    ? (currentLang === 'es' ? '⚠️ Urgente — planifica tu salida' :
+       currentLang === 'pt' ? '⚠️ Urgente — planeje sua saída' :
+       '⚠️ Urgent — plan your departure')
+    : daysLeft <= 30
+    ? (currentLang === 'es' ? '📅 Menos de 30 días — pronto deberás salir' :
+       currentLang === 'pt' ? '📅 Menos de 30 dias — em breve precisará sair' :
+       '📅 Under 30 days — you\'ll need to leave soon')
+    : (currentLang === 'es' ? '✅ Estadía en regla' :
+       currentLang === 'pt' ? '✅ Estadia em ordem' :
+       '✅ Stay in order');
+
+  const bar = document.createElement('div');
+  bar.id = 'visaProgressBar';
+  bar.style.cssText = 'margin-top:16px;';
+  bar.innerHTML = `
+    <div style="
+      display:flex;justify-content:space-between;
+      align-items:center;margin-bottom:6px;">
+      <span style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.8);text-transform:uppercase;">
+        ${currentLang === 'es' ? 'Tiempo restante' :
+          currentLang === 'pt' ? 'Tempo restante' : 'Time remaining'}
+      </span>
+      <span style="font-size:13px;font-weight:900;color:white;">${pct}%</span>
+    </div>
+
+    <!-- Barra -->
+    <div style="
+      height:10px;background:rgba(255,255,255,0.2);
+      border-radius:10px;overflow:hidden;">
+      <div style="
+        height:100%;width:0%;border-radius:10px;
+        background:${color};
+        transition:width 1s ease;
+        box-shadow:0 0 8px ${color};" id="visaBarFill">
+      </div>
+    </div>
+
+    <!-- Etiqueta -->
+    <p style="
+      font-size:11px;font-weight:700;
+      color:rgba(255,255,255,0.8);
+      margin-top:8px;text-align:center;">
+      ${label}
+    </p>`;
+
+  // Inserta después del resultado de días
+  const resultEl = document.getElementById('daysResult');
+  if (resultEl) resultEl.appendChild(bar);
+
+  // Anima la barra después de insertar
+  setTimeout(() => {
+    const fill = document.getElementById('visaBarFill');
+    if (fill) fill.style.width = pct + '%';
+  }, 100);
+}
 // ===== RECORDATORIO VENCIMIENTO =====
 function scheduleExpiryReminder(entryDateStr) {
   const [year, month, day] = entryDateStr.split('-').map(Number);
@@ -6885,13 +6950,16 @@ if (year < 2000 || entryDateObj > todayCheck) {
           : '⛔ Visa expired ' + Math.abs(daysRemaining) + ' days ago';
         warningEl.classList.remove('hidden');
       } else {
-        const expiry = new Date(year, month - 1, day + 90);
-        const locale = currentLang === 'es' ? 'es-CL' : currentLang === 'pt' ? 'pt-BR' : 'en-US';
-        numberEl.textContent = daysRemaining;
-        expiryEl.textContent = (currentLang === 'es' ? 'Vence ' : currentLang === 'pt' ? 'Vence ' : 'Expires ') +
-          expiry.toLocaleDateString(locale, {year:'numeric', month:'long', day:'numeric'});
-        warningEl.classList.toggle('hidden', daysRemaining > 15);
-      }
+  const expiry = new Date(year, month - 1, day + 90);
+  const locale = currentLang === 'es' ? 'es-CL' : currentLang === 'pt' ? 'pt-BR' : 'en-US';
+  numberEl.textContent = daysRemaining;
+  expiryEl.textContent = (currentLang === 'es' ? 'Vence ' : currentLang === 'pt' ? 'Vence ' : 'Expires ') +
+    expiry.toLocaleDateString(locale, {year:'numeric', month:'long', day:'numeric'});
+  warningEl.classList.toggle('hidden', daysRemaining > 15);
+
+  // Barra de progreso visual
+  renderVisaProgressBar(daysRemaining);
+}
 
       localStorage.setItem('entryDate', entryDate);
 saveDateToHistory(entryDate);
