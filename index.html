@@ -4174,6 +4174,16 @@ function loadConfetti(callback) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#x27;');
+
+        function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
     }
 
     // ===== UTILIDADES =====
@@ -4207,31 +4217,57 @@ function loadConfetti(callback) {
 
     // ===== MANEJO DE ERRORES =====
         function showError(message, retry = false) {
-      // Backdrop
-      const backdrop = document.createElement('div');
-      backdrop.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9998;';
-      document.body.appendChild(backdrop);
+  const errorTitles = {
+    es: '¡Ups! Algo salió mal',
+    en: 'Oops! Something went wrong',
+    pt: 'Ops! Algo deu errado'
+  };
+  const retryLabels = {
+    es: '🔄 Reintentar',
+    en: '🔄 Retry',
+    pt: '🔄 Tentar novamente'
+  };
 
-      const container = document.createElement('div');
-      container.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.3);z-index:9999;max-width:90%;text-align:center;';
-      const safeMsg = document.createElement('p');
-      safeMsg.style.cssText = 'color:#64748b;margin-bottom:20px;font-weight:600;';
-      safeMsg.textContent = message;
-      container.innerHTML = '<i class="fas fa-exclamation-triangle" style="font-size:48px;color:#f59e0b;margin-bottom:15px;"></i><h3 style="margin-bottom:10px;color:#0f172a;font-weight:900;">¡Ups! Algo salió mal</h3>';
-      container.appendChild(safeMsg);
-      if (retry) {
-        const btn = document.createElement('button');
-        btn.textContent = '🔄 Reintentar';
-        btn.style.cssText = 'padding:12px 24px;background:#0039a6;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;';
-        btn.onclick = () => location.reload();
-        container.appendChild(btn);
-      }
-            document.body.appendChild(container);
-      setTimeout(() => {
-        container.remove();
-        backdrop.remove();
-      }, 5000);
-    }
+  const backdrop = document.createElement('div');
+  backdrop.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9998;';
+  document.body.appendChild(backdrop);
+
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.3);z-index:9999;max-width:90%;text-align:center;';
+
+  // Ícono
+  const icon = document.createElement('i');
+  icon.className = 'fas fa-exclamation-triangle';
+  icon.style.cssText = 'font-size:48px;color:#f59e0b;margin-bottom:15px;display:block;';
+  container.appendChild(icon);
+
+  // Título en el idioma correcto
+  const title = document.createElement('h3');
+  title.style.cssText = 'margin-bottom:10px;color:#0f172a;font-weight:900;';
+  title.textContent = errorTitles[currentLang] || errorTitles.es;
+  container.appendChild(title);
+
+  // Mensaje recibido como parámetro — con textContent, nunca innerHTML
+  const msg = document.createElement('p');
+  msg.style.cssText = 'color:#64748b;margin-bottom:20px;font-weight:600;';
+  msg.textContent = message; // textContent previene XSS
+  container.appendChild(msg);
+
+  // Botón reintentar (opcional)
+  if (retry) {
+    const btn = document.createElement('button');
+    btn.textContent = retryLabels[currentLang] || retryLabels.es;
+    btn.style.cssText = 'padding:12px 24px;background:#0039a6;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;';
+    btn.onclick = () => location.reload();
+    container.appendChild(btn);
+  }
+
+  document.body.appendChild(container);
+  setTimeout(() => {
+    container.remove();
+    backdrop.remove();
+  }, 5000);
+}
 
         async function fetchWithRetry(url, options = {}, maxRetries = 3, timeoutMs = 8000) {
       for (let i = 0; i < maxRetries; i++) {
@@ -4264,8 +4300,8 @@ function loadConfetti(callback) {
       <!-- Hero kit -->
       <div class="card-glass glass-blue p-5 rounded-2xl">
         <p class="text-[11px] font-black uppercase text-blue-100 mb-1 tracking-wide">${t('kit-badge')}</p>
-        <h2 class="text-xl font-black text-white leading-tight mb-1">${t('kit-title')}</h2>
-        <p class="text-xs text-blue-100/90 font-semibold">${t('kit-subtitle')}</p>
+        <h2 class="text-xl font-black text-white leading-tight mb-1">${escapeHtml(t('kit-title'))}</h2>
+<p class="text-xs text-blue-100/90 font-semibold">${escapeHtml(t('kit-subtitle'))}</p>
       </div>
 
       <!-- Header sección -->
@@ -4354,8 +4390,8 @@ function loadConfetti(callback) {
             { href:'https://www.booking.com/city/cl/puerto-montt.html', title:t('kit-hotel-pto'), sub:t('kit-hotel-pto-sub') },
             { href:'https://www.booking.com/city/ar/san-carlos-de-bariloche.html', title:t('kit-hotel-bari'), sub:t('kit-hotel-bari-sub') }
           ].map((h, i, arr) => `
-                        <a href="${h.href}" target="_blank" rel="noopener sponsored"
-               aria-label="${h.title}"
+  <a href="${escapeHtml(h.href)}" target="_blank" rel="noopener sponsored"
+     aria-label="${escapeHtml(h.title)}"
                class="flex items-center justify-between px-4 py-3 transition active:bg-blue-50"
                style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
               <div class="flex items-center gap-3">
@@ -4386,8 +4422,8 @@ function loadConfetti(callback) {
             { href:'https://www.rentalcars.com', emoji:'🚗', title:t('kit-car-title'), sub:t('kit-car-sub') },
             { href:'https://www.busbud.com', emoji:'🚌', title:t('kit-bus-title'), sub:t('kit-bus-sub') }
           ].map((tr, i, arr) => `
-                        <a href="${tr.href}" target="_blank" rel="noopener sponsored"
-               aria-label="${tr.title}"
+  <a href="${escapeHtml(tr.href)}" target="_blank" rel="noopener sponsored"
+     aria-label="${escapeHtml(tr.title)}"
                class="flex items-center justify-between px-4 py-3 transition active:bg-orange-50"
                style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
               <div class="flex items-center gap-3">
@@ -4759,10 +4795,26 @@ function renderStats() {
     // ===== TRADUCCIÓN =====
     function translatePage(lang) {
       currentLang = lang;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (TRANSLATIONS[lang]?.[key]) el.innerHTML = TRANSLATIONS[lang][key];
-      });
+      // Keys que legítimamente contienen HTML (<strong>, <br>, <u>, etc.)
+const HTML_TRANSLATION_KEYS = [
+  'pdi-item1','pdi-item2','pdi-item3','pdi-item4','pdi-item5',
+  'sag-warning','sag-items','customs-list',
+  'kit-wise-b1','kit-wise-b2','kit-wise-b3',
+  'visa-info','docs-note'
+  // Agrega aquí cualquier key cuya traducción tenga etiquetas HTML
+];
+
+document.querySelectorAll('[data-i18n]').forEach(el => {
+  const key = el.getAttribute('data-i18n');
+  const value = TRANSLATIONS[lang]?.[key];
+  if (!value) return;
+
+  if (HTML_TRANSLATION_KEYS.includes(key)) {
+    el.innerHTML = value; // solo las que realmente necesitan HTML
+  } else {
+    el.textContent = value; // el resto: seguro contra XSS
+  }
+});
       document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
         if (TRANSLATIONS[lang]?.[key]) el.placeholder = TRANSLATIONS[lang][key];
@@ -4941,11 +4993,24 @@ if (clpEl) clpEl.style.opacity = '0.4';
           localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
           localStorage.setItem('exchangeRatesTime', ratesLastUpdate.toISOString());
           document.querySelector('.cache-warning')?.remove();
-          statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
-          timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
-          if (clpEl) clpEl.style.opacity = '1';
-          showRateChange(); convertMoney();renderQuickSummary(); return true;
-        } catch(e) { console.warn('API primaria falló, intentando backup...'); }
+                  statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online') + ' (backup)';
+        timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
+
+        // Aviso visible de monedas aproximadas
+        const approxNote = document.getElementById('approxRateNote');
+        if (!approxNote) {
+          const note = document.createElement('p');
+          note.id = 'approxRateNote';
+          note.style.cssText = 'font-size:10px;color:#f59e0b;font-weight:700;text-align:center;margin-top:6px;';
+          note.textContent = currentLang === 'pt'
+            ? '⚠️ BRL/PEN/BOB são valores aproximados'
+            : currentLang === 'en'
+            ? '⚠️ BRL/PEN/BOB are approximate values'
+            : '⚠️ BRL/PEN/BOB son valores aproximados';
+          timestampEl.parentElement.appendChild(note);
+        }
+        showRateChange(); convertMoney(); renderQuickSummary(); return true;
+      } catch(e) { console.error('API backup falló'); }
 
         try {
           const res2 = await fetchWithRetry('https://mindicador.cl/api');
@@ -4955,15 +5020,16 @@ if (clpEl) clpEl.style.opacity = '0.4';
             USD: Math.round(data2.dolar.valor),
             EUR: Math.round(data2.euro.valor),
             ARS: parseFloat((data2.dolar.valor / await fetchARSRate()).toFixed(2)),
-BRL: Math.round(data2.dolar.valor / 5.5),
-PEN: Math.round(data2.dolar.valor / 3.8),
-BOB: Math.round(data2.dolar.valor / 7.0)
+BRL: exchangeRates.BRL > 0 ? exchangeRates.BRL : Math.round(data2.dolar.valor / 5.5),
+PEN: exchangeRates.PEN > 0 ? exchangeRates.PEN : Math.round(data2.dolar.valor / 3.8),
+BOB: exchangeRates.BOB > 0 ? exchangeRates.BOB : Math.round(data2.dolar.valor / 7.0)
           };
           ratesLastUpdate = new Date(data2.dolar.fecha);
           localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
           localStorage.setItem('exchangeRatesTime', ratesLastUpdate.toISOString());
           document.querySelector('.cache-warning')?.remove();
           statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
+                  document.getElementById('approxRateNote')?.remove();
           timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
           showRateChange(); convertMoney();renderQuickSummary(); return true;
         } catch(e) { console.error('API backup falló'); }
@@ -5331,11 +5397,12 @@ const openPasses = BORDER_PASSES
               <p class="text-xs text-slate-700 font-bold mt-1.5">${sanitizeInput(pass.country)}</p>
             </div>
             <div class="flex items-center gap-2">
-  <button onclick="event.stopPropagation(); toggleFavorite('${sanitizeInput(pass.name)}')"
-    style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px;line-height:1;"
-    aria-label="Favorito">
-    ${favs.includes(pass.name) ? '⭐' : '☆'}
-  </button>
+  <button data-passname="${pass.name.replace(/"/g, '&quot;')}"
+  class="fav-toggle-btn"
+  style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px;line-height:1;"
+  aria-label="Favorito">
+  ${favs.includes(pass.name) ? '⭐' : '☆'}
+</button>
   <span class="badge badge-live">${t('open')}</span>
 </div>
           </div>
@@ -5795,14 +5862,15 @@ function filterByCountry(country, button) {
 
   // Filtra las cards
   document.querySelectorAll('#passesContainer [data-pass]').forEach(card => {
-    if (country === 'todos') {
-      card.classList.remove('hidden');
-      return;
-    }
-    const cardText = card.textContent.toLowerCase();
-    const matches = cardText.includes(country.toLowerCase());
-    card.classList.toggle('hidden', !matches);
-  });
+  if (country === 'todos') {
+    card.classList.remove('hidden');
+    return;
+  }
+  const passName = card.getAttribute('data-pass');
+  const passData = BORDER_PASSES.find(p => p.name.toLowerCase() === passName);
+  const matches  = passData?.country.toLowerCase() === country.toLowerCase();
+  card.classList.toggle('hidden', !matches);
+});
 
   // Actualiza contador
   const visible = document.querySelectorAll('#passesContainer [data-pass]:not(.hidden)').length;
@@ -5869,18 +5937,21 @@ function toggleMap() {
     btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
   }
 }
+let _mapRetryCount = 0;
+
 function updateMapMarkers() {
   if (!mapInstance) return;
 
-  // Limpia marcadores anteriores antes de agregar nuevos
   mapInstance.eachLayer(layer => {
     if (layer instanceof L.Marker) mapInstance.removeLayer(layer);
   });
 
   if (!BORDER_PASSES.length) {
-    setTimeout(() => updateMapMarkers(), 1000);
+    if (_mapRetryCount++ < 10) setTimeout(() => updateMapMarkers(), 1000);
+    else console.warn('updateMapMarkers: BORDER_PASSES vacío tras 10 intentos');
     return;
   }
+  _mapRetryCount = 0;
 
   BORDER_PASSES.forEach(pass => {
     const coords = PASS_LOCATIONS[pass.name];
@@ -5989,6 +6060,13 @@ function toggleFavorite(passName) {
   }
   localStorage.setItem('favoritePasses', JSON.stringify(favs));
   renderOpenPassesInViaje();
+  document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.fav-toggle-btn');
+  if (btn) {
+    e.stopPropagation();
+    toggleFavorite(btn.dataset.passname);
+  }
+});
 }
 // ===== COMPARTIR =====
 function shareReport(paso, tipo, mensaje) {
@@ -6159,14 +6237,14 @@ function loadConfetti(callback) {
       submitBtn.disabled = true;
 
       try {
-        fetch(CONFIG.WEB_APP_URL, {
-          method: 'POST', mode: 'no-cors',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(reportData)
-        }).catch(e => console.warn('Error enviando reporte:', e));
+  await fetch(CONFIG.WEB_APP_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(reportData)
+  });
 
-        // Mostramos el reporte localmente de inmediato
-        reportsCache.unshift(reportData);
+  // Mostramos el reporte localmente de inmediato
+  reportsCache.unshift(reportData);
         localStorage.setItem('reportsCache', JSON.stringify(reportsCache));
         renderReports(reportsCache);
         closeReportModal();
@@ -6964,19 +7042,22 @@ scheduleExpiryReminder(entryDate);
       const texts = getNotifTexts()[currentLang];
       const existing = document.getElementById('pushBanner');
       if (existing) {
-        existing.querySelector('.notif-banner-text').childNodes[0].textContent = texts.bannerTitle;
-        existing.querySelector('.notif-banner-text span').textContent = texts.bannerSub;
-        existing.querySelector('.notif-banner-btn').textContent = texts.bannerBtn;
-        return;
-      }
+  const titleEl = existing.querySelector('.notif-banner-title');
+  const subEl   = existing.querySelector('.notif-banner-text span');
+  const btnEl   = existing.querySelector('.notif-banner-btn');
+  if (titleEl) titleEl.textContent = texts.bannerTitle;
+  if (subEl)   subEl.textContent   = texts.bannerSub;
+  if (btnEl)   btnEl.textContent   = texts.bannerBtn;
+  return;
+}
       const banner = document.createElement('div');
       banner.id = 'pushBanner';
       banner.className = 'notif-banner';
       banner.innerHTML = `
-        <div class="notif-banner-text">
-          ${texts.bannerTitle}
-          <span>${texts.bannerSub}</span>
-        </div>
+  <div class="notif-banner-text">
+    <span class="notif-banner-title">${texts.bannerTitle}</span>
+    <span>${texts.bannerSub}</span>
+  </div>
         <button class="notif-banner-btn" onclick="requestNotificationPermission()">
           ${texts.bannerBtn}
         </button>
@@ -7023,7 +7104,6 @@ scheduleExpiryReminder(entryDate);
 function fetchAllData() {
   lastFetchTime = Date.now();
   initCurrencyTabs();
-fetchExchangeRates();
   fetchExchangeRates();
   fetchBorderPassesFromSheet();
   fetchReportsFromSheet();
@@ -7139,7 +7219,7 @@ document.getElementById('notificationHistoryModal').addEventListener('click', (e
 });
 // ===== ADSENSE INIT =====
 try {
-  (adsbygoogle = window.adsbygoogle || []).push({});
+  (window.adsbygoogle = window.adsbygoogle || []).push({});
 } catch(e) {
   console.warn('AdSense no disponible:', e);
 }// Click fuera del contenido cierra el modal
