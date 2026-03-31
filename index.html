@@ -4728,9 +4728,13 @@ function renderQuickSummary() {
 }
 // ===== ESTADÍSTICAS =====
 function initStats() {
-  // Suma una visita cada vez que se abre la app
-  const visits = parseInt(localStorage.getItem('appVisits') || '0') + 1;
-  localStorage.setItem('appVisits', visits.toString());
+  // Cuenta solo una vez por día
+  const todayKey = 'visited_' + new Date().toISOString().split('T')[0];
+  if (!localStorage.getItem(todayKey)) {
+    localStorage.setItem(todayKey, '1');
+    const visits = parseInt(localStorage.getItem('appVisits') || '0') + 1;
+    localStorage.setItem('appVisits', visits.toString());
+  }
   renderStats();
 }
 
@@ -4901,9 +4905,10 @@ if (tabEl) tabEl.classList.add('active');
 
     // ===== NIEVE =====
     function createSnowflakes() {
-      const container = document.getElementById('snowContainer');
-      if (!container) return;
-      for (let i = 0; i < 15; i++) {
+  const container = document.getElementById('snowContainer');
+  if (!container) return;
+  container.innerHTML = ''; // limpia copos anteriores
+  for (let i = 0; i < 15; i++) {
         const sf = document.createElement('div');
         sf.classList.add('snowflake');
         sf.textContent = '❄';
@@ -5484,7 +5489,8 @@ function startTravelMode() {
   }
 
   const btn = document.getElementById('travelModeBtn');
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+  const searching = { es:'Buscando...', en:'Searching...', pt:'Buscando...' };
+btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${searching[currentLang] || searching.es}`;
   btn.disabled = true;
 
   navigator.geolocation.getCurrentPosition(
@@ -5493,16 +5499,17 @@ function startTravelMode() {
 localStorage.setItem('travelModeWasActive', 'true');
 btn.innerHTML = '<i class="fas fa-stop"></i> Detener';
 btn.disabled = false;
-btn.classList.replace('bg-green-600', 'bg-red-600');
-btn.classList.replace('hover:bg-green-700', 'hover:bg-red-700');
+btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+btn.classList.add('bg-red-600', 'hover:bg-red-700');
       findNearestPass(position.coords.latitude, position.coords.longitude);
 
       // Actualiza cada 2 minutos
       travelModeInterval = setInterval(() => {
-        navigator.geolocation.getCurrentPosition(pos => {
-          findNearestPass(pos.coords.latitude, pos.coords.longitude);
-        });
-      }, 120000);
+  navigator.geolocation.getCurrentPosition(
+    pos => findNearestPass(pos.coords.latitude, pos.coords.longitude),
+    err => console.warn('GPS update falló:', err.message)
+  );
+}, 120000);
     },
     error => {
       btn.innerHTML = '<i class="fas fa-location-arrow"></i> ' + (currentLang === 'es' ? 'Activar' : currentLang === 'pt' ? 'Ativar' : 'Enable');
@@ -5520,8 +5527,8 @@ clearInterval(travelModeInterval);
 localStorage.removeItem('travelModeWasActive'); // ← línea nueva
   const btn = document.getElementById('travelModeBtn');
   btn.innerHTML = '<i class="fas fa-location-arrow"></i> Activar';
-  btn.classList.replace('bg-red-600', 'bg-green-600');
-  btn.classList.replace('hover:bg-red-700', 'hover:bg-green-700');
+  btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+btn.classList.add('bg-green-600', 'hover:bg-green-700');
   const travelEl = document.getElementById('travelModeResult');
 if (travelEl) travelEl.classList.add('hidden');
   showToast('🛑 ' + (currentLang === 'es' ? 'Modo viaje desactivado' :
@@ -5892,12 +5899,17 @@ function toggleMap() {
   const container = document.getElementById('mapContainer');
   const btn = document.getElementById('mapToggleBtn');
   const isHidden = container.classList.contains('hidden');
+  const mapLabels = {
+    es: { open:'Ver mapa', close:'Cerrar mapa' },
+    en: { open:'View map', close:'Close map' },
+    pt: { open:'Ver mapa', close:'Fechar mapa' }
+  };
+  const labels = mapLabels[currentLang] || mapLabels.es;
 
   if (isHidden) {
     container.classList.remove('hidden');
-    btn.innerHTML = '<i class="fas fa-times"></i> Cerrar mapa';
+    btn.innerHTML = `<i class="fas fa-times"></i> ${labels.close}`;
 
-    // Precarga Leaflet apenas abre el contenedor
     if (typeof L === 'undefined') {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
@@ -5906,9 +5918,7 @@ function toggleMap() {
 
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-      script.onload = () => {
-        setTimeout(() => initMapCore(), 500);
-      };
+      script.onload = () => setTimeout(() => initMapCore(), 500);
       script.onerror = () => {
         container.innerHTML = '<p style="text-align:center;padding:20px;color:#ef4444;font-weight:700">⚠️ No se pudo cargar el mapa. Verificá tu conexión.</p>';
       };
@@ -5918,7 +5928,7 @@ function toggleMap() {
     }
   } else {
     container.classList.add('hidden');
-    btn.innerHTML = '<i class="fas fa-map"></i> Ver mapa';
+    btn.innerHTML = `<i class="fas fa-map"></i> ${labels.open}`;
   }
 }
 let _mapRetryCount = 0;
@@ -6135,7 +6145,7 @@ const typeIcon = {
           </div>
           ${report.mensaje ? `<div class="report-message">"${sanitizeInput(report.mensaje)}"</div>` : ''}
           <div class="report-votes flex justify-between items-center">
-  <span>👍 ${report.votos} ${t('confirms')}</span>
+  <span>👍 ${parseInt(report.votos) || 0} ${t('confirms')}</span>
   <button
     data-paso="${sanitizeInput(report.paso)}"
     data-tipo="${sanitizeInput(report.tipo)}"
@@ -6163,7 +6173,12 @@ function canSubmitReport() {
       const form = document.getElementById('reportForm');
       form.prepend(errorEl);
     }
-    errorEl.textContent = `⏳ Espera ${secsLeft} seg antes de enviar otro reporte`;
+    const waitMsg = {
+  es: `⏳ Espera ${secsLeft}s antes de enviar otro reporte`,
+  en: `⏳ Wait ${secsLeft}s before sending another report`,
+  pt: `⏳ Aguarde ${secsLeft}s antes de enviar outro relato`
+};
+errorEl.textContent = waitMsg[currentLang] || waitMsg.es;
     setTimeout(() => errorEl?.remove(), 3000);
     return false;
   }
@@ -6446,7 +6461,9 @@ function switchChecklistProfile(profile) {
 
   // Carga el nuevo perfil
   const saved = localStorage.getItem('checklistState_' + profile);
-  const freshItems = CHECKLIST_ITEMS[currentLang][profile];
+  const freshItems = CHECKLIST_ITEMS[currentLang]?.[profile]
+                || CHECKLIST_ITEMS['es']?.[profile]
+                || [];
   if (saved) {
     try {
       const savedState = JSON.parse(saved);
@@ -6535,7 +6552,9 @@ function showConfirm(message, onConfirm) {
     currentLang === 'pt' ? 'Reiniciar a lista atual?' : 'Reset current checklist?',
     () => {
       const profile = localStorage.getItem('checklistProfile') || 'auto';
-      checklistState = [...CHECKLIST_ITEMS[currentLang][profile]];
+      checklistState = [...(CHECKLIST_ITEMS[currentLang]?.[profile]
+               || CHECKLIST_ITEMS['es']?.[profile]
+               || [])];
       localStorage.setItem('checklistState_' + profile, JSON.stringify(checklistState));
       renderChecklist();
       showToast('🔄 ' + (currentLang === 'es' ? 'Checklist reiniciado' :
