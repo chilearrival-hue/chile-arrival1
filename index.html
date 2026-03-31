@@ -2575,22 +2575,6 @@ function loadConfetti(callback) {
       background: rgba(255, 255, 255, 0.3);
       border-color: rgba(255, 255, 255, 0.6);
     }
-    .country-filter-btn {
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 2px solid rgba(0,0,0,0.1);
-  background: white;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: #334155;
-}
-.country-filter-btn.active {
-  background: #16a34a;
-  color: white;
-  border-color: #16a34a;
-}
   </style>
 </head>
 
@@ -3071,13 +3055,7 @@ function loadConfetti(callback) {
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" onkeyup="debouncedFilterPasses()" data-i18n-placeholder="search-placeholder"
           placeholder="Buscar por nombre o región...">
-      </div>
-      <div id="countryFilter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;margin-top:8px;">
-  <button onclick="filterByCountry('all')" class="country-filter-btn active" data-country="all">🌎 Todos</button>
-  <button onclick="filterByCountry('Argentina')" class="country-filter-btn" data-country="Argentina">🇦🇷 Argentina</button>
-  <button onclick="filterByCountry('Bolivia')" class="country-filter-btn" data-country="Bolivia">🇧🇴 Bolivia</button>
-  <button onclick="filterByCountry('Perú')" class="country-filter-btn" data-country="Perú">🇵🇪 Perú</button>
-</div>
+  
       <div id="passesContainer" class="space-y-4"></div>
     </section>
 
@@ -5600,7 +5578,7 @@ const openPasses = BORDER_PASSES
   const hasObs = pass.observations && pass.observations.trim() !== '';
       return `
   <div class="card-glass glass-green p-5 ${pass.important ? 'ring-2 ring-yellow-400' : ''}"
-    data-pass="${pass.name.toLowerCase()}"
+    data-pass="${pass.name.toLowerCase()}" data-country="${pass.country.toLowerCase()}"
     style="animation:cardFadeIn 0.4s ease ${index * 0.08}s both;">
           <div class="flex justify-between items-start mb-4">
             <div>
@@ -5641,41 +5619,36 @@ const openPasses = BORDER_PASSES
             </div>` : ''}
         </div>`;
     }
-function filterByCountry(country) {
-  document.querySelectorAll('.country-filter-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.country === country);
-  });
+   function filterPasses() {
+  const search = DOM_CACHE.searchInput.value.toLowerCase().trim();
+
+  const searchAliases = {
+    'open': 'abierto', 'closed': 'cerrado', 'border': 'paso',
+    'crossing': 'paso', 'north': 'norte', 'south': 'sur',
+    'argentina': 'argentina', 'peru': 'perú', 'bolivia': 'bolivia',
+    'aberto': 'abierto', 'fechado': 'cerrado', 'fronteira': 'paso',
+    'norte': 'norte', 'sul': 'sur'
+  };
+
+  const normalizedSearch = searchAliases[search] || search;
+
   document.querySelectorAll('#passesContainer [data-pass]').forEach(card => {
-    if (country === 'all') { card.classList.remove('hidden'); return; }
-    const matches = card.textContent.includes(country);
+    // Busca también en data-country si existe, si no busca en textContent
+    const passText = card.textContent.toLowerCase();
+    const passAttr = card.getAttribute('data-pass') || '';
+    const countryAttr = (card.getAttribute('data-country') || '').toLowerCase();
+
+    const matches =
+      passAttr.includes(normalizedSearch) ||
+      passAttr.includes(search) ||
+      countryAttr.includes(normalizedSearch) ||
+      countryAttr.includes(search) ||
+      passText.includes(normalizedSearch) ||
+      passText.includes(search);
+
     card.classList.toggle('hidden', !matches);
   });
 }
-   function filterPasses() {
-      const search = DOM_CACHE.searchInput.value.toLowerCase().trim();
-
-      // Traducciones de términos comunes para búsqueda
-      const searchAliases = {
-        // Inglés → español
-        'open': 'abierto', 'closed': 'cerrado', 'border': 'paso',
-        'crossing': 'paso', 'north': 'norte', 'south': 'sur',
-        'argentina': 'argentina', 'peru': 'perú', 'bolivia': 'bolivia',
-        // Portugués → español
-        'aberto': 'abierto', 'fechado': 'cerrado', 'fronteira': 'paso',
-        'norte': 'norte', 'sul': 'sur'
-      };
-
-      const normalizedSearch = searchAliases[search] || search;
-
-      document.querySelectorAll('#passesContainer [data-pass]').forEach(pass => {
-        const matches =
-          pass.getAttribute('data-pass').includes(normalizedSearch) ||
-          pass.getAttribute('data-pass').includes(search) ||
-          pass.textContent.toLowerCase().includes(normalizedSearch) ||
-          pass.textContent.toLowerCase().includes(search);
-        pass.classList.toggle('hidden', !matches);
-      });
-    }
 
     function populateReportPassSelect() {
       const select = document.getElementById('reportPass');
