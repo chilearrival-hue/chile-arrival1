@@ -5356,8 +5356,10 @@ function convertFromCLP() {
     if (!weather) return;
     const icon = getWeatherIcon(weather.code);
     const label = getWeatherLabel(weather.code, currentLang);
-    const existing = card.querySelector('.weather-badge');
-    if (existing) existing.remove();
+  const existing = card.querySelector('.weather-badge');
+if (existing) existing.remove();
+const existingShare = card.querySelector('.share-btn');
+if (existingShare) existingShare.remove();
     const badge = document.createElement('div');
     badge.className = 'weather-badge';
     badge.style.cssText = `
@@ -5617,11 +5619,11 @@ const openPasses = BORDER_PASSES
                 </div>
               </div>
             </div>` : ''}
-            <button onclick="sharePass('${sanitizeInput(pass.name)}','${sanitizeInput(pass.status)}','${sanitizeInput(pass.hours)}','${sanitizeInput(pass.observations || '')}')"
+          <button class="share-btn" onclick="sharePass('${sanitizeInput(pass.name)}','${sanitizeInput(pass.status)}','${sanitizeInput(pass.hours)}','${sanitizeInput(pass.observations || '')}')"
   style="margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;
   border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;display:flex;
   align-items:center;justify-content:center;gap:6px;">
-  <i class="fab fa-whatsapp"></i> Compartir estado
+  📤 Compartir estado
 </button>
         </div>`;
     }
@@ -6369,7 +6371,7 @@ const typeIcon = {
     data-mensaje="${sanitizeInput(report.mensaje || '').replace(/"/g, '&quot;')}"
     onclick="shareReport(this.dataset.paso, this.dataset.tipo, this.dataset.mensaje)"
     style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:800;color:#25d366;display:flex;align-items:center;gap:4px;">
-    <i class="fab fa-whatsapp" style="font-size:16px"></i>
+    📤
     ${currentLang === 'pt' ? 'Compartilhar' : currentLang === 'en' ? 'Share' : 'Compartir'}
   </button>
 </div>
