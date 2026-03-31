@@ -10,11 +10,7 @@ const STATIC_ASSETS = [
   '/manifest.json',
   '/firebase-config.js',
   '/icons/icon-180x180.png',
-  '/icons/icon-32x32.png',
-  'https://cdn.tailwindcss.com/3.4.1',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap',
-  'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js'
+  '/icons/icon-32x32.png'
 ];
 
 const API_ORIGINS = [
@@ -22,6 +18,16 @@ const API_ORIGINS = [
   'api.exchangerate-api.com',
   'mindicador.cl',
   'script.google.com'
+];
+
+// CDNs externos — se manejan con staleWhileRevalidate, no se precachean
+const EXTERNAL_CDN_ORIGINS = [
+  'cdn.tailwindcss.com',
+  'cdnjs.cloudflare.com',
+  'fonts.googleapis.com',
+  'fonts.gstatic.com',
+  'cdn.jsdelivr.net',
+  'unpkg.com'
 ];
 
 // ===== INSTALL =====
@@ -83,7 +89,11 @@ self.addEventListener('fetch', event => {
     event.respondWith(networkFirstStrategy(request, API_CACHE, 8000));
     return;
   }                                                      // ← Fix S1 ✅
-
+  // CDNs externos — stale while revalidate, sin bloquear instalación
+  if (EXTERNAL_CDN_ORIGINS.some(origin => url.hostname.includes(origin))) {
+    event.respondWith(staleWhileRevalidate(request, DYNAMIC_CACHE));
+    return;
+  }
   if (url.origin === self.location.origin) {
     event.respondWith(cacheFirstStrategy(request, STATIC_CACHE));
     return;
