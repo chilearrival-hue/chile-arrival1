@@ -149,12 +149,12 @@ async function staleWhileRevalidate(request, cacheName) {
     .then(response => {
       if (response && response.ok) {
         cache.put(request, response.clone());
-        return response;
       }
+      return response;
     })
-    .catch(() => null);
+    .catch(() => cached || new Response('', { status: 503 }));
   return cached || networkFetch;
-}                                                        // ← Fix S1 ✅
+}                                                 // ← Fix S1 ✅
 
 // ===== FALLBACK OFFLINE =====
 function offlineFallback(request) {
