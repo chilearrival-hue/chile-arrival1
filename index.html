@@ -4823,7 +4823,7 @@ function renderQuickSummary() {
       </div>
 
       <!-- Fila inferior: días restantes — ancho completo -->
-      <div onclick="showTab('home', document.querySelector('.nav-btn[data-tab=home]'))"
+      <div onclick="showTab('home', document.querySelector('.nav-btn[data-tab=home]')); setTimeout(() => { const input = document.getElementById('entryDate'); if(input){ input.scrollIntoView({behavior:'smooth', block:'center'}); input.focus(); } }, 400);"
         style="
           background:linear-gradient(135deg,
             rgba(${daysLeft !== null && daysLeft <= 10 ? '220,38,38' : daysLeft !== null && daysLeft <= 30 ? '245,158,11' : '16,185,129'},0.15),
