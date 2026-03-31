@@ -2636,6 +2636,16 @@ function loadConfetti(callback) {
   70%  { transform:scale(1.1); opacity:1; }
   100% { transform:scale(1);   opacity:1; }
 }
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 </style>
   <!-- Botón volver arriba -->
   <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
@@ -5427,18 +5437,20 @@ const openPasses = BORDER_PASSES
           </div>
         </div>
         <div class="space-y-4">
-          ${openPasses.map(pass => renderPassCard(pass)).join('')}
+          ${openPasses.map((pass, i) => renderPassCard(pass, i)).join('')}
         </div>`;
 
       // Inyecta clima en las cards después de renderizar
       setTimeout(() => injectWeatherIntoCards(), 300);
     }
 
-    function renderPassCard(pass) {
+    function renderPassCard(pass, index = 0) {
   const favs = getFavorites();
   const hasObs = pass.observations && pass.observations.trim() !== '';
       return `
-        <div class="card-glass glass-green p-5 ${pass.important ? 'ring-2 ring-yellow-400' : ''}" data-pass="${pass.name.toLowerCase()}">
+  <div class="card-glass glass-green p-5 ${pass.important ? 'ring-2 ring-yellow-400' : ''}"
+    data-pass="${pass.name.toLowerCase()}"
+    style="animation:cardFadeIn 0.4s ease ${index * 0.08}s both;">
           <div class="flex justify-between items-start mb-4">
             <div>
               <h4 class="font-black text-xl text-slate-900">${sanitizeInput(pass.name)} ${pass.important ? '⭐' : ''}</h4>
