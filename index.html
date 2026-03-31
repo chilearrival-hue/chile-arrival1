@@ -5455,6 +5455,7 @@ if (!card.querySelector('.share-btn')) {
           return;
         }
 
+        notifyFavoritePasses(passes);
         BORDER_PASSES = passes;
         localStorage.setItem('borderPassesCache', JSON.stringify(BORDER_PASSES));
         localStorage.setItem('borderPassesCacheTime', Date.now().toString());
@@ -6619,6 +6620,32 @@ function renderNotificationToggle() {
         </div>`).join('');
     }
 
+    async function requestNotificationPermission() {
+  if (!('Notification' in window)) return false;
+  if (Notification.permission === 'granted') return true;
+  const result = await Notification.requestPermission();
+  return result === 'granted';
+}
+
+function notifyFavoritePasses(newPasses) {
+  const favs = getFavorites();
+  if (!favs.length || Notification.permission !== 'granted') return;
+
+  newPasses.forEach(pass => {
+    const cached = BORDER_PASSES.find(p => p.name === pass.name);
+    if (!cached || !favs.includes(pass.name)) return;
+    if (cached.status !== pass.status) {
+      const emoji = pass.status === 'Abierto' ? '✅' : '🔴';
+      new Notification(`${emoji} ${pass.name}`, {
+        body: pass.status === 'Abierto'
+          ? (currentLang === 'es' ? 'Ahora está abierto' : currentLang === 'pt' ? 'Agora está aberto' : 'Now open')
+          : (currentLang === 'es' ? 'Ahora está cerrado' : currentLang === 'pt' ? 'Agora está fechado' : 'Now closed'),
+        icon: '/favicon.ico'
+      });
+    }
+  });
+}
+
     function updateNotificationBadge() {
       const badge = DOM_CACHE.notificationBadge;
       if (!badge) return;
@@ -7476,6 +7503,7 @@ function fetchAllData() {
       const savedLang = localStorage.getItem('language');
       if (savedLang === 'es' || savedLang === 'en' || savedLang === 'pt') currentLang = savedLang;
      translatePage(currentLang);
+     requestNotificationPermission();
 
 // Limita la fecha máxima al día de hoy — compatible con iOS
 const todayStr = new Date().toISOString().split('T')[0];
