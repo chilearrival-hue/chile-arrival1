@@ -5276,7 +5276,7 @@ function convertFromCLP() {
       padding:10px 14px;">
       ${rows}
     </div>`;
-    
+
   resultEl.classList.remove('hidden');
 }
     function convertMoney() {
@@ -5344,38 +5344,40 @@ function convertFromCLP() {
     }
 
     async function injectWeatherIntoCards() {
-      const cards = document.querySelectorAll('#passesContainer [data-pass]');
-      for (const card of cards) {
-        const passName = Object.keys(PASS_LOCATIONS).find(
-          name => card.getAttribute('data-pass') === name.toLowerCase()
-        );
-        if (!passName) continue;
-        const weather = await fetchWeatherForPass(passName);
-        if (!weather) continue;
-        const icon = getWeatherIcon(weather.code);
-        const label = getWeatherLabel(weather.code, currentLang);
-        const existing = card.querySelector('.weather-badge');
-        if (existing) existing.remove();
-        const badge = document.createElement('div');
-        badge.className = 'weather-badge';
-        badge.style.cssText = `
-          display:flex;align-items:center;gap:6px;
-          margin-top:10px;padding:8px 12px;
-          background:rgba(255,255,255,0.5);
-          border-radius:10px;font-size:12px;font-weight:700;
-          border:1px solid rgba(255,255,255,0.6);
-        `;
-        badge.innerHTML = `
-          <span style="font-size:18px">${icon}</span>
-          <span>${weather.temp}°C</span>
-          <span style="color:#64748b">·</span>
-          <span>${label}</span>
-          <span style="color:#64748b">·</span>
-          <span>💨 ${weather.wind} km/h</span>
-        `;
-        card.appendChild(badge);
-      }
-    }
+  const cards = [...document.querySelectorAll('#passesContainer [data-pass]')];
+  
+  // Lanza TODOS los fetches al mismo tiempo
+  await Promise.allSettled(cards.map(async (card) => {
+    const passName = Object.keys(PASS_LOCATIONS).find(
+      name => card.getAttribute('data-pass') === name.toLowerCase()
+    );
+    if (!passName) return;
+    const weather = await fetchWeatherForPass(passName);
+    if (!weather) return;
+    const icon = getWeatherIcon(weather.code);
+    const label = getWeatherLabel(weather.code, currentLang);
+    const existing = card.querySelector('.weather-badge');
+    if (existing) existing.remove();
+    const badge = document.createElement('div');
+    badge.className = 'weather-badge';
+    badge.style.cssText = `
+      display:flex;align-items:center;gap:6px;
+      margin-top:10px;padding:8px 12px;
+      background:rgba(255,255,255,0.5);
+      border-radius:10px;font-size:12px;font-weight:700;
+      border:1px solid rgba(255,255,255,0.6);
+    `;
+    badge.innerHTML = `
+      <span style="font-size:18px">${icon}</span>
+      <span>${weather.temp}°C</span>
+      <span style="color:#64748b">·</span>
+      <span>${label}</span>
+      <span style="color:#64748b">·</span>
+      <span>💨 ${weather.wind} km/h</span>
+    `;
+    card.appendChild(badge);
+  }));
+}
     // ===== PASOS FRONTERIZOS =====
     const PASSES_FALLBACK = [
       {name:"Chacalluta", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
