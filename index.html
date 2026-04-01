@@ -45,8 +45,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <!-- Leaflet se carga solo cuando el usuario abre el mapa -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
@@ -56,17 +55,12 @@
     future: { hoverOnlyWhenSupported: true }
   }
 </script>
-  <script>
-function loadConfetti(callback) {
-  if (typeof confetti !== 'undefined') { callback(); return; }
-  const s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js';
-  s.onload = callback;
-  document.head.appendChild(s);
-}
+<script>
+/* loadConfetti se define en el JS principal — no duplicar aquí */
 </script>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+</script>
+ <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   <style>
     /* Variables CSS optimizadas */
     :root {
@@ -118,16 +112,6 @@ function loadConfetti(callback) {
 
     /* Glass Effect mejorado */
     .card-glass {
-      background: rgba(255, 255, 255, .75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .5);
-      box-shadow: 0 4px 16px rgba(31, 38, 135, .1);
-      border-radius: 20px;
-      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-    }
-
-        .card-glass {
       background: rgba(255, 255, 255, .75);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -3052,12 +3036,14 @@ function loadConfetti(callback) {
   </button>
 </div>
       <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" onkeyup="debouncedFilterPasses()" data-i18n-placeholder="search-placeholder"
-          placeholder="Buscar por nombre o región...">
-  
-      <div id="passesContainer" class="space-y-4"></div>
-    </section>
+  <i class="fas fa-search"></i>
+  <input type="text" id="searchInput" onkeyup="debouncedFilterPasses()" 
+    data-i18n-placeholder="search-placeholder"
+    placeholder="Buscar por nombre o región...">
+</div>   ← este cierre faltaba
+
+<div id="passesContainer" class="space-y-4"></div>
+</section>
 
     <!-- TAB: ÚTILES -->
     <section id="utiles" class="tab-content space-y-6">
@@ -4158,7 +4144,7 @@ function loadConfetti(callback) {
       { name:"Hotel 3 estrellas", price:"$50.000–$90.000 CLP" },
       { name:"Airbnb (departamento)", price:"$35.000–$70.000 CLP" }
     ]},
-            { icon:"⛽", category:"Combustible · Mar 2026", items:[
+            { icon:"⛽", category:"Combustible · " + new Date().toLocaleDateString('es-CL', {month:'short', year:'numeric'}), items:[
       { name:"Gasolina 93 octanos", price:"~$1.080 CLP/L" },
       { name:"Gasolina 95 octanos", price:"~$1.130 CLP/L" },
       { name:"Gasolina 97 octanos", price:"~$1.210 CLP/L" },
@@ -4187,7 +4173,7 @@ function loadConfetti(callback) {
       { name:"3-star hotel", price:"$50,000–$90,000 CLP" },
       { name:"Airbnb (apartment)", price:"$35,000–$70,000 CLP" }
     ]},
-        { icon:"⛽", category:"Fuel · Mar 2026", items:[
+        { icon:"⛽", category:"Fuel · " + new Date().toLocaleDateString('en-US', {month:'short', year:'numeric'}), items:[
       { name:"Gasoline 93 octane", price:"~$1,080 CLP/L" },
       { name:"Gasoline 95 octane", price:"~$1,130 CLP/L" },
       { name:"Gasoline 97 octane", price:"~$1,210 CLP/L" },
@@ -4216,7 +4202,7 @@ function loadConfetti(callback) {
       { name:"Hotel 3 estrelas", price:"$50.000–$90.000 CLP" },
       { name:"Airbnb (apartamento)", price:"$35.000–$70.000 CLP" }
     ]},
-        { icon:"⛽", category:"Combustível · Mar 2026", items:[
+        { icon:"⛽", category:"Combustível · " + new Date().toLocaleDateString('pt-BR', {month:'short', year:'numeric'}), items:[
       { name:"Gasolina 93 octanas", price:"~$1.080 CLP/L" },
       { name:"Gasolina 95 octanas", price:"~$1.130 CLP/L" },
       { name:"Gasolina 97 octanas", price:"~$1.210 CLP/L" },
@@ -4405,7 +4391,8 @@ function escapeHtml(str) {
       <!-- eSIM -->
             <a href="https://www.airalo.com" target="_blank" rel="noopener sponsored"
          aria-label="eSIM Airalo - Datos en Chile y Argentina"
-         class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
+         class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform"
+         onclick="trackKitClick('esim')">
         <div class="p-4 flex items-center gap-4"
              style="background:linear-gradient(135deg,#7c3aed,#4338ca)">
           <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
@@ -4423,7 +4410,8 @@ function escapeHtml(str) {
       <!-- Seguro -->
             <a href="https://www.iatiseguros.com" target="_blank" rel="noopener sponsored"
          aria-label="iati Seguros - Seguro de viaje internacional"
-         class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform">
+         class="block rounded-2xl shadow-md overflow-hidden active:scale-95 transition-transform"
+         onclick="trackKitClick('seguro')">
         <div class="p-4 flex items-center gap-4"
              style="background:linear-gradient(135deg,#059669,#0f766e)">
           <div class="bg-white/20 rounded-xl p-3 flex-shrink-0">
@@ -4457,7 +4445,8 @@ function escapeHtml(str) {
                     <a href="https://wise.com" target="_blank" rel="noopener sponsored"
              aria-label="Wise - Enviar dinero sin comisiones ocultas"
              class="mt-3 flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm text-white font-bold active:scale-95 transition-all"
-             style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
+             style="background:linear-gradient(135deg,#0f766e,#14b8a6)"
+             onclick="trackKitClick('wise')">
             <span><i class="fas fa-paper-plane mr-2"></i>${t('kit-wise-btn')}</span>
             <span class="text-xs bg-white/20 px-2 py-1 rounded-full">${currentLang === 'pt' ? 'Sem taxa' : currentLang === 'en' ? 'No fees' : 'Sin comisión'}</span>
           </a>
@@ -5387,7 +5376,7 @@ if (!card.querySelector('.share-btn')) {
     const shareBtn = document.createElement('button');
     shareBtn.className = 'share-btn';
     shareBtn.style.cssText = 'margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;';
-    shareBtn.innerHTML = '📤 Compartir estado';
+    shareBtn.innerHTML = '📤 ' + (currentLang === 'es' ? 'Compartir estado' : currentLang === 'pt' ? 'Compartilhar estado' : 'Share status');
     shareBtn.onclick = () => sharePass(passData.name, passData.status, passData.hours, passData.observations || '');
     card.appendChild(shareBtn);
   }
@@ -5635,10 +5624,10 @@ const openPasses = BORDER_PASSES
               </div>
             </div>` : ''}
           <button class="share-btn" onclick="sharePass('${sanitizeInput(pass.name)}','${sanitizeInput(pass.status)}','${sanitizeInput(pass.hours)}','${sanitizeInput(pass.observations || '')}')"
-  style="margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;
+ style="margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;
   border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;display:flex;
   align-items:center;justify-content:center;gap:6px;">
-  📤 Compartir estado
+  📤 ${currentLang === 'es' ? 'Compartir estado' : currentLang === 'pt' ? 'Compartilhar estado' : 'Share status'}
 </button>
         </div>`;
     }
@@ -7505,8 +7494,7 @@ function fetchAllData() {
       const savedLang = localStorage.getItem('language');
       if (savedLang === 'es' || savedLang === 'en' || savedLang === 'pt') currentLang = savedLang;
      translatePage(currentLang);
-     requestNotificationPermission();
-
+     // requestNotificationPermission() — se activa solo cuando el usuario presiona la campana
 // Limita la fecha máxima al día de hoy — compatible con iOS
 const todayStr = new Date().toISOString().split('T')[0];
 DOM_CACHE.entryDate.max = todayStr;
@@ -7546,15 +7534,16 @@ if (tabParam && validTabs.includes(tabParam)) {
 }
 
 // Secuencia de carga con splash
-updateSplash(20, 'Conectando...');
+updateSplash(20, currentLang === 'pt' ? 'Conectando...' : currentLang === 'en' ? 'Connecting...' : 'Conectando...');
 fetchExchangeRates().then(() => {
-  updateSplash(50, 'Cargando pasos...');
+  }).then(() => {
+  updateSplash(50, currentLang === 'en' ? 'Loading crossings...' : currentLang === 'pt' ? 'Carregando postos...' : 'Cargando pasos...');
   return fetchBorderPassesFromSheet();
 }).then(() => {
-  updateSplash(80, 'Cargando reportes...');
+  updateSplash(80, currentLang === 'en' ? 'Loading reports...' : currentLang === 'pt' ? 'Carregando relatos...' : 'Cargando reportes...');
   return fetchReportsFromSheet();
 }).finally(() => {
-  updateSplash(100, '¡Listo!');
+  updateSplash(100, currentLang === 'en' ? 'Ready!' : currentLang === 'pt' ? 'Pronto!' : '¡Listo!');
   setTimeout(() => hideSplash(), 600);
 });
 
@@ -7595,6 +7584,16 @@ try {
   console.warn('AdSense no disponible:', e);
 }// Click fuera del contenido cierra el modal
     });
+       function trackKitClick(item) {
+      // Guarda en localStorage para estadísticas internas
+      const key = 'kitClick_' + item;
+      const count = parseInt(localStorage.getItem(key) || '0') + 1;
+      localStorage.setItem(key, count.toString());
+      // Si en el futuro agregas Google Analytics, aquí va el evento
+      // gtag('event', 'kit_click', { item: item });
+      console.log('[Kit Viajero] Click en:', item, '— total:', count);
+    }
+
         window.addEventListener('error', (e) => { console.error('Error capturado:', e.message); });
     window.addEventListener('unhandledrejection', (e) => { console.error('Promise rechazada:', e.reason); });
 
