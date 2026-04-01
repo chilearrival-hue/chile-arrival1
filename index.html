@@ -2567,7 +2567,26 @@
 
 <body>
   <!-- SPLASH SCREEN -->
-<div id="splashScreen" style="
+<!-- Banner PWA Install -->
+<div id="pwaInstallBanner" style="display:none;position:fixed;bottom:80px;left:12px;right:12px;z-index:9999;
+  background:linear-gradient(135deg,#0039a6,#d52b1e);border-radius:16px;padding:14px 16px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);animation:slideUp 0.4s ease">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="/icons/icon-96x96.png" style="width:48px;height:48px;border-radius:12px;flex-shrink:0">
+    <div style="flex:1;min-width:0">
+      <div style="color:white;font-weight:800;font-size:14px">Instalar Chile Arrival</div>
+      <div style="color:rgba(255,255,255,0.85);font-size:11px;margin-top:2px">Acceso rápido sin abrir el navegador</div>
+    </div>
+    <button onclick="installPWA()" style="background:white;color:#0039a6;border:none;border-radius:10px;
+      padding:8px 14px;font-weight:800;font-size:13px;cursor:pointer;flex-shrink:0">
+      Instalar
+    </button>
+    <button onclick="dismissInstallBanner()" style="background:none;border:none;color:white;
+      font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0">✕</button>
+  </div>
+</div>
+
+<div id="splashScreen" class="splash-screen">
   position:fixed;inset:0;z-index:999999;
   background:linear-gradient(135deg,#0039a6 0%,#1e40af 50%,#d52b1e 100%);
   display:flex;flex-direction:column;
@@ -7604,9 +7623,45 @@ try {
       console.log('[Kit Viajero] Click en:', item, '— total:', count);
     }
 
-        window.addEventListener('error', (e) => { console.error('Error capturado:', e.message); });
+       // PWA Install Banner
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Mostrar banner después de 30 segundos si no está instalada
+  const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
+  const dismissed = localStorage.getItem('pwaBannerDismissed');
+  if (!isInstalled && !dismissed) {
+    setTimeout(() => {
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner) banner.style.display = 'block';
+    }, 30000);
+  }
+});
+
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(choice => {
+    if (choice.outcome === 'accepted') {
+      localStorage.setItem('pwaBannerDismissed', 'true');
+    }
+    deferredPrompt = null;
+    dismissInstallBanner();
+  });
+}
+
+function dismissInstallBanner() {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) banner.style.display = 'none';
+  localStorage.setItem('pwaBannerDismissed', 'true');
+}
+
+window.addEventListener('error', (e) => { console.error('Error capturado:', e.message); });
     window.addEventListener('unhandledrejection', (e) => { console.error('Promise rechazada:', e.reason); });
 
+
+    
   </script>
 
   <script>
