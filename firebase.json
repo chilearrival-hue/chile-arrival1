@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -8,21 +8,36 @@
     ],
     "headers": [
       {
-        "source": "**/*.@(js|css|html)",
+        "source": "/icons/**",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=31536000" },
-          { "key": "X-Content-Type-Options", "value": "nosniff" }
+          { "key": "Content-Type", "value": "image/png" }
         ]
       },
       {
-        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|ico)",
+        "source": "/screenshots/**",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+          { "key": "Content-Type", "value": "image/png" }
+        ]
+      },
+      {
+        "source": "/sw.js",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" },
+          { "key": "Content-Type", "value": "application/javascript" }
+        ]
+      },
+      {
+        "source": "/manifest.json",
+        "headers": [
+          { "key": "Content-Type", "value": "application/manifest+json" }
         ]
       }
     ],
     "rewrites": [
-      { "source": "**", "destination": "/index.html" }
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
