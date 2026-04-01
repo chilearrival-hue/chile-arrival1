@@ -1,5 +1,5 @@
 // ===== sw.js — Chile Arrival Service Worker =====
-const APP_VERSION   = 'chile-arrival-v1.1.0';
+const APP_VERSION   = `chile-arrival-v${new Date().toISOString().slice(0,10)}`;
 const STATIC_CACHE  = `${APP_VERSION}-static`;
 const DYNAMIC_CACHE = `${APP_VERSION}-dynamic`;
 const API_CACHE     = `${APP_VERSION}-api`;
@@ -8,9 +8,16 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/firebase-config.js',
-  '/icons/icon-180x180.png',
-  '/icons/icon-32x32.png'
+  '/icons/icon-72x72.png',
+  '/icons/icon-96x96.png',
+  '/icons/icon-128x128.png',
+  '/icons/icon-144x144.png',
+  '/icons/icon-152x152.png',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+  '/icons/icon-maskable-512x512.png',
+  '/screenshots/home.png',
+  '/screenshots/passes.png'
 ];
 
 const API_ORIGINS = [
