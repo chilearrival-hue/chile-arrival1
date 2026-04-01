@@ -3040,8 +3040,7 @@
   <input type="text" id="searchInput" onkeyup="debouncedFilterPasses()" 
     data-i18n-placeholder="search-placeholder"
     placeholder="Buscar por nombre o región...">
-</div>   ← este cierre faltaba
-
+</div> 
 <div id="passesContainer" class="space-y-4"></div>
 </section>
 
@@ -7535,14 +7534,22 @@ if (tabParam && validTabs.includes(tabParam)) {
 
 // Secuencia de carga con splash
 updateSplash(20, currentLang === 'pt' ? 'Conectando...' : currentLang === 'en' ? 'Connecting...' : 'Conectando...');
-fetchExchangeRates().then(() => {
-  }).then(() => {
-  updateSplash(50, currentLang === 'en' ? 'Loading crossings...' : currentLang === 'pt' ? 'Carregando postos...' : 'Cargando pasos...');
-  return fetchBorderPassesFromSheet();
-}).then(() => {
-  updateSplash(80, currentLang === 'en' ? 'Loading reports...' : currentLang === 'pt' ? 'Carregando relatos...' : 'Cargando reportes...');
-  return fetchReportsFromSheet();
-}).finally(() => {
+
+// Simula progreso visual mientras cargan en paralelo
+const progressInterval = setInterval(() => {
+  const bar = document.getElementById('splashBar');
+  if (bar) {
+    const current = parseInt(bar.style.width) || 20;
+    if (current < 85) bar.style.width = (current + 5) + '%';
+  }
+}, 200);
+
+Promise.allSettled([
+  fetchExchangeRates(),
+  fetchBorderPassesFromSheet(),
+  fetchReportsFromSheet()
+]).finally(() => {
+  clearInterval(progressInterval);
   updateSplash(100, currentLang === 'en' ? 'Ready!' : currentLang === 'pt' ? 'Pronto!' : '¡Listo!');
   setTimeout(() => hideSplash(), 600);
 });
