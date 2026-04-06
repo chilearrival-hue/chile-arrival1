@@ -118,6 +118,11 @@
 .status-banner-right { text-align: center; }
 .status-count { display: block; font-size: 36px; font-weight: 900; line-height: 1; }
 .status-count-label { font-size: 10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; }
+@keyframes splashBounce {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
 </style>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -2713,6 +2718,7 @@
 .color-card-title {
   letter-spacing: -0.02em;
 }
+
   </style>
 </head>
 
@@ -2785,28 +2791,6 @@
   </p>
 </div>
 
-<style>
-@keyframes splashBounce {
-  0%   { transform:scale(0.5); opacity:0; }
-  70%  { transform:scale(1.1); opacity:1; }
-  100% { transform:scale(1);   opacity:1; }
-}
-@keyframes cardFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes splashBounce {
-  0%   { transform: scale(0.5); opacity: 0; }
-  70%  { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1);   opacity: 1; }
-}
-</style>
   <!-- Botón volver arriba -->
   <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
     <i class="fas fa-chevron-up"></i>
