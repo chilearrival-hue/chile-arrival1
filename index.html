@@ -6036,7 +6036,6 @@ function renderCurrencyComparison() {
   const container = document.getElementById('currencyComparisonContainer');
   if (!container) return;
 
-  const amount = parseFloat(DOM_CACHE.currencyInput?.value) || 1;
   const currencies = [
     { code:'USD', flag:'🇺🇸', name:{ es:'Dólar', en:'Dollar', pt:'Dólar' } },
     { code:'EUR', flag:'🇪🇺', name:{ es:'Euro', en:'Euro', pt:'Euro' } },
@@ -6050,10 +6049,9 @@ function renderCurrencyComparison() {
 
   container.innerHTML = currencies.map(cur => {
     const rate = exchangeRates[cur.code];
-    // ✅ CORRECTO: cuántas monedas extranjeras obtienes por tus CLP
-    // rate = CLP por 1 unidad extranjera → dividir para ir al revés
+    // ✅ Muestra cuántos CLP vale 1 unidad de cada moneda extranjera
     const result = rate > 0
-      ? (amount / rate).toLocaleString('es-CL', {minimumFractionDigits:2, maximumFractionDigits:2})
+      ? Math.round(rate).toLocaleString('es-CL')
       : '---';
     const isSelected = cur.code === selectedCurrency;
 
@@ -6071,13 +6069,12 @@ function renderCurrencyComparison() {
           </div>
         </div>
         <div style="text-align:right">
-          <p style="font-size:12px;font-weight:900;color:white;margin:0">${result}</p>
-          <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">${cur.code}</p>
+          <p style="font-size:12px;font-weight:900;color:white;margin:0">$${result}</p>
+          <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">CLP</p>
         </div>
       </div>`;
   }).join('');
 }
-
 function selectCurrencyFromComparison(code) {
   selectedCurrency = code;
   const btn = [...document.querySelectorAll('.currency-tab')]
