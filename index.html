@@ -6050,7 +6050,11 @@ function renderCurrencyComparison() {
 
   container.innerHTML = currencies.map(cur => {
     const rate = exchangeRates[cur.code];
-    const result = rate > 0 ? Math.round(amount * rate).toLocaleString('es-CL') : '---';
+    // ✅ CORRECTO: cuántas monedas extranjeras obtienes por tus CLP
+    // rate = CLP por 1 unidad extranjera → dividir para ir al revés
+    const result = rate > 0
+      ? (amount / rate).toLocaleString('es-CL', {minimumFractionDigits:2, maximumFractionDigits:2})
+      : '---';
     const isSelected = cur.code === selectedCurrency;
 
     return `
@@ -6061,11 +6065,14 @@ function renderCurrencyComparison() {
                border:1px solid ${isSelected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'};">
         <div style="display:flex;align-items:center;gap:6px;">
           <span style="font-size:16px;font-family:Apple Color Emoji,Segoe UI Emoji,sans-serif">${cur.flag}</span>
-          <p style="font-size:11px;font-weight:800;color:white;margin:0">${cur.code}</p>
+          <div>
+            <p style="font-size:11px;font-weight:800;color:white;margin:0">${cur.code}</p>
+            <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">${cur.name[currentLang] || cur.name.es}</p>
+          </div>
         </div>
         <div style="text-align:right">
-          <p style="font-size:12px;font-weight:900;color:white;margin:0">$${result}</p>
-          <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">CLP</p>
+          <p style="font-size:12px;font-weight:900;color:white;margin:0">${result}</p>
+          <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">${cur.code}</p>
         </div>
       </div>`;
   }).join('');
