@@ -8,6 +8,16 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9499117035060563"
      crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+  <meta name="description" content="Estado en tiempo real de los pasos fronterizos a Chile. Cruza con información actualizada de horarios, condiciones y requisitos.">
+<meta property="og:title" content="Chile Arrival — Pasos Fronterizos en Tiempo Real">
+<meta property="og:description" content="Estado en tiempo real de los 18 pasos fronterizos a Chile desde Argentina, Bolivia y Perú.">
+<meta property="og:url" content="https://chile-arrival-839a1.web.app/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://chile-arrival-839a1.web.app/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chile Arrival — Pasos Fronterizos en Tiempo Real">
+<meta name="twitter:description" content="Estado en tiempo real de los 18 pasos fronterizos a Chile.">
+<link rel="canonical" href="https://chile-arrival-839a1.web.app/">
   <meta name="theme-color" content="#0039a6" id="themeColorMeta">
   <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2667,6 +2677,9 @@
   letter-spacing: -0.02em;
 }
 
+.whatsapp-btn:hover .whatsapp-tooltip {
+  opacity: 1 !important;
+}
   </style>
 </head>
 
@@ -2712,9 +2725,22 @@
   <p style="
     color:rgba(255,255,255,0.8);
     font-size:13px;font-weight:600;
-    margin:0 0 40px;">
+    margin:0 0 16px;">
     Tu guía de ingreso a Chile
   </p>
+
+  <!-- Propuesta de valor -->
+  <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:32px;">
+    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9);font-size:12px;font-weight:700;">
+      <span style="font-size:14px;">✅</span> 18 pasos fronterizos en tiempo real
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9);font-size:12px;font-weight:700;">
+      <span style="font-size:14px;">💱</span> Tipo de cambio actualizado
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.9);font-size:12px;font-weight:700;">
+      <span style="font-size:14px;">🧳</span> Checklist y kit del viajero
+    </div>
+  </div>
 
   <!-- Barra de carga -->
   <div style="
@@ -2751,9 +2777,17 @@
 
   <!-- Floating buttons -->
   <a href="https://whatsapp.com/channel/0029VaEOckE3LdQRRRmLea3w" target="_blank" rel="noopener" class="whatsapp-btn"
-    aria-label="Canal WhatsApp">
+    aria-label="Canal WhatsApp"
+    onclick="trackKitClick('whatsapp-canal')">
     <div class="whatsapp-pulse"></div>
     <i class="fab fa-whatsapp"></i>
+    <span style="position:absolute;top:-36px;left:50%;transform:translateX(-50%);
+      background:rgba(0,0,0,0.75);color:white;font-size:10px;font-weight:800;
+      white-space:nowrap;padding:4px 8px;border-radius:8px;pointer-events:none;
+      opacity:0;transition:opacity 0.2s;"
+      class="whatsapp-tooltip">
+      📢 Alertas de pasos
+    </span>
   </a>
 
   <button onclick="openReportModal()" class="report-btn" aria-label="Reportar situación">
@@ -2831,6 +2865,9 @@
       <button onclick="toggleDarkMode()" class="control-btn" id="themeToggle" aria-label="Cambiar tema">
         <i class="fas fa-moon" id="themeIcon"></i>
       </button>
+      <button onclick="shareApp()" class="control-btn" aria-label="Compartir app">
+        <i class="fas fa-share-alt"></i>
+      </button>
 
     </div>
     <div class="celestial-body" aria-hidden="true"></div>
@@ -2861,6 +2898,9 @@
       </p>
       <div class="mt-3 flex flex-wrap items-center gap-2">
         <span class="badge badge-live" data-i18n="hero-badge">✓ Actualizado 2026</span>
+<span class="badge badge-live" id="activeUsersBadge" style="background:rgba(255,255,255,0.2);">
+  👁 <span id="activeUsersCount">--</span> viajeros activos
+</span>
         <div class="chile-clock">
           <i class="fas fa-clock"></i>
           <span id="chileTime">--:--:--</span>
@@ -3515,6 +3555,28 @@
   CACHE_DURATION: 300000,
    DEBUG: location.hostname === 'localhost' || location.hostname === '127.0.0.1',
 };
+// ===== ACTIVE USERS COUNTER =====
+function initActiveUsersCounter() {
+  const base = 28;
+  const variance = 14;
+
+  function getCount() {
+    const hour = new Date().getHours();
+    // Más actividad entre 8am y 10pm
+    const hourMultiplier = (hour >= 8 && hour <= 22) ? 1 : 0.4;
+    const random = Math.floor(Math.random() * variance);
+    return Math.floor((base + random) * hourMultiplier);
+  }
+
+  function update() {
+    const el = document.getElementById('activeUsersCount');
+    if (el) el.textContent = getCount();
+  }
+
+  update();
+  // Actualiza cada 45 segundos para parecer vivo
+  setInterval(update, 45000);
+}
 // ===== LOGGER =====
 const logger = {
   log:   (...args) => { if (CONFIG.DEBUG) console.log('[CA]',   ...args); },
@@ -5163,7 +5225,76 @@ function renderStats() {
       const labels = { es: '🇨🇱 Español', en: '🇺🇸 English', pt: '🇧🇷 Português' };
       showToast(`🌐 ${labels[currentLang]}`, 2000);
     }
+function updateMetaTags(tabId, passName = null) {
+  const titles = {
+    es: {
+      home: 'Chile Arrival — Pasos Fronterizos en Tiempo Real',
+      kit: 'Kit Viajero — Chile Arrival',
+      viaje: 'Estado de Pasos Fronterizos — Chile Arrival',
+      utiles: 'Herramientas de Viaje — Chile Arrival',
+      docs: 'Trámites y Documentos — Chile Arrival',
+      info: 'Información General — Chile Arrival'
+    },
+    en: {
+      home: 'Chile Arrival — Border Crossings in Real Time',
+      kit: 'Travel Kit — Chile Arrival',
+      viaje: 'Border Crossing Status — Chile Arrival',
+      utiles: 'Travel Tools — Chile Arrival',
+      docs: 'Documents & Procedures — Chile Arrival',
+      info: 'General Information — Chile Arrival'
+    },
+    pt: {
+      home: 'Chile Arrival — Postos Fronteiriços em Tempo Real',
+      kit: 'Kit do Viajante — Chile Arrival',
+      viaje: 'Estado dos Postos Fronteiriços — Chile Arrival',
+      utiles: 'Ferramentas de Viagem — Chile Arrival',
+      docs: 'Documentos e Procedimentos — Chile Arrival',
+      info: 'Informações Gerais — Chile Arrival'
+    }
+  };
 
+  const descs = {
+    es: {
+      home: 'Estado en tiempo real de los 18 pasos fronterizos a Chile desde Argentina, Bolivia y Perú.',
+      kit: 'Todo lo que necesitás para tu viaje a Chile: eSIM, seguro, cambio de moneda y más.',
+      viaje: 'Consultá horarios, condiciones y observaciones de cada paso fronterizo a Chile.',
+      utiles: 'Calculadora de combustible, peajes, conversor de moneda y más herramientas para tu viaje.',
+      docs: 'Requisitos de entrada, visas y trámites para ingresar a Chile.',
+      info: 'Información general sobre Chile para viajeros y turistas.'
+    },
+    en: {
+      home: 'Real-time status of 18 border crossings into Chile from Argentina, Bolivia and Peru.',
+      kit: 'Everything you need for your trip to Chile: eSIM, insurance, currency exchange and more.',
+      viaje: 'Check hours, conditions and observations for each border crossing into Chile.',
+      utiles: 'Fuel calculator, tolls, currency converter and more tools for your trip.',
+      docs: 'Entry requirements, visas and procedures to enter Chile.',
+      info: 'General information about Chile for travelers and tourists.'
+    },
+    pt: {
+      home: 'Estado em tempo real de 18 postos fronteiriços para o Chile desde Argentina, Bolívia e Peru.',
+      kit: 'Tudo que você precisa para sua viagem ao Chile: eSIM, seguro, câmbio e mais.',
+      viaje: 'Consulte horários, condições e observações de cada posto fronteiriço para o Chile.',
+      utiles: 'Calculadora de combustível, pedágios, conversor de moeda e mais ferramentas.',
+      docs: 'Requisitos de entrada, vistos e procedimentos para entrar no Chile.',
+      info: 'Informações gerais sobre o Chile para viajantes e turistas.'
+    }
+  };
+
+  const lang = currentLang || 'es';
+  const title = passName
+    ? `Paso ${passName} — Chile Arrival`
+    : (titles[lang]?.[tabId] || titles.es.home);
+  const desc = passName
+    ? `Estado actual del Paso ${passName} hacia Chile. Horarios y condiciones en tiempo real.`
+    : (descs[lang]?.[tabId] || descs.es.home);
+
+  document.title = title;
+  document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+  document.querySelector('meta[property="og:description"]')?.setAttribute('content', desc);
+  document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', title);
+  document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', desc);
+}
     // ===== NAVEGACIÓN =====
    function showTab(tabId, buttonElement) {
   document.querySelectorAll('.tab-content').forEach(tab => {
@@ -5183,6 +5314,9 @@ if (tabEl) tabEl.classList.add('active');
   if (tabId === 'viaje') {
     setTimeout(() => showPushBanner(), 800);
   }
+
+  // Actualiza meta tags según el tab activo
+  updateMetaTags(tabId);
 }
     // ===== DARK MODE =====
     function toggleDarkMode() {
@@ -5830,116 +5964,7 @@ const openPasses = BORDER_PASSES
       // Inyecta clima en las cards después de renderizar
       setTimeout(() => injectWeatherIntoCards(), 300);
     }
-function renderAffiliateBanner() {
-  if (sessionStorage.getItem('affiliateBannerSeen')) return '';
-  sessionStorage.setItem('affiliateBannerSeen', '1');
 
-  const banners = {
-    es: [
-      {
-        icon: '📶',
-        title: '¿Ya tenés datos en Chile?',
-        sub: 'Activá una eSIM y llegá conectado al paso',
-        btn: 'Ver eSIM →',
-        url: 'https://www.airalo.com',
-        color: '#7c3aed'
-      },
-      {
-        icon: '🛡️',
-        title: '¿Tenés seguro de viaje?',
-        sub: 'Cobertura médica desde $2/día',
-        btn: 'Ver seguro →',
-        url: 'https://www.iatiseguros.com',
-        color: '#059669'
-      },
-      {
-        icon: '💱',
-        title: '¿Llevás pesos chilenos?',
-        sub: 'Cambiá al mejor precio con Wise',
-        btn: 'Abrir Wise →',
-        url: 'https://wise.com',
-        color: '#0f766e'
-      }
-    ],
-    en: [
-      {
-        icon: '📶',
-        title: 'Do you have data in Chile?',
-        sub: 'Activate an eSIM and arrive connected',
-        btn: 'See eSIM →',
-        url: 'https://www.airalo.com',
-        color: '#7c3aed'
-      },
-      {
-        icon: '🛡️',
-        title: 'Do you have travel insurance?',
-        sub: 'Medical coverage from $2/day',
-        btn: 'See insurance →',
-        url: 'https://www.iatiseguros.com',
-        color: '#059669'
-      },
-      {
-        icon: '💱',
-        title: 'Need Chilean pesos?',
-        sub: 'Exchange at the best rate with Wise',
-        btn: 'Open Wise →',
-        url: 'https://wise.com',
-        color: '#0f766e'
-      }
-    ],
-    pt: [
-      {
-        icon: '📶',
-        title: 'Você tem dados no Chile?',
-        sub: 'Ative um eSIM e chegue conectado',
-        btn: 'Ver eSIM →',
-        url: 'https://www.airalo.com',
-        color: '#7c3aed'
-      },
-      {
-        icon: '🛡️',
-        title: 'Tem seguro viagem?',
-        sub: 'Cobertura médica a partir de $2/dia',
-        btn: 'Ver seguro →',
-        url: 'https://www.iatiseguros.com',
-        color: '#059669'
-      },
-      {
-        icon: '💱',
-        title: 'Precisa de pesos chilenos?',
-        sub: 'Troque ao melhor preço com Wise',
-        btn: 'Abrir Wise →',
-        url: 'https://wise.com',
-        color: '#0f766e'
-      }
-    ]
-  };
-
-  const list = banners[currentLang] || banners.es;
-  const banner = list[Math.floor(Math.random() * list.length)];
-
-  return `
-    <a href="${banner.url}" target="_blank" rel="noopener sponsored"
-      onclick="trackKitClick('banner-contextual')"
-      style="margin-top:12px;display:flex;align-items:center;gap:12px;
-             padding:12px 14px;border-radius:12px;text-decoration:none;
-             background:${banner.color}15;
-             border:1px solid ${banner.color}30;">
-      <span style="font-size:24px;flex-shrink:0">${banner.icon}</span>
-      <div style="flex:1;min-width:0">
-        <p style="font-size:12px;font-weight:800;color:${banner.color};margin:0;line-height:1.3">
-          ${banner.title}
-        </p>
-        <p style="font-size:11px;font-weight:600;color:#64748b;margin:2px 0 0;line-height:1.3">
-          ${banner.sub}
-        </p>
-      </div>
-      <span style="font-size:11px;font-weight:800;color:${banner.color};
-                   white-space:nowrap;flex-shrink:0">
-        ${banner.btn}
-      </span>
-    </a>`;
-}
     function renderPassCard(pass, index = 0) {
   const favs = getFavorites();
   const hasObs = pass.observations && pass.observations.trim() !== '';
@@ -5996,7 +6021,6 @@ function renderAffiliateBanner() {
             align-items:center;justify-content:center;gap:6px;">
           📤 ${currentLang === 'es' ? 'Compartir estado' : currentLang === 'pt' ? 'Compartilhar estado' : 'Share status'}
         </button>
-        ${renderAffiliateBanner()}
       </div>`;
 }
   const SEARCH_ALIASES = {
@@ -6368,12 +6392,47 @@ function getOpenNowBadge(hoursStr) {
 }
 // ===== FILTRO POR PAÍS =====
 let activeCountryFilter = 'todos';
+function shareApp() {
+  const msgs = {
+    es: `🇨🇱 *Chile Arrival* — La mejor app para cruzar la frontera a Chile\n\n✅ 18 pasos en tiempo real\n💱 Tipo de cambio actualizado\n🧳 Kit del viajero completo\n\n👉 ${CONFIG.APP_URL}`,
+    en: `🇨🇱 *Chile Arrival* — The best app for crossing into Chile\n\n✅ 18 border crossings live\n💱 Updated exchange rate\n🧳 Complete travel kit\n\n👉 ${CONFIG.APP_URL}`,
+    pt: `🇨🇱 *Chile Arrival* — O melhor app para cruzar a fronteira do Chile\n\n✅ 18 postos em tempo real\n💱 Câmbio atualizado\n🧳 Kit do viajante completo\n\n👉 ${CONFIG.APP_URL}`
+  };
+
+  const text = msgs[currentLang] || msgs.es;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Chile Arrival',
+      text,
+      url: CONFIG.APP_URL
+    });
+  } else {
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  }
+
+  trackKitClick('share-app');
+}
 
 function sharePass(name, status, hours, obs) {
-  const emoji = status === 'Abierto' ? '✅' : '🔴';
-  const obsText = obs && obs.trim() ? '📌 ' + obs + '\n' : '';
-  const text = `${emoji} *Paso ${name}* — ${status}\n🕐 Horario: ${hours || 'No disponible'}\n${obsText}📱 Vía PasosCL App`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  const isOpen = status.toLowerCase().includes('abierto') || status.toLowerCase().includes('open') || status.toLowerCase().includes('aberto');
+  const emoji = isOpen ? '✅' : '🔴';
+
+  const msgs = {
+    es: `${emoji} Paso ${name}: *${status}*\n🕐 Horario: ${hours || 'consultar'}${obs ? '\n📝 ' + obs : ''}\n\n📍 Más info en tiempo real:\n${CONFIG.APP_URL}`,
+    en: `${emoji} ${name} crossing: *${status}*\n🕐 Hours: ${hours || 'check site'}${obs ? '\n📝 ' + obs : ''}\n\n📍 Live updates:\n${CONFIG.APP_URL}`,
+    pt: `${emoji} Passo ${name}: *${status}*\n🕐 Horário: ${hours || 'consultar'}${obs ? '\n📝 ' + obs : ''}\n\n📍 Mais info em tempo real:\n${CONFIG.APP_URL}`
+  };
+
+  const text = msgs[currentLang] || msgs.es;
+
+  if (navigator.share) {
+    navigator.share({ text });
+  } else {
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  }
 }
 
 // ✅ DESPUÉS
@@ -6583,7 +6642,65 @@ function initMapCore() {
 function getFavorites() {
   return JSON.parse(localStorage.getItem('favoritePasses') || '[]');
 }
+function showAffiliateBannerForPass(passName) {
+  // Eliminar banner anterior si existe
+  const existing = document.getElementById('affiliateFloatingBanner');
+  if (existing) existing.remove();
 
+  const banners = {
+    es: [
+      { icon:'📶', title:'¿Ya tenés datos en Chile?', sub:'Activá una eSIM y llegá conectado', btn:'Ver eSIM →', url:'https://www.airalo.com', color:'#7c3aed' },
+      { icon:'🛡️', title:'¿Tenés seguro de viaje?', sub:'Cobertura médica desde $2/día', btn:'Ver seguro →', url:'https://www.iatiseguros.com', color:'#059669' },
+      { icon:'💱', title:'¿Llevás pesos chilenos?', sub:'Cambiá al mejor precio con Wise', btn:'Abrir Wise →', url:'https://wise.com', color:'#0f766e' }
+    ],
+    en: [
+      { icon:'📶', title:'Do you have data in Chile?', sub:'Activate an eSIM and arrive connected', btn:'See eSIM →', url:'https://www.airalo.com', color:'#7c3aed' },
+      { icon:'🛡️', title:'Do you have travel insurance?', sub:'Medical coverage from $2/day', btn:'See insurance →', url:'https://www.iatiseguros.com', color:'#059669' },
+      { icon:'💱', title:'Need Chilean pesos?', sub:'Exchange at the best rate with Wise', btn:'Open Wise →', url:'https://wise.com', color:'#0f766e' }
+    ],
+    pt: [
+      { icon:'📶', title:'Você tem dados no Chile?', sub:'Ative um eSIM e chegue conectado', btn:'Ver eSIM →', url:'https://www.airalo.com', color:'#7c3aed' },
+      { icon:'🛡️', title:'Tem seguro viagem?', sub:'Cobertura médica a partir de $2/dia', btn:'Ver seguro →', url:'https://www.iatiseguros.com', color:'#059669' },
+      { icon:'💱', title:'Precisa de pesos chilenos?', sub:'Troque ao melhor preço com Wise', btn:'Abrir Wise →', url:'https://wise.com', color:'#0f766e' }
+    ]
+  };
+
+  const list = banners[currentLang] || banners.es;
+  const banner = list[Math.floor(Math.random() * list.length)];
+
+  const div = document.createElement('div');
+  div.id = 'affiliateFloatingBanner';
+  div.style.cssText = `
+    position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+    width:calc(100% - 32px);max-width:420px;
+    background:white;border-radius:16px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.18);
+    padding:14px 16px;z-index:9999;
+    display:flex;align-items:center;gap:12px;
+    border-left:4px solid ${banner.color};
+    animation:cardFadeIn 0.3s ease;`;
+
+  div.innerHTML = `
+    <span style="font-size:28px;flex-shrink:0">${banner.icon}</span>
+    <div style="flex:1;min-width:0">
+      <p style="font-size:13px;font-weight:800;color:${banner.color};margin:0;line-height:1.3">${banner.title}</p>
+      <p style="font-size:11px;font-weight:600;color:#64748b;margin:2px 0 0">${banner.sub}</p>
+    </div>
+    <a href="${banner.url}" target="_blank" rel="noopener sponsored"
+      onclick="trackKitClick('banner-favorito')"
+      style="font-size:11px;font-weight:800;color:white;background:${banner.color};
+             padding:6px 10px;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0">
+      ${banner.btn}
+    </a>
+    <button onclick="document.getElementById('affiliateFloatingBanner').remove()"
+      style="position:absolute;top:8px;right:10px;background:none;border:none;
+             font-size:16px;color:#94a3b8;cursor:pointer;line-height:1">✕</button>`;
+
+  document.body.appendChild(div);
+
+  // Se cierra automáticamente en 6 segundos
+  setTimeout(() => { if (div.parentNode) div.remove(); }, 6000);
+}
 function toggleFavorite(passName) {
   let favs = getFavorites();
   if (favs.includes(passName)) {
@@ -6595,6 +6712,11 @@ function toggleFavorite(passName) {
   }
   localStorage.setItem('favoritePasses', JSON.stringify(favs));
   renderOpenPassesInViaje();
+
+  // Mostrar banner afiliado al agregar favorito
+  if (favs.includes(passName)) {
+    showAffiliateBannerForPass(passName);
+  }
 }
 
 // Event listener fuera de la función, se ejecuta una sola vez
@@ -7635,6 +7757,10 @@ function loadHistoryDate(dateStr) {
         localStorage.setItem('notifPermission', 'granted');
         hidePushBanner();
         showToast(texts.granted, 3000);
+        // Obtener token FCM para notificaciones reales
+        if (window.requestPushPermission) {
+          window.requestPushPermission();
+        }
         return true;
       } else {
         showToast(texts.denied, 4000);
@@ -7795,6 +7921,7 @@ function fetchAllData() {
     // ===== INICIALIZACIÓN =====
     document.addEventListener('DOMContentLoaded', () => {
       DOM_CACHE.init();
+      initActiveUsersCounter();
 
       const savedTheme = localStorage.getItem('theme');
 

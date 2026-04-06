@@ -1,5 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC2s3FmZ_aQnXNNGMoBHEfFDV7SqFbSNpA",
@@ -13,6 +14,49 @@ const firebaseConfig = {
 const app      = initializeApp(firebaseConfig);
 const auth     = getAuth(app);
 const provider = new GoogleAuthProvider();
+const messaging = getMessaging(app);
+
+const VAPID_KEY = 'BFeYKBc77bJivWY0qzH4xm8DBJx0dIzXhzVa-nAX3fVm-x1oT_tkvt-NA2nsiMRS7j-8XjAv6kAclflgkQapitA';
+
+// ===== FCM: SOLICITAR PERMISO Y OBTENER TOKEN =====
+window.requestPushPermission = async function() {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      if (typeof showToast === 'function') {
+        const lang = localStorage.getItem('language') || 'es';
+        showToast(lang === 'es' ? '🔕 Notificaciones desactivadas' : '🔕 Notifications disabled', 3000);
+      }
+      return null;
+    }
+
+    const token = await getToken(messaging, {
+      vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: await navigator.serviceWorker.getRegistration()
+    });
+
+    if (token) {
+      localStorage.setItem('fcmToken', token);
+      const lang = localStorage.getItem('language') || 'es';
+      if (typeof showToast === 'function') {
+        showToast(lang === 'es' ? '🔔 ¡Notificaciones activadas!' : '🔔 Notifications enabled!', 3000);
+      }
+      logger && logger.log('FCM token:', token);
+      return token;
+    }
+  } catch (error) {
+    logger && logger.error('Error FCM:', error);
+    return null;
+  }
+};
+
+// ===== FCM: NOTIFICACIONES EN FOREGROUND =====
+onMessage(messaging, (payload) => {
+  const { title, body } = payload.notification || {};
+  if (title && typeof showToast === 'function') {
+    showToast(`🔔 ${title}: ${body}`, 5000);
+  }
+});
 
 // ===== ESTADO DEL USUARIO =====
 onAuthStateChanged(auth, (user) => {
