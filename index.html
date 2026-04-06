@@ -50,53 +50,6 @@
   <link rel="dns-prefetch" href="https://mindicador.cl">
   <style>
 /* Reemplazo mini de Tailwind — solo clases usadas en Chile Arrival */
-.flex{display:flex}.grid{display:grid}.hidden{display:none}.block{display:block}.inline-flex{display:inline-flex}
-.flex-col{flex-direction:column}.flex-row{flex-direction:row}.flex-wrap{flex-wrap:wrap}
-.items-center{align-items:center}.items-start{align-items:flex-start}.justify-center{justify-content:center}
-.justify-between{justify-content:space-between}.justify-end{justify-content:flex-end}
-.gap-1{gap:4px}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.gap-6{gap:24px}
-.w-full{width:100%}.h-full{height:100%}.min-w-0{min-width:0}.flex-1{flex:1}.flex-shrink-0{flex-shrink:0}
-.p-2{padding:8px}.p-3{padding:12px}.p-4{padding:16px}.p-6{padding:24px}
-.px-2{padding-left:8px;padding-right:8px}.px-3{padding-left:12px;padding-right:12px}
-.px-4{padding-left:16px;padding-right:16px}.px-6{padding-left:24px;padding-right:24px}
-.py-1{padding-top:4px;padding-bottom:4px}.py-2{padding-top:8px;padding-bottom:8px}
-.py-3{padding-top:12px;padding-bottom:12px}.py-4{padding-top:16px;padding-bottom:16px}
-.m-0{margin:0}.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}
-.mb-1{margin-bottom:4px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
-.ml-1{margin-left:4px}.ml-2{margin-left:8px}.mr-1{margin-right:4px}.mr-2{margin-right:8px}
-.mx-auto{margin-left:auto;margin-right:auto}
-.text-xs{font-size:12px;line-height:16px}.text-sm{font-size:14px;line-height:20px}
-.text-base{font-size:16px;line-height:24px}.text-lg{font-size:18px;line-height:28px}
-.text-xl{font-size:20px;line-height:28px}.text-2xl{font-size:24px;line-height:32px}
-.text-3xl{font-size:30px;line-height:36px}.text-4xl{font-size:36px;line-height:40px}
-.font-normal{font-weight:400}.font-medium{font-weight:500}.font-semibold{font-weight:600}
-.font-bold{font-weight:700}.font-extrabold{font-weight:800}
-.text-white{color:#fff}.text-center{text-align:center}.text-left{text-align:left}.text-right{text-align:right}
-.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rounded{border-radius:4px}.rounded-lg{border-radius:8px}.rounded-xl{border-radius:12px}
-.rounded-2xl{border-radius:16px}.rounded-full{border-radius:9999px}
-.border{border-width:1px}.border-2{border-width:2px}.border-none{border:none}
-.shadow{box-shadow:0 1px 3px rgba(0,0,0,.1)}.shadow-md{box-shadow:0 4px 6px rgba(0,0,0,.1)}
-.shadow-lg{box-shadow:0 10px 15px rgba(0,0,0,.1)}
-.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}
-.relative{position:relative}.absolute{position:absolute}.fixed{position:fixed}.sticky{position:sticky}
-.inset-0{top:0;right:0;bottom:0;left:0}.top-0{top:0}.bottom-0{bottom:0}.left-0{left:0}.right-0{right:0}
-.z-10{z-index:10}.z-50{z-index:50}
-.opacity-0{opacity:0}.opacity-50{opacity:.5}.opacity-100{opacity:1}
-.transition{transition:all .15s ease}.transition-all{transition:all .15s ease}
-.transition-transform{transition:transform .15s ease}
-.cursor-pointer{cursor:pointer}.select-none{user-select:none}.pointer-events-none{pointer-events:none}
-.space-y-2>*+*{margin-top:8px}.space-y-3>*+*{margin-top:12px}.space-y-4>*+*{margin-top:16px}
-.grid-cols-2{grid-template-columns:repeat(2,1fr)}.grid-cols-3{grid-template-columns:repeat(3,1fr)}
-.col-span-2{grid-column:span 2}.col-span-3{grid-column:span 3}
-.active\:scale-95:active{transform:scale(.95)}
-.line-through{text-decoration:line-through}.underline{text-decoration:underline}
-.uppercase{text-transform:uppercase}.capitalize{text-transform:capitalize}
-.whitespace-nowrap{white-space:nowrap}.break-words{word-break:break-word}
-.max-w-sm{max-width:384px}.max-w-md{max-width:448px}.max-w-lg{max-width:512px}
-.min-h-screen{min-height:100vh}.h-screen{height:100vh}
-.bg-white{background:#fff}.bg-transparent{background:transparent}
-.border-transparent{border-color:transparent}
 .status-banner {
   display: flex;
   align-items: center;
@@ -243,11 +196,6 @@
     0 1px 0 rgba(255, 255, 255, 0.9) inset;
   transform: translateY(-2px);
 }
-
-    .card-glass:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(31, 38, 135, .15);
-    }
 
     [data-theme="dark"] .card-glass:hover {
       box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
@@ -3266,9 +3214,6 @@
           </div>
                    <p class="text-center text-blue-100 text-[10px] mt-3 font-semibold" data-i18n="rate-disclaimer">Tasa oficial •
             No incluye comisiones bancarias</p>
-
-          <p class="text-center text-blue-100 text-[10px] mt-3 font-semibold" data-i18n="rate-disclaimer">Tasa oficial •
-            No incluye comisiones bancarias</p>
         </div>
       </div>
 
@@ -3562,11 +3507,19 @@
 
   <script>
     // ===== CONFIGURACIÓN =====
-        const CONFIG = {
-      WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxZha_wgj93Alh-OWWuxNjHvW6Tb_lL4gSc6Qm29jgEYAjIlvLYxl8vgzxv8WTLEC_F/exec',
-      UPDATE_INTERVAL: 300000,   // 5 min — frecuencia de fetch a la API
-      CACHE_DURATION: 300000,    // 5 min — tiempo máximo de datos en caché
-    };
+       const CONFIG = {
+  WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxZha_wgj93Alh-OWWuxNjHvW6Tb_lL4gSc6Qm29jgEYAjIlvLYxl8vgzxv8WTLEC_F/exec',
+  APP_URL: 'https://chile-arrival-839a1.web.app/',
+  UPDATE_INTERVAL: 300000,
+  CACHE_DURATION: 300000,
+   DEBUG: location.hostname === 'localhost' || location.hostname === '127.0.0.1',
+};
+// ===== LOGGER =====
+const logger = {
+  log:   (...args) => { if (CONFIG.DEBUG) console.log('[CA]',   ...args); },
+  warn:  (...args) => { if (CONFIG.DEBUG) console.warn('[CA]',  ...args); },
+  error: (...args) => { if (CONFIG.DEBUG) console.error('[CA]', ...args); },
+};
 
     // ===== CACHÉ DE ELEMENTOS DOM =====
     const DOM_CACHE = {
@@ -3597,7 +3550,7 @@
         };
         ids.forEach(id => {
           this[keyMap[id]] = document.getElementById(id);
-          if (!this[keyMap[id]]) console.warn(`[DOM_CACHE] Elemento no encontrado: #${id}`);
+          if (!this[keyMap[id]]) logger.warn(`Elemento no encontrado: #${id}`);
         });
       }
     };
@@ -3925,7 +3878,7 @@
       const keys_es = Object.keys(TRANSLATIONS.es);
       ['en', 'pt'].forEach(lang => {
         const missing = keys_es.filter(k => !Object.keys(TRANSLATIONS[lang]).includes(k));
-        if (missing.length) console.warn(`[i18n] Keys faltantes en '${lang}':`, missing);
+        if (missing.length) logger.warn(`Keys faltantes en '${lang}':`, missing);
       });
     }
 
@@ -4384,9 +4337,21 @@
     let ratesLastUpdate = null;
     let updateIntervalId = null;
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
+function sanitizeInput(str, options = {}) {
+  if (!str || typeof str !== 'string') return '';
+  const { maxLength = 500, filterWords = true } = options;
+
+  let clean = str.trim().substring(0, maxLength);
+
+  // Filtra palabras bloqueadas (solo si se pide)
+  if (filterWords) {
+    BLOCKED_WORDS.forEach(word => {
+      clean = clean.replace(new RegExp(word, 'gi'), '***');
+    });
+  }
+
+  // Escapa caracteres HTML peligrosos
+  return clean
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -4527,8 +4492,8 @@ function escapeHtml(str) {
       <!-- Hero kit -->
       <div class="card-glass glass-blue p-5 rounded-2xl">
         <p class="text-[11px] font-black uppercase text-blue-100 mb-1 tracking-wide">${t('kit-badge')}</p>
-        <h2 class="text-xl font-black text-white leading-tight mb-1">${escapeHtml(t('kit-title'))}</h2>
-<p class="text-xs text-blue-100/90 font-semibold">${escapeHtml(t('kit-subtitle'))}</p>
+        <h2 class="text-xl font-black text-white leading-tight mb-1">${sanitizeInput(t('kit-title'), { filterWords: false })}</h2>
+<p class="text-xs text-blue-100/90 font-semibold">${sanitizeInput(t('kit-subtitle'), { filterWords: false })}</p>
       </div>
 
       <!-- Header sección -->
@@ -4620,8 +4585,8 @@ function escapeHtml(str) {
             { href:'https://www.booking.com/city/cl/puerto-montt.html', title:t('kit-hotel-pto'), sub:t('kit-hotel-pto-sub') },
             { href:'https://www.booking.com/city/ar/san-carlos-de-bariloche.html', title:t('kit-hotel-bari'), sub:t('kit-hotel-bari-sub') }
           ].map((h, i, arr) => `
-  <a href="${escapeHtml(h.href)}" target="_blank" rel="noopener sponsored"
-     aria-label="${escapeHtml(h.title)}"
+  <a href="${sanitizeInput(h.href, { filterWords: false })}" target="_blank" rel="noopener sponsored"
+     aria-label="${sanitizeInput(h.title, { filterWords: false })}"
                class="flex items-center justify-between px-4 py-3 transition active:bg-blue-50"
                style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
               <div class="flex items-center gap-3">
@@ -4652,8 +4617,8 @@ function escapeHtml(str) {
             { href:'https://www.rentalcars.com', emoji:'🚗', title:t('kit-car-title'), sub:t('kit-car-sub') },
             { href:'https://www.busbud.com', emoji:'🚌', title:t('kit-bus-title'), sub:t('kit-bus-sub') }
           ].map((tr, i, arr) => `
-  <a href="${escapeHtml(tr.href)}" target="_blank" rel="noopener sponsored"
-     aria-label="${escapeHtml(tr.title)}"
+  <a href="${sanitizeInput(tr.href, { filterWords: false })}" target="_blank" rel="noopener sponsored"
+     aria-label="${sanitizeInput(tr.title, { filterWords: false })}"
                class="flex items-center justify-between px-4 py-3 transition active:bg-orange-50"
                style="${i < arr.length-1 ? 'border-bottom:1px solid rgba(0,0,0,0.06)' : ''}">
               <div class="flex items-center gap-3">
@@ -4700,9 +4665,13 @@ function initOnboarding() {
 
   let currentSlide = 0;
   const data = slides[currentLang] || slides.es;
+  const previousFocus = document.activeElement;
 
   const overlay = document.createElement('div');
   overlay.id = 'onboardingOverlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', currentLang === 'pt' ? 'Introdução' : currentLang === 'en' ? 'Introduction' : 'Introducción');
   overlay.style.cssText = `
     position:fixed;top:0;left:0;width:100%;height:100%;
     background:rgba(0,0,0,0.85);z-index:99999;
@@ -4715,38 +4684,48 @@ function initOnboarding() {
     const btnLabel = isLast
       ? (currentLang === 'es' ? '¡Empezar!' : currentLang === 'pt' ? 'Começar!' : 'Get started!')
       : (currentLang === 'es' ? 'Siguiente →' : currentLang === 'pt' ? 'Próximo →' : 'Next →');
+    const skipLabel = currentLang === 'es' ? 'Saltar' : currentLang === 'pt' ? 'Pular' : 'Skip';
 
     overlay.innerHTML = `
       <div style="background:var(--card-bg);border-radius:24px;padding:36px 28px;
                   max-width:360px;width:100%;text-align:center;
                   box-shadow:0 20px 60px rgba(0,0,0,0.5);">
-        <div style="font-size:64px;margin-bottom:16px;line-height:1">${slide.icon}</div>
+        <div style="font-size:64px;margin-bottom:16px;line-height:1" aria-hidden="true">${slide.icon}</div>
         <h2 style="font-size:20px;font-weight:900;color:var(--text-primary);
                    margin-bottom:12px;line-height:1.3">${slide.title}</h2>
         <p style="font-size:14px;font-weight:600;color:#64748b;
                   line-height:1.6;margin-bottom:28px">${slide.text}</p>
-
-        <!-- Dots -->
-        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:24px">
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:24px" aria-hidden="true">
           ${data.map((_, i) => `
             <div style="width:${i === currentSlide ? '24px' : '8px'};height:8px;
                         border-radius:4px;transition:all 0.3s;
                         background:${i === currentSlide ? '#0039a6' : '#e2e8f0'}"></div>
           `).join('')}
         </div>
-
-        <button onclick="nextOnboardingSlide()"
+        <p style="font-size:11px;color:#94a3b8;margin-bottom:16px">
+          ${currentSlide + 1} / ${data.length}
+        </p>
+        <button id="onboardingMainBtn"
           style="width:100%;padding:14px;background:linear-gradient(135deg,#0039a6,#1e40af);
                  color:white;border:none;border-radius:12px;font-size:15px;
                  font-weight:800;cursor:pointer;margin-bottom:10px;">
           ${btnLabel}
         </button>
-        <button onclick="skipOnboarding()"
+        <button id="onboardingSkipBtn"
           style="width:100%;padding:10px;background:transparent;color:#94a3b8;
                  border:none;font-size:13px;font-weight:600;cursor:pointer;">
-          ${currentLang === 'es' ? 'Saltar' : currentLang === 'pt' ? 'Pular' : 'Skip'}
+          ${skipLabel}
         </button>
       </div>`;
+
+    // Mueve el foco al botón principal al renderizar cada slide
+    requestAnimationFrame(() => {
+      const mainBtn = document.getElementById('onboardingMainBtn');
+      if (mainBtn) mainBtn.focus();
+    });
+
+    document.getElementById('onboardingMainBtn').onclick = nextOnboardingSlide;
+    document.getElementById('onboardingSkipBtn').onclick = skipOnboarding;
   }
 
   window.nextOnboardingSlide = function() {
@@ -4761,7 +4740,16 @@ function initOnboarding() {
   window.skipOnboarding = function() {
     overlay.remove();
     localStorage.setItem('onboardingDone', '1');
+    // Devuelve el foco al elemento que estaba activo antes de abrir
+    if (previousFocus && previousFocus.focus) {
+      requestAnimationFrame(() => previousFocus.focus());
+    }
   };
+
+  // Cierra con Escape
+  overlay.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') skipOnboarding();
+  });
 
   document.body.appendChild(overlay);
   renderSlide();
@@ -5288,7 +5276,7 @@ function initCurrencyTabs() {
       statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
       timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
       showRateChange(); convertMoney(); renderQuickSummary(); return true;
-    } catch(e) { console.error('API primaria (mindicador.cl) falló:', e); }
+    } catch(e) { logger.error('API primaria (mindicador.cl) falló:', e); }
 
     // ===== API DE RESPALDO: exchangerate-api.com =====
     try {
@@ -5324,7 +5312,7 @@ function initCurrencyTabs() {
         timestampEl.parentElement.appendChild(note);
       }
       showRateChange(); convertMoney(); renderQuickSummary(); return true;
-    } catch(e) { console.error('API de respaldo (exchangerate-api.com) falló:', e); }
+    } catch(e) { logger.error('API de respaldo (exchangerate-api.com) falló:', e);}
 
     // ===== ÚLTIMO RECURSO: caché local =====
     const cached = localStorage.getItem('exchangeRates');
@@ -5350,7 +5338,7 @@ function initCurrencyTabs() {
     return false;
 
   } catch (error) {
-    console.error('Error general tipo de cambio:', error);
+    logger.error('Error general tipo de cambio:', error);
     return false;
   }
 }
@@ -5611,25 +5599,26 @@ if (!card.querySelector('.share-btn')) {
   }));
 }
     // ===== PASOS FRONTERIZOS =====
-    const PASSES_FALLBACK = [
-      {name:"Chacalluta", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Jama", region:"Antofagasta", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Los Libertadores", region:"Valparaíso", country:"Argentina", hours:"24h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Chungará", region:"Arica y Parinacota", country:"Bolivia", hours:"24h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Carririñe", region:"Los Ríos", country:"Argentina", hours:"", status:"Cerrado", observations:"", reason:"Trabajos del MOP - Cerrado hasta Abril", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Cardenal Samoré", region:"Los Lagos", country:"Argentina", hours:"8-19h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Integración Austral", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"8-22h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-      {name:"Pino Hachado", region:"La Araucanía", country:"Argentina", hours:"8-21h", status:"Abierto", observations:"Ruta ripio en sector argentino", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Icalma", region:"La Araucanía", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Paso turístico, baja circulación", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Mamuil Malal", region:"La Araucanía", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Zona volcán Lanín, muy turístico", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Huahum", region:"Los Ríos", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Conecta con San Martín de los Andes", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"San Sebastián", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"24h", status:"Abierto", observations:"Estratégico para Tierra del Fuego", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Chile Chico", region:"Aysén", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Conecta con Los Antiguos, Argentina", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Futaleufú", region:"Los Lagos", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Zona de rafting, muy turístico", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Colchane", region:"Tarapacá", country:"Bolivia", hours:"8-20h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Visviri", region:"Arica y Parinacota", country:"Bolivia", hours:"8-18h", status:"Abierto", observations:"Paso tripartito Chile-Bolivia-Perú", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Santa Rosa", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"Frontera con Tacna, Perú", reason:"", important:true, lastUpdate:"2026-02-08T03:00:00.000Z"},
-{name:"Concordia", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"Paso peatonal y vehicular", reason:"", important:false, lastUpdate:"2026-02-08T03:00:00.000Z"}
+    const FALLBACK_DATE = new Date().toISOString();
+const PASSES_FALLBACK = [
+      {name:"Chacalluta", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+      {name:"Jama", region:"Antofagasta", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+      {name:"Los Libertadores", region:"Valparaíso", country:"Argentina", hours:"24h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:FALLBACK_DATE},
+      {name:"Chungará", region:"Arica y Parinacota", country:"Bolivia", hours:"24h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:FALLBACK_DATE},
+      {name:"Carririñe", region:"Los Ríos", country:"Argentina", hours:"", status:"Cerrado", observations:"", reason:"Trabajos del MOP - Cerrado hasta Abril", important:false, lastUpdate:FALLBACK_DATE},
+      {name:"Cardenal Samoré", region:"Los Lagos", country:"Argentina", hours:"8-19h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:FALLBACK_DATE},
+      {name:"Integración Austral", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"8-22h", status:"Abierto", observations:"", reason:"", important:true, lastUpdate:FALLBACK_DATE},
+      {name:"Pino Hachado", region:"La Araucanía", country:"Argentina", hours:"8-21h", status:"Abierto", observations:"Ruta ripio en sector argentino", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"Icalma", region:"La Araucanía", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Paso turístico, baja circulación", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"Mamuil Malal", region:"La Araucanía", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Zona volcán Lanín, muy turístico", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"Huahum", region:"Los Ríos", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Conecta con San Martín de los Andes", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"San Sebastián", region:"Magallanes y Antártica Chilena", country:"Argentina", hours:"24h", status:"Abierto", observations:"Estratégico para Tierra del Fuego", reason:"", important:true, lastUpdate:FALLBACK_DATE},
+{name:"Chile Chico", region:"Aysén", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Conecta con Los Antiguos, Argentina", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"Futaleufú", region:"Los Lagos", country:"Argentina", hours:"8-20h", status:"Abierto", observations:"Zona de rafting, muy turístico", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"Colchane", region:"Tarapacá", country:"Bolivia", hours:"8-20h", status:"Abierto", observations:"", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"Visviri", region:"Arica y Parinacota", country:"Bolivia", hours:"8-18h", status:"Abierto", observations:"Paso tripartito Chile-Bolivia-Perú", reason:"", important:false, lastUpdate:FALLBACK_DATE},
+{name:"Santa Rosa", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"Frontera con Tacna, Perú", reason:"", important:true, lastUpdate:FALLBACK_DATE},
+{name:"Concordia", region:"Arica y Parinacota", country:"Perú", hours:"24h", status:"Abierto", observations:"Paso peatonal y vehicular", reason:"", important:false, lastUpdate:FALLBACK_DATE}
    
 ];
 
@@ -5680,12 +5669,12 @@ if (!card.querySelector('.share-btn')) {
         populateReportPassSelect();
 
       } catch (error) {
-        console.error('Error al cargar pasos:', error);
+        logger.error('Error al cargar pasos:', error);
         if (!cached) {
           BORDER_PASSES = PASSES_FALLBACK;
           updatePassesDisplay();
           populateReportPassSelect();
-          showToast('📵 Usando datos de respaldo', 3000);
+          showToast('📵 Sin conexión — mostrando datos de referencia, pueden no estar actualizados', 4000);
         }
       }
     }
@@ -6383,7 +6372,7 @@ function updateMapMarkers() {
 
   if (!BORDER_PASSES.length) {
     if (_mapRetryCount++ < 10) setTimeout(() => updateMapMarkers(), 1000);
-    else console.warn('updateMapMarkers: BORDER_PASSES vacío tras 10 intentos');
+    else logger.warn('updateMapMarkers: BORDER_PASSES vacío tras 10 intentos');
     return;
   }
   _mapRetryCount = 0;
@@ -6475,7 +6464,7 @@ function initMapCore() {
       }, 400);
 
     } catch(e) {
-      console.error('Error iniciando mapa:', e);
+      logger.error('Error iniciando mapa:', e);
     }
   }, 300);
 }
@@ -6540,7 +6529,7 @@ async function fetchReportsFromSheet() {
     localStorage.setItem('reportsCache', JSON.stringify(reports));
     renderReports(reports);
   } catch (error) {
-    console.error('Error al cargar reportes:', error);
+    logger.error('Error al cargar reportes:', error);
     if (!cached) {
       DOM_CACHE.reportsContainer.innerHTML = `
         <div class="text-center py-8">
@@ -6712,7 +6701,7 @@ renderStats();
           3000
         );
       } catch (error) {
-        console.error('Error:', error);
+        logger.error('Error al enviar reporte:', error);
         showToast('❌ ' + t('error'), 3000);
       } finally {
         submitBtn.innerHTML = originalText;
@@ -7435,30 +7424,48 @@ function loadHistoryDate(dateStr) {
     }
     // ===== FAQ =====
         function initFAQ() {
-      const container = document.getElementById('faqContainer');
-      if (!container) return;
-      const fallback = document.getElementById('faqFallback');
-      if (fallback) fallback.remove();
-      const items = FAQ_DATA[currentLang] || FAQ_DATA.es;
-      container.innerHTML = items.map((item, i) => `
-        <div class="faq-item" id="faq-${i}">
-          <button class="faq-question" onclick="toggleFAQ(${i})">
-            <span>${item.q}</span>
-            <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="faq-answer">${item.a}</div>
-        </div>`).join('');
-    }
+  const container = document.getElementById('faqContainer');
+  if (!container) return;
+  const fallback = document.getElementById('faqFallback');
+  if (fallback) fallback.remove();
+  const items = FAQ_DATA[currentLang] || FAQ_DATA.es;
+  container.innerHTML = items.map((item, i) => `
+    <div class="faq-item" id="faq-${i}">
+      <button class="faq-question"
+        onclick="toggleFAQ(${i})"
+        aria-expanded="false"
+        aria-controls="faq-answer-${i}">
+        <span>${item.q}</span>
+        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+      </button>
+      <div class="faq-answer"
+        id="faq-answer-${i}"
+        role="region"
+        aria-labelledby="faq-btn-${i}">
+        ${item.a}
+      </div>
+    </div>`).join('');
+}
 
     function toggleFAQ(index) {
-      const item = document.getElementById(`faq-${index}`);
-      if (!item) return;
-      const isOpen = item.classList.contains('open');
-      // Cierra todos
-      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
-      // Abre el seleccionado si estaba cerrado
-      if (!isOpen) item.classList.add('open');
-    }
+  const item = document.getElementById(`faq-${index}`);
+  if (!item) return;
+  const isOpen = item.classList.contains('open');
+
+  // Cierra todos y resetea aria-expanded
+  document.querySelectorAll('.faq-item').forEach(el => {
+    el.classList.remove('open');
+    const btn = el.querySelector('.faq-question');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  });
+
+  // Abre el seleccionado si estaba cerrado
+  if (!isOpen) {
+    item.classList.add('open');
+    const btn = item.querySelector('.faq-question');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+  }
+}
     // ===== NOTIFICACIONES PUSH =====
 
     // Guarda el estado anterior de los pasos para comparar
@@ -7625,7 +7632,7 @@ function detectPassChanges(newPasses) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
           .then(reg => { setInterval(() => reg.update(), 3600000); })
-          .catch(err => console.warn('⚠️ SW Error:', err));
+          .catch(err => logger.warn('SW Error:', err))
       });
     }
 // Botón volver arriba — aparece al bajar 300px
@@ -7814,7 +7821,7 @@ try {
       localStorage.setItem(key, count.toString());
       // Si en el futuro agregas Google Analytics, aquí va el evento
       // gtag('event', 'kit_click', { item: item });
-      console.log('[Kit Viajero] Click en:', item, '— total:', count);
+      logger.log('Kit click:', item, '— total:', count);
     }
 
 function dismissInstallBanner() {
@@ -7823,15 +7830,13 @@ function dismissInstallBanner() {
   localStorage.setItem('pwaBannerDismissed', 'true');
 }
 
-window.addEventListener('error', (e) => { console.error('Error capturado:', e.message); });
-    window.addEventListener('unhandledrejection', (e) => { console.error('Promise rechazada:', e.reason); });
+window.addEventListener('error', (e) => { logger.error('Error capturado:', e.message); });
+window.addEventListener('unhandledrejection', (e) => { logger.error('Promise rechazada:', e.reason); });
 
 
     
   </script>
-
-  <script>
-    // Carga firebase-config.js solo si está disponible
+<script>
     (function() {
       var s = document.createElement('script');
       s.type = 'module';
@@ -7841,41 +7846,6 @@ window.addEventListener('error', (e) => { console.error('Error capturado:', e.me
       };
       document.body.appendChild(s);
     })();
-    // PWA Install
-let deferredPrompt = null;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Mostrar banner después de 3 segundos
-  setTimeout(() => {
-    const banner = document.getElementById('pwaInstallBanner');
-    if (banner) banner.style.display = 'block';
-  }, 3000);
-});
-
-function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('PWA instalada');
-    }
-    deferredPrompt = null;
-    dismissInstallBanner();
-  });
-}
-
-function dismissInstallBanner() {
-  const banner = document.getElementById('pwaInstallBanner');
-  if (banner) banner.style.display = 'none';
-}
-
-// Ocultar banner si ya está instalada
-window.addEventListener('appinstalled', () => {
-  dismissInstallBanner();
-  deferredPrompt = null;
-});
   </script>
 
 </body>
