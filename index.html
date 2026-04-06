@@ -3,6 +3,7 @@
 
 
 <head>
+  
   <meta charset="UTF-8">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9499117035060563"
      crossorigin="anonymous"></script>
@@ -1577,27 +1578,22 @@
     }
 
     /* Modal mejorado */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, .7);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(5px);
-    }
-
-        .modal {
-      display: flex;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
+.modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
     .modal.show {
       opacity: 1;
       pointer-events: all;
@@ -2804,6 +2800,11 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+@keyframes splashBounce {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
 }
 </style>
   <!-- Botón volver arriba -->
@@ -7671,11 +7672,16 @@ function updateSplash(pct, text) {
 }
 
 function hideSplash() {
+  // Timeout de seguridad: si el splash sigue visible después de 5s, forzar cierre
+setTimeout(function() {
   const splash = document.getElementById('splashScreen');
-  if (!splash) return;
-  splash.style.opacity = '0';
-  splash.style.visibility = 'hidden';
-  setTimeout(() => splash.remove(), 500);
+  if (splash && splash.style.display !== 'none' && splash.style.opacity !== '0') {
+    splash.style.opacity = '0';
+    splash.style.visibility = 'hidden';
+    setTimeout(function() { splash.style.display = 'none'; }, 500);
+    console.warn('Splash cerrado por timeout de seguridad');
+  }
+}, 5000);
 }
 function fetchAllData() {
   lastFetchTime = Date.now();
