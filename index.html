@@ -7869,7 +7869,11 @@ function detectPassChanges(newPasses) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
           .then(reg => { setInterval(() => reg.update(), 3600000); })
-          .catch(err => logger.warn('SW Error:', err))
+          .catch(err => logger.warn('SW Error:', err));
+
+        // Registrar SW de Firebase Messaging por separado
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
+          .catch(err => logger.warn('FCM SW Error:', err));
       });
     }
 // Botón volver arriba — aparece al bajar 300px
