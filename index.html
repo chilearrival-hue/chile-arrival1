@@ -41,15 +41,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
-<noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
-  <link rel="preconnect" href="https://cdn.tailwindcss.com">
-  <!-- Leaflet se carga solo cuando el usuario abre el mapa -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
   <style>
@@ -101,6 +96,27 @@
 .min-h-screen{min-height:100vh}.h-screen{height:100vh}
 .bg-white{background:#fff}.bg-transparent{background:transparent}
 .border-transparent{border-color:transparent}
+.status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: linear-gradient(135deg, #0039a6, #0057d8);
+  box-shadow: 0 4px 20px rgba(0,57,166,0.35);
+  color: white;
+}
+.status-banner:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,57,166,0.4); }
+.status-banner-left { display: flex; align-items: center; gap: 14px; }
+.status-icon { font-size: 28px; animation: pulseIcon 2s ease-in-out infinite; }
+@keyframes pulseIcon { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+.status-banner-title { font-size: 15px; font-weight: 900; margin: 0; }
+.status-banner-sub { font-size: 11px; font-weight: 600; opacity: 0.8; margin: 2px 0 0; }
+.status-banner-right { text-align: center; }
+.status-count { display: block; font-size: 36px; font-weight: 900; line-height: 1; }
+.status-count-label { font-size: 10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; }
 </style>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -131,12 +147,51 @@
     }
 
     [data-theme="dark"] {
-      --chile-blue: #60a5fa;
-      --chile-red: #f87171;
-      --bg-primary: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      --card-bg: #1e293b;
-      --text-primary: #f1f5f9;
-    }
+  --chile-blue: #60a5fa;
+  --chile-red: #f87171;
+  --bg-primary: linear-gradient(135deg, #080c14 0%, #0f172a 50%, #131c2e 100%);
+  --card-bg: #111827;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+}
+
+[data-theme="dark"] .card-glass {
+  background: rgba(17, 24, 39, 0.85) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.05) inset !important;
+}
+
+[data-theme="dark"] .glass-green {
+  background: linear-gradient(135deg, rgba(16,185,129,.2) 0%, rgba(5,150,105,.15) 100%) !important;
+  border: 1px solid rgba(16,185,129,0.2) !important;
+  box-shadow: 0 4px 24px rgba(5,150,105,0.1) !important;
+}
+
+[data-theme="dark"] .glass-red {
+  background: linear-gradient(135deg, rgba(220,38,38,.2) 0%, rgba(185,28,28,.15) 100%) !important;
+  border: 1px solid rgba(220,38,38,0.2) !important;
+  box-shadow: 0 4px 24px rgba(220,38,38,0.1) !important;
+}
+
+[data-theme="dark"] .glass-blue {
+  background: linear-gradient(135deg, rgba(37,99,235,.2) 0%, rgba(29,78,216,.15) 100%) !important;
+  border: 1px solid rgba(37,99,235,0.2) !important;
+  box-shadow: 0 4px 24px rgba(37,99,235,0.1) !important;
+}
+
+[data-theme="dark"] .glass-yellow {
+  background: linear-gradient(135deg, rgba(245,158,11,.2) 0%, rgba(217,119,6,.15) 100%) !important;
+  border: 1px solid rgba(245,158,11,0.2) !important;
+  box-shadow: 0 4px 24px rgba(217,119,6,0.1) !important;
+}
+
+[data-theme="dark"] .nav-btn::after {
+  background: var(--chile-blue);
+}
 
     /* Reset optimizado */
     * {
@@ -151,28 +206,37 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg-primary);
-      padding-bottom: 120px;
-      color: var(--text-primary);
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      line-height: 1.6;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  padding-bottom: 120px;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
 
     /* Glass Effect mejorado */
     .card-glass {
-      background: rgba(255, 255, 255, .75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .5);
-      box-shadow: 0 4px 16px rgba(31, 38, 135, .1);
-      border-radius: 20px;
-      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-      will-change: transform;
-    }
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 
+    0 4px 24px rgba(31, 38, 135, 0.1),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  border-radius: 20px;
+  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  will-change: transform;
+}
+.card-glass:hover {
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.15),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  transform: translateY(-2px);
+}
 
     .card-glass:hover {
       transform: translateY(-2px);
@@ -192,19 +256,23 @@
     /* Colores específicos */
     .glass-blue {
   background: linear-gradient(135deg, rgba(0,57,166,.35) 0%, rgba(37,99,235,.28) 100%) !important;
-  border-left: 4px solid #0039a6 !important;
+  border: 1px solid rgba(37,99,235,0.3) !important;
+  box-shadow: 0 4px 24px rgba(0,57,166,0.15), 0 1px 0 rgba(255,255,255,0.8) inset !important;
 }
 .glass-green {
   background: linear-gradient(135deg, rgba(16,185,129,.38) 0%, rgba(5,150,105,.3) 100%) !important;
-  border-left: 4px solid #10b981 !important;
+  border: 1px solid rgba(16,185,129,0.35) !important;
+  box-shadow: 0 4px 24px rgba(5,150,105,0.15), 0 1px 0 rgba(255,255,255,0.8) inset !important;
 }
 .glass-red {
   background: linear-gradient(135deg, rgba(213,43,30,.32) 0%, rgba(220,38,38,.25) 100%) !important;
-  border-left: 4px solid #d52b1e !important;
+  border: 1px solid rgba(220,38,38,0.3) !important;
+  box-shadow: 0 4px 24px rgba(220,38,38,0.15), 0 1px 0 rgba(255,255,255,0.8) inset !important;
 }
 .glass-yellow {
   background: linear-gradient(135deg, rgba(245,158,11,.32) 0%, rgba(217,119,6,.25) 100%) !important;
-  border-left: 4px solid #f59e0b !important;
+  border: 1px solid rgba(245,158,11,0.3) !important;
+  box-shadow: 0 4px 24px rgba(217,119,6,0.15), 0 1px 0 rgba(255,255,255,0.8) inset !important;
 }
 
 /* Texto legible en cards glass (modo claro) */
@@ -926,26 +994,43 @@
     }
 
     .nav-btn {
-      flex: 1;
-      height: 75px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-sm);
-      color: #94a3b8;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      transition: all var(--transition-speed) ease;
-      position: relative;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .nav-btn.active-tab {
-      color: var(--chile-blue)
-    }
-
+  flex: 1;
+  height: 75px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  color: #94a3b8;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: color 0.25s ease, transform 0.2s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 32px;
+  height: 3px;
+  background: var(--chile-blue);
+  border-radius: 3px 3px 0 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-btn.active-tab {
+  color: var(--chile-blue);
+}
+.nav-btn.active-tab::after {
+  transform: translateX(-50%) scaleX(1);
+}
+.nav-btn:active {
+  transform: scale(0.92);
+}
     .nav-btn.active-tab::before {
       content: '';
       position: absolute;
@@ -2611,6 +2696,27 @@
       background: rgba(255, 255, 255, 0.3);
       border-color: rgba(255, 255, 255, 0.6);
     }
+    /* Tipografía premium para números */
+#clpResult {
+  font-family: 'Inter', sans-serif;
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.02em;
+}
+
+.input-money {
+  font-family: 'Inter', sans-serif;
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.01em;
+}
+
+.main-section-title {
+  letter-spacing: -0.03em;
+  font-weight: 900;
+}
+
+.color-card-title {
+  letter-spacing: -0.02em;
+}
   </style>
 </head>
 
@@ -3044,7 +3150,20 @@
         <h2 class="main-section-title" data-i18n="travel-info-title">Información de Viaje</h2>
         <p class="small-text-enhanced" data-i18n="travel-info-subtitle">Pasos fronterizos operativos</p>
         <p id="lastUpdate" class="text-xs text-slate-500 mt-2 font-semibold"></p>
-      </div>
+      <!-- BANNER ESTADO GENERAL -->
+<div id="statusBanner" class="status-banner mb-4">
+  <div class="status-banner-left">
+    <div id="statusIcon" class="status-icon">🟢</div>
+    <div>
+      <p id="statusTitle" class="status-banner-title">Cargando pasos...</p>
+      <p id="statusSub" class="status-banner-sub">Actualizando información</p>
+    </div>
+  </div>
+  <div class="status-banner-right">
+    <span id="statusCount" class="status-count">--</span>
+    <span class="status-count-label">abiertos</span>
+  </div>
+</div>
       <div class="card-glass p-4 mb-4">
   <div class="flex items-center justify-between mb-3">
     <h3 class="card-title-enhanced flex items-center gap-2">
@@ -3144,7 +3263,13 @@
             <div class="flex flex-col items-center">
               <span class="text-xs uppercase font-bold text-blue-100 mb-2">CLP 💰</span>
               <div class="bg-white/20 rounded-xl px-5 py-3 min-w-[140px] text-center">
-                <p id="clpResult" class="text-3xl font-black tracking-tight">$---</p>
+                <p id="clpResult" class="text-3xl font-black tracking-tight cursor-pointer select-all"
+   onclick="copyCLPResult()"
+   title="Tap para copiar">$---</p>
+<span id="copyFeedback" style="font-size:10px;color:rgba(255,255,255,0.7);font-weight:700;
+  display:block;text-align:center;height:14px;transition:opacity 0.3s;opacity:0;margin-top:2px;">
+  ✓ Copiado
+</span>
                 <span id="rateChange" class="rate-change hidden"></span>
               </div>
             </div>
@@ -5245,28 +5370,36 @@ function initCurrencyTabs() {
   }
 }
 
-   function showRateChange() {
+  function showRateChange() {
   const changeEl = document.getElementById('rateChange');
   if (!changeEl) return;
 
-  // Si no hay tasas anteriores, no mostrar nada
-  if (!previousRates) {
+  const current = exchangeRates[selectedCurrency];
+  if (!current || current <= 0) { changeEl.classList.add('hidden'); return; }
+
+  // Guarda tasa de apertura del día (solo una vez por día)
+  const today = new Date().toDateString();
+  const savedDay  = localStorage.getItem('rateDay_' + selectedCurrency);
+  const savedOpen = parseFloat(localStorage.getItem('rateOpen_' + selectedCurrency));
+
+  if (savedDay !== today || !savedOpen) {
+    // Nuevo día → guarda tasa actual como apertura
+    localStorage.setItem('rateDay_'  + selectedCurrency, today);
+    localStorage.setItem('rateOpen_' + selectedCurrency, current);
     changeEl.classList.add('hidden');
     return;
   }
 
-  const current  = exchangeRates[selectedCurrency];
-  const previous = previousRates[selectedCurrency];
+  // Calcula variación vs apertura del día
+  const pct = (((current - savedOpen) / savedOpen) * 100).toFixed(2);
+  const isUp = current > savedOpen;
+  const isFlat = Math.abs(pct) < 0.01;
 
-  if (previous && previous !== current && previous > 0) {
-    const pct = (((current - previous) / previous) * 100).toFixed(2);
-    const isUp = current > previous;
-    changeEl.classList.remove('hidden', 'rate-up', 'rate-down');
-    changeEl.classList.add(isUp ? 'rate-up' : 'rate-down');
-    changeEl.textContent = `${isUp ? '▲' : '▼'} ${Math.abs(pct)}%`;
-  } else {
-    changeEl.classList.add('hidden');
-  }
+  if (isFlat) { changeEl.classList.add('hidden'); return; }
+
+  changeEl.classList.remove('hidden', 'rate-up', 'rate-down');
+  changeEl.classList.add(isUp ? 'rate-up' : 'rate-down');
+  changeEl.textContent = `${isUp ? '▲' : '▼'} ${Math.abs(pct)}% hoy`;
 }
 
     function selectCurrency(code, btn) {
@@ -5327,9 +5460,54 @@ function convertFromCLP() {
    function convertMoney() {
   const val = parseFloat(DOM_CACHE.currencyInput.value) || 0;
   const rate = exchangeRates[selectedCurrency];
-  DOM_CACHE.clpResult.textContent = rate > 0 
-    ? '$ ' + Math.round(val * rate).toLocaleString('es-CL') 
-    : '$---';
+  const newValue = rate > 0 ? Math.round(val * rate) : null;
+
+  if (!newValue) {
+    DOM_CACHE.clpResult.textContent = '$---';
+    return;
+  }
+
+  // Animación de conteo
+  const el = DOM_CACHE.clpResult;
+  const current = parseInt(el.textContent.replace(/[^0-9]/g, '')) || 0;
+  const diff = newValue - current;
+  const duration = 400; // ms
+  const steps = 20;
+  const stepVal = diff / steps;
+  let step = 0;
+
+  clearInterval(el._countTimer);
+  el._countTimer = setInterval(() => {
+    step++;
+    const displayed = Math.round(current + stepVal * step);
+    el.textContent = '$ ' + displayed.toLocaleString('es-CL');
+    if (step >= steps) {
+      clearInterval(el._countTimer);
+      el.textContent = '$ ' + newValue.toLocaleString('es-CL');
+    }
+  }, duration / steps);
+}
+function copyCLPResult() {
+  const text = document.getElementById('clpResult').textContent;
+  if (text === '$---') return;
+  // Extrae solo el número
+  const clean = text.replace(/[^0-9]/g, '');
+  navigator.clipboard.writeText(clean).then(() => {
+    const fb = document.getElementById('copyFeedback');
+    fb.style.opacity = '1';
+    setTimeout(() => fb.style.opacity = '0', 1500);
+  }).catch(() => {
+    // Fallback para dispositivos sin clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = clean;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const fb = document.getElementById('copyFeedback');
+    fb.style.opacity = '1';
+    setTimeout(() => fb.style.opacity = '0', 1500);
+  });
 }
 // Coordenadas geográficas de los pasos para clima
     // Cache de clima por paso
@@ -5527,11 +5705,46 @@ if (!card.querySelector('.share-btn')) {
       }
     }
     // FIX: el bloque huérfano fue eliminado completamente ↑
+function updateStatusBanner() {
+  const open   = BORDER_PASSES.filter(p => p.status === 'Abierto').length;
+  const closed = BORDER_PASSES.filter(p => p.status === 'Cerrado').length;
+  const total  = BORDER_PASSES.length;
 
+  const banner = document.getElementById('statusBanner');
+  const icon   = document.getElementById('statusIcon');
+  const title  = document.getElementById('statusTitle');
+  const sub    = document.getElementById('statusSub');
+  const count  = document.getElementById('statusCount');
+
+  if (!banner) return;
+
+  count.textContent = open;
+
+  if (closed === 0) {
+    banner.style.background = 'linear-gradient(135deg, #059669, #10b981)';
+    banner.style.boxShadow  = '0 4px 20px rgba(5,150,105,0.35)';
+    icon.textContent  = '✅';
+    title.textContent = '¡Todos los pasos operativos!';
+    sub.textContent   = `${total} pasos sin cierres reportados`;
+  } else if (closed <= 2) {
+    banner.style.background = 'linear-gradient(135deg, #d97706, #f59e0b)';
+    banner.style.boxShadow  = '0 4px 20px rgba(217,119,6,0.35)';
+    icon.textContent  = '⚠️';
+    title.textContent = `${closed} paso${closed > 1 ? 's' : ''} cerrado${closed > 1 ? 's' : ''}`;
+    sub.textContent   = `${open} de ${total} pasos operativos`;
+  } else {
+    banner.style.background = 'linear-gradient(135deg, #dc2626, #ef4444)';
+    banner.style.boxShadow  = '0 4px 20px rgba(220,38,38,0.35)';
+    icon.textContent  = '🔴';
+    title.textContent = `${closed} pasos cerrados`;
+    sub.textContent   = `${open} de ${total} pasos operativos`;
+  }
+}
     function updatePassesDisplay() {
   renderClosedPassesInHome();
   renderOpenPassesInViaje();
   showLastUpdate();
+  updateStatusBanner();
   if (mapInitialized && mapInstance) updateMapMarkers();
   renderQuickSummary();
 }
