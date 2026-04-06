@@ -4783,21 +4783,40 @@ function shareApp(method) {
 }
 
 function copyAppLink() {
-  const url = 'https://chile-arrival-839a1.web.app/';
-  navigator.clipboard.writeText(url).then(() => {
-    showToast('🔗 ' + (currentLang === 'es' ? 'Link copiado' :
-              currentLang === 'pt' ? 'Link copiado' : 'Link copied'), 2000);
-  }).catch(() => {
-    // Fallback para navegadores que no soportan clipboard
-    const el = document.createElement('textarea');
-    el.value = url;
-    document.body.appendChild(el);
-    el.select();
+  const url = CONFIG.APP_URL || window.location.href;
+
+  // Método moderno
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        showToast('✅ ' + (currentLang === 'es' ? 'Link copiado' :
+                  currentLang === 'pt' ? 'Link copiado' : 'Link copied'), 2000);
+      })
+      .catch(() => fallbackCopy(url));
+    return;
+  }
+
+  // Fallback si clipboard no está disponible
+  fallbackCopy(url);
+}
+
+function fallbackCopy(url) {
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    textarea.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
     document.execCommand('copy');
-    document.body.removeChild(el);
-    showToast('🔗 ' + (currentLang === 'es' ? 'Link copiado' :
+    document.body.removeChild(textarea);
+    showToast('✅ ' + (currentLang === 'es' ? 'Link copiado' :
               currentLang === 'pt' ? 'Link copiado' : 'Link copied'), 2000);
-  });
+  } catch(e) {
+    // Si todo falla, muestra el URL para que lo copie manualmente
+    prompt(currentLang === 'es' ? 'Copia este link:' :
+           currentLang === 'pt' ? 'Copie este link:' : 'Copy this link:', url);
+  }
 }
 // ===== WIDGET RESUMEN RÁPIDO =====
 function renderQuickSummary() {
@@ -5097,22 +5116,19 @@ if (tabEl) tabEl.classList.add('active');
 }
     // ===== DARK MODE =====
     function toggleDarkMode() {
-      const body = document.body;
-      const icon = DOM_CACHE.themeIcon;
-      const meta = document.getElementById('themeColorMeta');
-      const isDark = body.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        body.removeAttribute('data-theme');
-        icon.classList.replace('fa-sun', 'fa-moon');
-        localStorage.setItem('theme', 'light');
-        if (meta) meta.content = '#0039a6';
-      } else {
-        body.setAttribute('data-theme', 'dark');
-        icon.classList.replace('fa-moon', 'fa-sun');
-        localStorage.setItem('theme', 'dark');
-        if (meta) meta.content = '#0f172a';
-      }
-    }
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  const icon = DOM_CACHE.themeIcon;
+
+  if (isDark) {
+    document.body.removeAttribute('data-theme');
+    localStorage.setItem('theme', 'light');
+    icon.className = 'fas fa-moon';
+  } else {
+    document.body.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+    icon.className = 'fas fa-sun';
+  }
+}
 
     // ===== NIEVE =====
     function createSnowflakes() {
@@ -5282,15 +5298,16 @@ function initCurrencyTabs() {
   }
 }
 
-    function selectCurrency(currency, button) {
-      selectedCurrency = currency;
-      const symbols = {USD:'💵', EUR:'💶', ARS:'🇦🇷', BRL:'🇧🇷', PEN:'🇵🇪', BOB:'🇧🇴'};
-      const selCurEl = document.getElementById('selectedCurrency');
-if (selCurEl) selCurEl.textContent = currency + ' ' + symbols[currency];
-      document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
-      button.classList.add('active');
-      showRateChange(); convertMoney();
-    }
+    function selectCurrency(code, btn) {
+  selectedCurrency = code;
+  document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const symbols = {USD:'💵', EUR:'💶', ARS:'🇦🇷', BRL:'🇧🇷', PEN:'🇵🇪', BOB:'🇧🇴'};
+  const selectedEl = document.getElementById('selectedCurrency');
+  if (selectedEl) selectedEl.textContent = code + ' ' + (symbols[code] || '');
+  showRateChange();
+  convertMoney();
+}
 function convertFromCLP() {
   const amountEl = document.getElementById('clpAmount');
   const resultEl = document.getElementById('clpResultContainer');
@@ -5345,7 +5362,14 @@ function convertFromCLP() {
     const weatherCache = {};
 
     async function fetchWeatherForPass(passName) {
-      if (weatherCache[passName]) return weatherCache[passName];
+      if (weatherCache[passName]) {
+  const cached = weatherCache[passName];
+  const thirtyMinutes = 30 * 60 * 1000;
+  if (Date.now() - cached.ts < thirtyMinutes) {
+    return cached.data;
+  }
+  delete weatherCache[passName];
+}
       const coords = PASS_LOCATIONS[passName];
       if (!coords) return null;
       try {
@@ -5358,7 +5382,7 @@ function convertFromCLP() {
           wind: Math.round(w.windspeed),
           code: w.weathercode
         };
-        weatherCache[passName] = result;
+        weatherCache[passName] = { data: result, ts: Date.now() };
         return result;
       } catch(e) {
         return null;
@@ -5703,21 +5727,19 @@ const openPasses = BORDER_PASSES
         </button>
       </div>`;
 }
-   function filterPasses() {
+  const SEARCH_ALIASES = {
+  'open': 'abierto', 'closed': 'cerrado', 'border': 'paso',
+  'crossing': 'paso', 'north': 'norte', 'south': 'sur',
+  'argentina': 'argentina', 'peru': 'perú', 'bolivia': 'bolivia',
+  'aberto': 'abierto', 'fechado': 'cerrado', 'fronteira': 'paso',
+  'norte': 'norte', 'sul': 'sur'
+};
+
+function filterPasses() {
   const search = DOM_CACHE.searchInput.value.toLowerCase().trim();
-
-  const searchAliases = {
-    'open': 'abierto', 'closed': 'cerrado', 'border': 'paso',
-    'crossing': 'paso', 'north': 'norte', 'south': 'sur',
-    'argentina': 'argentina', 'peru': 'perú', 'bolivia': 'bolivia',
-    'aberto': 'abierto', 'fechado': 'cerrado', 'fronteira': 'paso',
-    'norte': 'norte', 'sul': 'sur'
-  };
-
-  const normalizedSearch = searchAliases[search] || search;
+  const normalizedSearch = SEARCH_ALIASES[search] || search;
 
   document.querySelectorAll('#passesContainer [data-pass]').forEach(card => {
-    // Busca también en data-country si existe, si no busca en textContent
     const passText = card.textContent.toLowerCase();
     const passAttr = card.getAttribute('data-pass') || '';
     const countryAttr = (card.getAttribute('data-country') || '').toLowerCase();
@@ -6024,33 +6046,26 @@ function renderCurrencyComparison() {
     { code:'BOB', flag:'🇧🇴', name:{ es:'Boliviano', en:'Boliviano', pt:'Boliviano' } }
   ];
 
+  container.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;';
+
   container.innerHTML = currencies.map(cur => {
     const rate = exchangeRates[cur.code];
     const result = rate > 0 ? Math.round(amount * rate).toLocaleString('es-CL') : '---';
     const isSelected = cur.code === selectedCurrency;
+
     return `
       <div onclick="selectCurrencyFromComparison('${cur.code}')"
         style="display:flex;align-items:center;justify-content:space-between;
-               padding:10px 12px;border-radius:12px;cursor:pointer;transition:all 0.2s;
+               padding:8px 10px;border-radius:10px;cursor:pointer;transition:all 0.2s;
                background:${isSelected ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)'};
-               border:1px solid ${isSelected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'};
-               margin-bottom:6px;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:18px">${cur.flag}</span>
-          <div>
-            <p style="font-size:12px;font-weight:800;color:white;margin:0;line-height:1.2">
-              ${cur.code}
-            </p>
-            <p style="font-size:10px;color:rgba(255,255,255,0.7);margin:0;line-height:1.2">
-              ${cur.name[currentLang] || cur.name.es}
-            </p>
-          </div>
+               border:1px solid ${isSelected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'};">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:16px">${cur.flag}</span>
+          <p style="font-size:11px;font-weight:800;color:white;margin:0">${cur.code}</p>
         </div>
         <div style="text-align:right">
-          <p style="font-size:14px;font-weight:900;color:white;margin:0;line-height:1.2">
-            $${result}
-          </p>
-          <p style="font-size:10px;color:rgba(255,255,255,0.6);margin:0;line-height:1.2">CLP</p>
+          <p style="font-size:12px;font-weight:900;color:white;margin:0">$${result}</p>
+          <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">CLP</p>
         </div>
       </div>`;
   }).join('');
@@ -6069,7 +6084,6 @@ function selectCurrencyFromComparison(code) {
   if (selectedEl) selectedEl.textContent = code + ' ' + (symbols[code] || '');
   showRateChange();
   convertMoney();
-  renderCurrencyComparison();
 }
 // ===== HORARIO EN TIEMPO REAL =====
 function isPassOpenNow(hoursStr) {
@@ -7412,22 +7426,27 @@ function loadHistoryDate(dateStr) {
       }
     }
 
-    function detectPassChanges(newPasses) {
-      if (!newPasses || !newPasses.length) return;
-      // Primera carga — solo guarda el estado, no notifica
-      if (!Object.keys(previousPassesState).length) {
-        newPasses.forEach(p => { previousPassesState[p.name] = p.status; });
-        return;
-      }
-      // Detecta cambios respecto al estado anterior
-      newPasses.forEach(pass => {
-        const prev = previousPassesState[pass.name];
-        if (prev && prev !== pass.status) {
-          sendPushNotification(pass.name, pass.status);
-        }
-        previousPassesState[pass.name] = pass.status;
-      });
+   let firstPassLoad = true;
+
+function detectPassChanges(newPasses) {
+  if (!newPasses || !newPasses.length) return;
+
+  // Primera carga — solo guarda el estado, no notifica
+  if (firstPassLoad) {
+    firstPassLoad = false;
+    newPasses.forEach(p => { previousPassesState[p.name] = p.status; });
+    return;
+  }
+
+  // Detecta cambios respecto al estado anterior
+  newPasses.forEach(pass => {
+    const prev = previousPassesState[pass.name];
+    if (prev && prev !== pass.status) {
+      sendPushNotification(pass.name, pass.status);
     }
+    previousPassesState[pass.name] = pass.status;
+  });
+}
 
     function showPushBanner() {
       // No mostrar si ya tiene permiso o ya lo rechazó antes
@@ -7613,7 +7632,8 @@ Promise.allSettled([
   setTimeout(() => hideSplash(), 600);
 });
 
-    updateIntervalId = setInterval(() => {
+    if (updateIntervalId) clearInterval(updateIntervalId);
+updateIntervalId = setInterval(() => {
   if (!document.hidden) {
     fetchAllData();
   }
