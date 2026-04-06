@@ -5138,17 +5138,10 @@ async function fetchARSRate() {
     );
     const data = await res.json();
     // Devuelve cuántos ARS vale 1 USD
-    return data.rates?.ARS || 900;
+    return data.rates?.ARS || 1100;
   } catch(e) {
-    // Si falla, usa valor de caché o estimado
-    const cached = localStorage.getItem('exchangeRates');
-    if (cached) {
-      const rates = JSON.parse(cached);
-      const usd = rates.USD || 900;
-      const ars = rates.ARS || 1;
-      return usd / ars;
-    }
-    return 900; // fallback estimado
+    // Si falla, usa valor estimado realista (no calcular desde caché CLP)
+    return 1100;
   }
 }
 function initCurrencyTabs() {
@@ -5170,95 +5163,100 @@ function initCurrencyTabs() {
 }
     // ===== TIPO DE CAMBIO =====
     async function fetchExchangeRates() {
-      const statusEl = DOM_CACHE.rateStatus;
-      const timestampEl = DOM_CACHE.rateTimestamp;
-      statusEl.innerHTML = '<span class="loading-spinner"></span> ' + t('connecting');
-      const clpEl = DOM_CACHE.clpResult;
-if (clpEl) clpEl.style.opacity = '0.4';
+  const statusEl = DOM_CACHE.rateStatus;
+  const timestampEl = DOM_CACHE.rateTimestamp;
+  statusEl.innerHTML = '<span class="loading-spinner"></span> ' + t('connecting');
+  const clpEl = DOM_CACHE.clpResult;
+  if (clpEl) clpEl.style.opacity = '0.4';
 
-      try {
-        try {
-          const res = await fetchWithRetry('https://api.exchangerate-api.com/v4/latest/CLP');
-          const data = await res.json();
-          previousRates = {...exchangeRates};
-          exchangeRates = {
-            USD: Math.round(1 / data.rates.USD),
-            EUR: Math.round(1 / data.rates.EUR),
-            ARS: parseFloat((1 / data.rates.ARS).toFixed(2)),
-            BRL: Math.round(1 / data.rates.BRL),
-            PEN: Math.round(1 / data.rates.PEN),
-            BOB: Math.round(1 / data.rates.BOB)
-          };
-          ratesLastUpdate = new Date();
-          localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
-          localStorage.setItem('exchangeRatesTime', ratesLastUpdate.toISOString());
-          document.querySelector('.cache-warning')?.remove();
-                  statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online') + ' (backup)';
-        timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
+  try {
+    // ===== API PRIMARIA: mindicador.cl (datos chilenos oficiales) =====
+    try {
+      const res2 = await fetchWithRetry('https://mindicador.cl/api');
+      const data2 = await res2.json();
+      previousRates = {...exchangeRates};
+      exchangeRates = {
+        USD: Math.round(data2.dolar.valor),
+        EUR: Math.round(data2.euro.valor),
+        ARS: parseFloat((data2.dolar.valor / await fetchARSRate()).toFixed(2)),
+        BRL: exchangeRates.BRL > 0 ? exchangeRates.BRL : Math.round(data2.dolar.valor / 5.5),
+        PEN: exchangeRates.PEN > 0 ? exchangeRates.PEN : Math.round(data2.dolar.valor / 3.8),
+        BOB: exchangeRates.BOB > 0 ? exchangeRates.BOB : Math.round(data2.dolar.valor / 7.0)
+      };
+      ratesLastUpdate = new Date(data2.dolar.fecha);
+      localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
+      localStorage.setItem('exchangeRatesTime', ratesLastUpdate.toISOString());
+      document.querySelector('.cache-warning')?.remove();
+      document.getElementById('approxRateNote')?.remove();
+      statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
+      timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
+      showRateChange(); convertMoney(); renderQuickSummary(); return true;
+    } catch(e) { console.error('API primaria (mindicador.cl) falló:', e); }
 
-        // Aviso visible de monedas aproximadas
-        const approxNote = document.getElementById('approxRateNote');
-        if (!approxNote) {
-          const note = document.createElement('p');
-          note.id = 'approxRateNote';
-          note.style.cssText = 'font-size:10px;color:#f59e0b;font-weight:700;text-align:center;margin-top:6px;';
-          note.textContent = currentLang === 'pt'
-            ? '⚠️ BRL/PEN/BOB são valores aproximados'
-            : currentLang === 'en'
-            ? '⚠️ BRL/PEN/BOB are approximate values'
-            : '⚠️ BRL/PEN/BOB son valores aproximados';
-          timestampEl.parentElement.appendChild(note);
-        }
-        showRateChange(); convertMoney(); renderQuickSummary(); return true;
-      } catch(e) { console.error('API backup falló'); }
+    // ===== API DE RESPALDO: exchangerate-api.com =====
+    try {
+      const res = await fetchWithRetry('https://api.exchangerate-api.com/v4/latest/CLP');
+      const data = await res.json();
+      previousRates = {...exchangeRates};
+      exchangeRates = {
+        USD: Math.round(1 / data.rates.USD),
+        EUR: Math.round(1 / data.rates.EUR),
+        ARS: parseFloat((1 / data.rates.ARS).toFixed(2)),
+        BRL: Math.round(1 / data.rates.BRL),
+        PEN: Math.round(1 / data.rates.PEN),
+        BOB: Math.round(1 / data.rates.BOB)
+      };
+      ratesLastUpdate = new Date();
+      localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
+      localStorage.setItem('exchangeRatesTime', ratesLastUpdate.toISOString());
+      document.querySelector('.cache-warning')?.remove();
+      statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online') + ' (respaldo)';
+      timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
 
-        try {
-          const res2 = await fetchWithRetry('https://mindicador.cl/api');
-          const data2 = await res2.json();
-          previousRates = {...exchangeRates};
-          exchangeRates = {
-            USD: Math.round(data2.dolar.valor),
-            EUR: Math.round(data2.euro.valor),
-            ARS: parseFloat((data2.dolar.valor / await fetchARSRate()).toFixed(2)),
-BRL: exchangeRates.BRL > 0 ? exchangeRates.BRL : Math.round(data2.dolar.valor / 5.5),
-PEN: exchangeRates.PEN > 0 ? exchangeRates.PEN : Math.round(data2.dolar.valor / 3.8),
-BOB: exchangeRates.BOB > 0 ? exchangeRates.BOB : Math.round(data2.dolar.valor / 7.0)
-          };
-          ratesLastUpdate = new Date(data2.dolar.fecha);
-          localStorage.setItem('exchangeRates', JSON.stringify(exchangeRates));
-          localStorage.setItem('exchangeRatesTime', ratesLastUpdate.toISOString());
-          document.querySelector('.cache-warning')?.remove();
-          statusEl.innerHTML = '<i class="fas fa-circle text-[6px] mr-1"></i>' + t('online');
-                  document.getElementById('approxRateNote')?.remove();
-          timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
-          showRateChange(); convertMoney();renderQuickSummary(); return true;
-        } catch(e) { console.error('API backup falló'); }
-
-        const cached = localStorage.getItem('exchangeRates');
-        if (cached) {
-          exchangeRates = JSON.parse(cached);
-          ratesLastUpdate = localStorage.getItem('exchangeRatesTime') ? new Date(localStorage.getItem('exchangeRatesTime')) : null;
-          statusEl.innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-300 text-[10px] mr-1"></i>' + t('offline');
-          if (ratesLastUpdate) timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
-          convertMoney();
-          const converterCard = document.querySelector('.money-converter');
-          if (converterCard && !converterCard.querySelector('.cache-warning')) {
-            const warning = document.createElement('div');
-            warning.className = 'cache-warning';
-            warning.style.cssText = 'background:rgba(245,158,11,0.25);border:1px solid #f59e0b;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;color:#fef3c7;margin-bottom:12px;text-align:center;';
-            warning.textContent = '⚠️ Sin conexión · Mostrando último tipo de cambio guardado';
-            converterCard.querySelector('.relative').prepend(warning);
-          }
-          showToast('📵 ' + (currentLang === 'es' ? 'Usando tipo de cambio guardado' : currentLang === 'pt' ? 'Usando taxa de câmbio salva' : 'Using saved exchange rate'), 3000);
-          return false;
-        }
-        statusEl.innerHTML = '<i class="fas fa-times-circle text-red-400 text-[10px] mr-1"></i>' + t('error');
-        return false;
-      } catch (error) {
-        console.error('Error general tipo de cambio:', error);
-        return false;
+      // Aviso de valores aproximados para monedas no CLP directas
+      const approxNote = document.getElementById('approxRateNote');
+      if (!approxNote) {
+        const note = document.createElement('p');
+        note.id = 'approxRateNote';
+        note.style.cssText = 'font-size:10px;color:#f59e0b;font-weight:700;text-align:center;margin-top:6px;';
+        note.textContent = currentLang === 'pt'
+          ? '⚠️ BRL/PEN/BOB são valores aproximados'
+          : currentLang === 'en'
+          ? '⚠️ BRL/PEN/BOB are approximate values'
+          : '⚠️ BRL/PEN/BOB son valores aproximados';
+        timestampEl.parentElement.appendChild(note);
       }
+      showRateChange(); convertMoney(); renderQuickSummary(); return true;
+    } catch(e) { console.error('API de respaldo (exchangerate-api.com) falló:', e); }
+
+    // ===== ÚLTIMO RECURSO: caché local =====
+    const cached = localStorage.getItem('exchangeRates');
+    if (cached) {
+      exchangeRates = JSON.parse(cached);
+      ratesLastUpdate = localStorage.getItem('exchangeRatesTime') ? new Date(localStorage.getItem('exchangeRatesTime')) : null;
+      statusEl.innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-300 text-[10px] mr-1"></i>' + t('offline');
+      if (ratesLastUpdate) timestampEl.textContent = ratesLastUpdate.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
+      convertMoney();
+      const converterCard = document.querySelector('.money-converter');
+      if (converterCard && !converterCard.querySelector('.cache-warning')) {
+        const warning = document.createElement('div');
+        warning.className = 'cache-warning';
+        warning.style.cssText = 'background:rgba(245,158,11,0.25);border:1px solid #f59e0b;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;color:#fef3c7;margin-bottom:12px;text-align:center;';
+        warning.textContent = '⚠️ Sin conexión · Mostrando último tipo de cambio guardado';
+        converterCard.querySelector('.relative').prepend(warning);
+      }
+      showToast('📵 ' + (currentLang === 'es' ? 'Usando tipo de cambio guardado' : currentLang === 'pt' ? 'Usando taxa de câmbio salva' : 'Using saved exchange rate'), 3000);
+      return false;
     }
+
+    statusEl.innerHTML = '<i class="fas fa-times-circle text-red-400 text-[10px] mr-1"></i>' + t('error');
+    return false;
+
+  } catch (error) {
+    console.error('Error general tipo de cambio:', error);
+    return false;
+  }
+}
 
    function showRateChange() {
   const changeEl = document.getElementById('rateChange');
@@ -5650,55 +5648,61 @@ const openPasses = BORDER_PASSES
     function renderPassCard(pass, index = 0) {
   const favs = getFavorites();
   const hasObs = pass.observations && pass.observations.trim() !== '';
-      return `
+  return `
   <div class="card-glass glass-green p-5 ${pass.important ? 'ring-2 ring-yellow-400' : ''}"
     data-pass="${pass.name.toLowerCase()}" data-country="${pass.country.toLowerCase()}"
     style="animation:cardFadeIn 0.4s ease ${index * 0.08}s both;">
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h4 class="font-black text-xl text-slate-900">${sanitizeInput(pass.name)} ${pass.important ? '⭐' : ''}</h4>
-              <p class="text-xs text-slate-700 font-bold mt-1.5">${sanitizeInput(pass.country)}</p>
-            </div>
-            <div class="flex items-center gap-2">
-  <button data-passname="${pass.name.replace(/"/g, '&quot;')}"
-  class="fav-toggle-btn"
-  style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px;line-height:1;"
-  aria-label="Favorito">
-  ${favs.includes(pass.name) ? '⭐' : '☆'}
-</button>
-  <span class="badge badge-live">${t('open')}</span>
-</div>
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h4 class="font-black text-xl text-slate-900">${sanitizeInput(pass.name)} ${pass.important ? '⭐' : ''}</h4>
+            <p class="text-xs text-slate-700 font-bold mt-1.5">${sanitizeInput(pass.country)}</p>
           </div>
-          <div class="grid grid-cols-2 gap-3 text-xs">
-  <div class="pass-info-box">
-    <p class="pass-info-label">${t('schedule')}</p>
-    <p class="pass-info-value">${sanitizeInput(pass.hours)}</p>
-    ${getOpenNowBadge(pass.hours)}
-  </div>
-  <div class="pass-info-box">
-    <p class="pass-info-label">${t('region')}</p>
-    <p class="pass-info-value">${sanitizeInput(pass.region)}</p>
-  </div>
-</div>
+          <div class="flex items-center gap-2">
+            <button data-passname="${sanitizeInput(pass.name)}"
+              class="fav-toggle-btn"
+              style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px;line-height:1;"
+              aria-label="Favorito">
+              ${favs.includes(pass.name) ? '⭐' : '☆'}
+            </button>
+            <span class="badge badge-live">${t('open')}</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="pass-info-box">
+            <p class="pass-info-label">${t('schedule')}</p>
+            <p class="pass-info-value">${sanitizeInput(pass.hours)}</p>
+            ${getOpenNowBadge(pass.hours)}
+          </div>
+          <div class="pass-info-box">
+            <p class="pass-info-label">${t('region')}</p>
+            <p class="pass-info-value">${sanitizeInput(pass.region)}</p>
+          </div>
+        </div>
 
-          ${hasObs ? `
-            <div class="pass-observations-box">
-              <div class="flex items-start gap-3">
-                <div class="observation-icon"><i class="fas fa-info-circle"></i></div>
-                <div class="flex-1">
-                  <p class="observation-label">${t('observations')}</p>
-                  <p class="observation-text">${sanitizeInput(pass.observations)}</p>
-                </div>
+        ${hasObs ? `
+          <div class="pass-observations-box">
+            <div class="flex items-start gap-3">
+              <div class="observation-icon"><i class="fas fa-info-circle"></i></div>
+              <div class="flex-1">
+                <p class="observation-label">${t('observations')}</p>
+                <p class="observation-text">${sanitizeInput(pass.observations)}</p>
               </div>
-            </div>` : ''}
-          <button class="share-btn" onclick="sharePass('${sanitizeInput(pass.name)}','${sanitizeInput(pass.status)}','${sanitizeInput(pass.hours)}','${sanitizeInput(pass.observations || '')}')"
- style="margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;
-  border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;display:flex;
-  align-items:center;justify-content:center;gap:6px;">
-  📤 ${currentLang === 'es' ? 'Compartir estado' : currentLang === 'pt' ? 'Compartilhar estado' : 'Share status'}
-</button>
-        </div>`;
-    }
+            </div>
+          </div>` : ''}
+
+        <button class="share-btn"
+          data-name="${sanitizeInput(pass.name)}"
+          data-status="${sanitizeInput(pass.status)}"
+          data-hours="${sanitizeInput(pass.hours || '')}"
+          data-obs="${sanitizeInput(pass.observations || '')}"
+          onclick="sharePass(this.dataset.name, this.dataset.status, this.dataset.hours, this.dataset.obs)"
+          style="margin-top:10px;width:100%;padding:8px;background:#25D366;color:white;border:none;
+            border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;display:flex;
+            align-items:center;justify-content:center;gap:6px;">
+          📤 ${currentLang === 'es' ? 'Compartir estado' : currentLang === 'pt' ? 'Compartilhar estado' : 'Share status'}
+        </button>
+      </div>`;
+}
    function filterPasses() {
   const search = DOM_CACHE.searchInput.value.toLowerCase().trim();
 
@@ -6679,13 +6683,6 @@ function renderNotificationToggle() {
         </div>`).join('');
     }
 
-    async function requestNotificationPermission() {
-  if (!('Notification' in window)) return false;
-  if (Notification.permission === 'granted') return true;
-  const result = await Notification.requestPermission();
-  return result === 'granted';
-}
-
 function notifyFavoritePasses(newPasses) {
   const favs = getFavorites();
   if (!favs.length || Notification.permission !== 'granted') return;
@@ -7169,63 +7166,56 @@ function loadHistoryDate(dateStr) {
 
   const [year, month, day] = entryDate.split('-').map(Number);
 
-  // Validación de rango de fecha
- const entryDateObj = new Date(year, month - 1, day);
-const todayCheck = new Date(); todayCheck.setHours(0,0,0,0);
-if (year < 2000 || entryDateObj > todayCheck) {
-    showToast('⚠️ Ingresá una fecha válida de entrada', 3000);
-    return;
-  }
-
   const entry = new Date(year, month - 1, day);
   const today = new Date(); today.setHours(0,0,0,0); entry.setHours(0,0,0,0);
 
-      const resultEl  = document.getElementById('daysResult');
-      const numberEl  = document.getElementById('daysNumber');
-      const expiryEl  = document.getElementById('expiryDate');
-      const warningEl = document.getElementById('warningAlert');
+  const resultEl  = document.getElementById('daysResult');
+  const numberEl  = document.getElementById('daysNumber');
+  const expiryEl  = document.getElementById('expiryDate');
+  const warningEl = document.getElementById('warningAlert');
 
-     if (entry > today) {
-        resultEl.classList.remove('hidden');
-        numberEl.textContent = '90';
-        expiryEl.textContent = currentLang === 'es'
-          ? '⚠️ La fecha no puede ser futura'
-          : currentLang === 'pt'
-          ? '⚠️ A data não pode ser futura'
-          : '⚠️ Date cannot be in the future';
-        warningEl.classList.add('hidden');
-        return;
-      }
+  // Validación única: fecha inválida o futura
+  if (year < 2000 || entry > today) {
+    resultEl.classList.remove('hidden');
+    numberEl.textContent = '--';
+    expiryEl.textContent = currentLang === 'es'
+      ? '⚠️ Ingresá una fecha válida de entrada'
+      : currentLang === 'pt'
+      ? '⚠️ Insira uma data válida de entrada'
+      : '⚠️ Enter a valid entry date';
+    warningEl.classList.add('hidden');
+    return;
+  }
 
-      const daysPassed    = Math.floor((today - entry) / 86400000);
-      const daysRemaining = 90 - daysPassed;
-      resultEl.classList.remove('hidden');
+  const daysPassed    = Math.floor((today - entry) / 86400000);
+  const daysRemaining = 90 - daysPassed;
+  resultEl.classList.remove('hidden');
 
-      if (daysRemaining <= 0) {
-        numberEl.textContent = '0';
-        expiryEl.textContent = currentLang === 'es'
-          ? '⛔ Visa vencida hace ' + Math.abs(daysRemaining) + ' días'
-          : currentLang === 'pt'
-          ? '⛔ Visto vencido há ' + Math.abs(daysRemaining) + ' dias'
-          : '⛔ Visa expired ' + Math.abs(daysRemaining) + ' days ago';
-        warningEl.classList.remove('hidden');
-      } else {
-  const expiry = new Date(year, month - 1, day + 90);
-  const locale = currentLang === 'es' ? 'es-CL' : currentLang === 'pt' ? 'pt-BR' : 'en-US';
-  numberEl.textContent = daysRemaining;
-  expiryEl.textContent = (currentLang === 'es' ? 'Vence ' : currentLang === 'pt' ? 'Vence ' : 'Expires ') +
-    expiry.toLocaleDateString(locale, {year:'numeric', month:'long', day:'numeric'});
-  warningEl.classList.toggle('hidden', daysRemaining > 15);
+  if (daysRemaining <= 0) {
+    numberEl.textContent = '0';
+    expiryEl.textContent = currentLang === 'es'
+      ? '⛔ Visa vencida hace ' + Math.abs(daysRemaining) + ' días'
+      : currentLang === 'pt'
+      ? '⛔ Visto vencido há ' + Math.abs(daysRemaining) + ' dias'
+      : '⛔ Visa expired ' + Math.abs(daysRemaining) + ' days ago';
+    warningEl.classList.remove('hidden');
+  } else {
+    const expiry = new Date(year, month - 1, day + 90);
+    const locale = currentLang === 'es' ? 'es-CL' : currentLang === 'pt' ? 'pt-BR' : 'en-US';
+    numberEl.textContent = daysRemaining;
+    expiryEl.textContent = (currentLang === 'es' ? 'Vence ' : currentLang === 'pt' ? 'Vence ' : 'Expires ') +
+      expiry.toLocaleDateString(locale, {year:'numeric', month:'long', day:'numeric'});
+    warningEl.classList.toggle('hidden', daysRemaining > 15);
 
-  // Barra de progreso visual
-  renderVisaProgressBar(daysRemaining);
+    // Barra de progreso visual
+    renderVisaProgressBar(daysRemaining);
+  }
+
+  localStorage.setItem('entryDate', entryDate);
+  saveDateToHistory(entryDate);
+  renderDateHistory();
+  scheduleExpiryReminder(entryDate);
 }
-
-      localStorage.setItem('entryDate', entryDate);
-saveDateToHistory(entryDate);
-renderDateHistory();
-scheduleExpiryReminder(entryDate);
-    }
 
     // ===== CONTENIDO ESTÁTICO =====
     function initCultureContent() {
@@ -7669,34 +7659,6 @@ try {
       // gtag('event', 'kit_click', { item: item });
       console.log('[Kit Viajero] Click en:', item, '— total:', count);
     }
-
-       // PWA Install Banner
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Mostrar banner después de 30 segundos si no está instalada
-  const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
-  const dismissed = localStorage.getItem('pwaBannerDismissed');
-  if (!isInstalled && !dismissed) {
-    setTimeout(() => {
-      const banner = document.getElementById('pwaInstallBanner');
-      if (banner) banner.style.display = 'block';
-    }, 30000);
-  }
-});
-
-function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(choice => {
-    if (choice.outcome === 'accepted') {
-      localStorage.setItem('pwaBannerDismissed', 'true');
-    }
-    deferredPrompt = null;
-    dismissInstallBanner();
-  });
-}
 
 function dismissInstallBanner() {
   const banner = document.getElementById('pwaInstallBanner');
