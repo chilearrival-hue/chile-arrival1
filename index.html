@@ -5317,46 +5317,49 @@ function convertFromCLP() {
   if (amount <= 0) { resultEl.innerHTML = ''; return; }
 
   const currencies = [
-    { code:'USD', flag:'🇺🇸', name:'USD' },
-    { code:'ARS', flag:'🇦🇷', name:'ARS' },
-    { code:'BRL', flag:'🇧🇷', name:'BRL' },
-    { code:'EUR', flag:'🇪🇺', name:'EUR' },
-    { code:'PEN', flag:'🇵🇪', name:'PEN' },
-    { code:'BOB', flag:'🇧🇴', name:'BOB' }
+    { code:'USD', flag:'🇺🇸', name:'Dólar' },
+    { code:'EUR', flag:'🇪🇺', name:'Euro' },
+    { code:'ARS', flag:'🇦🇷', name:'Peso arg.' },
+    { code:'BRL', flag:'🇧🇷', name:'Real' },
+    { code:'PEN', flag:'🇵🇪', name:'Sol' },
+    { code:'BOB', flag:'🇧🇴', name:'Boliviano' }
   ];
 
   const rows = currencies.map(c => {
     const rate = exchangeRates[c.code];
     if (!rate || rate <= 0) return '';
-    const converted = (amount / rate).toFixed(2);
+    const converted = amount / rate;
+    const decimals = converted < 0.01 ? 6 : converted < 1 ? 4 : converted < 100 ? 2 : 0;
+    const formatted = converted.toLocaleString('es-CL', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
     return `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;">
-        <span style="font-size:12px;color:rgba(255,255,255,0.8);font-weight:700;">
-          ${c.flag} ${c.name}
+      <div style="display:flex;align-items:center;justify-content:space-between;
+                  padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <span style="font-size:12px;color:rgba(255,255,255,0.75);font-weight:700;">
+          ${c.flag} ${c.code} — ${c.name}
         </span>
         <span style="font-size:13px;font-weight:900;color:white;">
-          ${parseFloat(converted).toLocaleString('es-CL', {minimumFractionDigits:2, maximumFractionDigits:2})}
+          ${formatted}
         </span>
       </div>`;
   }).join('');
 
   resultEl.innerHTML = `
-    <div style="
-      margin-top:10px;
-      background:rgba(255,255,255,0.1);
-      border-radius:12px;
-      padding:10px 14px;">
+    <div style="margin-top:10px;background:rgba(255,255,255,0.08);
+                border-radius:12px;padding:10px 14px;">
       ${rows}
     </div>`;
-
   resultEl.classList.remove('hidden');
 }
-    function convertMoney() {
-      const val = parseFloat(DOM_CACHE.currencyInput.value) || 0;
-      const rate = exchangeRates[selectedCurrency];
-      DOM_CACHE.clpResult.textContent = rate > 0 ? '$' + Math.round(val * rate).toLocaleString('es-CL') : '$---';
-      renderCurrencyComparison();
-    }
+   function convertMoney() {
+  const val = parseFloat(DOM_CACHE.currencyInput.value) || 0;
+  const rate = exchangeRates[selectedCurrency];
+  DOM_CACHE.clpResult.textContent = rate > 0 
+    ? '$ ' + Math.round(val * rate).toLocaleString('es-CL') 
+    : '$---';
+}
 // Coordenadas geográficas de los pasos para clima
     // Cache de clima por paso
     const weatherCache = {};
@@ -6030,50 +6033,6 @@ if (tollCostEl) tollCostEl.textContent = '$' + route.cost.toLocaleString('es-CL'
               currentLang === 'pt' ? 'Pedágio carregado na calculadora' :
               'Toll loaded into fuel calculator'), 3000);
   }
-}
-// ===== COMPARAR MONEDAS =====
-function renderCurrencyComparison() {
-  const container = document.getElementById('currencyComparisonContainer');
-  if (!container) return;
-
-  const currencies = [
-    { code:'USD', flag:'🇺🇸', name:{ es:'Dólar', en:'Dollar', pt:'Dólar' } },
-    { code:'EUR', flag:'🇪🇺', name:{ es:'Euro', en:'Euro', pt:'Euro' } },
-    { code:'ARS', flag:'🇦🇷', name:{ es:'Peso arg.', en:'Arg. Peso', pt:'Peso arg.' } },
-    { code:'BRL', flag:'🇧🇷', name:{ es:'Real', en:'Real', pt:'Real' } },
-    { code:'PEN', flag:'🇵🇪', name:{ es:'Sol', en:'Sol', pt:'Sol' } },
-    { code:'BOB', flag:'🇧🇴', name:{ es:'Boliviano', en:'Boliviano', pt:'Boliviano' } }
-  ];
-
-  container.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;';
-
-  container.innerHTML = currencies.map(cur => {
-    const rate = exchangeRates[cur.code];
-    // ✅ Muestra cuántos CLP vale 1 unidad de cada moneda extranjera
-    const result = rate > 0
-      ? Math.round(rate).toLocaleString('es-CL')
-      : '---';
-    const isSelected = cur.code === selectedCurrency;
-
-    return `
-      <div onclick="selectCurrencyFromComparison('${cur.code}')"
-        style="display:flex;align-items:center;justify-content:space-between;
-               padding:8px 10px;border-radius:10px;cursor:pointer;transition:all 0.2s;
-               background:${isSelected ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)'};
-               border:1px solid ${isSelected ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'};">
-        <div style="display:flex;align-items:center;gap:6px;">
-          <span style="font-size:16px;font-family:Apple Color Emoji,Segoe UI Emoji,sans-serif">${cur.flag}</span>
-          <div>
-            <p style="font-size:11px;font-weight:800;color:white;margin:0">${cur.code}</p>
-            <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">${cur.name[currentLang] || cur.name.es}</p>
-          </div>
-        </div>
-        <div style="text-align:right">
-          <p style="font-size:12px;font-weight:900;color:white;margin:0">$${result}</p>
-          <p style="font-size:9px;color:rgba(255,255,255,0.6);margin:0">CLP</p>
-        </div>
-      </div>`;
-  }).join('');
 }
 function selectCurrencyFromComparison(code) {
   selectedCurrency = code;
