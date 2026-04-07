@@ -3,28 +3,17 @@
 
 
 <head>
-  
+
   <meta charset="UTF-8">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9499117035060563"
      crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-  <meta name="description" content="Estado en tiempo real de los pasos fronterizos a Chile. Cruza con información actualizada de horarios, condiciones y requisitos.">
-<meta property="og:title" content="Chile Arrival — Pasos Fronterizos en Tiempo Real">
-<meta property="og:description" content="Estado en tiempo real de los 18 pasos fronterizos a Chile desde Argentina, Bolivia y Perú.">
-<meta property="og:url" content="https://chile-arrival-839a1.web.app/">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://chile-arrival-839a1.web.app/icons/icon-512.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Chile Arrival — Pasos Fronterizos en Tiempo Real">
-<meta name="twitter:description" content="Estado en tiempo real de los 18 pasos fronterizos a Chile.">
-<link rel="canonical" href="https://chile-arrival-839a1.web.app/">
   <meta name="theme-color" content="#0039a6" id="themeColorMeta">
   <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Chile Arrival">
- <meta name="description"
-    content="Guía completa para ingresar a Chile: pasos fronterizos en tiempo real, tipo de cambio actualizado y toda la información necesaria para tu viaje.">
+  <meta name="description" content="Guía completa para ingresar a Chile: pasos fronterizos en tiempo real, tipo de cambio actualizado y toda la información necesaria para tu viaje.">
   <meta name="keywords" content="chile, fronteras, pasos fronterizos, tipo cambio, aduana chile, SAG">
   <title>Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso</title>
 
@@ -35,7 +24,7 @@
   <meta property="og:description" content="Pasos fronterizos en tiempo real, tipo de cambio actualizado, checklist de viaje y todo lo que necesitas para ingresar a Chile.">
   <meta property="og:image" content="https://chile-arrival-839a1.web.app/screenshots/home.png">
   <meta property="og:image:width" content="857">
-    <meta property="og:image:height" content="1600">
+  <meta property="og:image:height" content="1600">
   <meta property="og:image:alt" content="Chile Arrival - Guía completa para ingresar a Chile">
   <meta property="og:locale" content="es_CL">
   <meta property="og:locale:alternate" content="en_US">
@@ -47,17 +36,19 @@
   <meta name="twitter:title" content="Chile Arrival 🇨🇱 | Tu Guía Completa de Ingreso">
   <meta name="twitter:description" content="Pasos fronterizos en tiempo real, tipo de cambio actualizado y todo lo que necesitas para ingresar a Chile.">
   <meta name="twitter:image" content="https://chile-arrival-839a1.web.app/screenshots/home.png">
-   <link rel="canonical" href="https://chile-arrival-839a1.web.app/">
+
+  <link rel="canonical" href="https://chile-arrival-839a1.web.app/">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.tailwindcss.com">
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://api.exchangerate-api.com">
   <link rel="dns-prefetch" href="https://mindicador.cl">
+
   <style>
 /* Reemplazo mini de Tailwind — solo clases usadas en Chile Arrival */
 .status-banner {
@@ -5320,19 +5311,20 @@ if (tabEl) tabEl.classList.add('active');
 }
     // ===== DARK MODE =====
     function toggleDarkMode() {
-  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   const icon = DOM_CACHE.themeIcon;
 
   if (isDark) {
-    document.body.removeAttribute('data-theme');
+    document.documentElement.removeAttribute('data-theme');
     localStorage.setItem('theme', 'light');
     icon.className = 'fas fa-moon';
   } else {
-    document.body.setAttribute('data-theme', 'dark');
+    document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem('theme', 'dark');
     icon.className = 'fas fa-sun';
   }
 }
+
 
     // ===== NIEVE =====
     function createSnowflakes() {
@@ -7930,28 +7922,29 @@ function fetchAllData() {
       const savedTheme = localStorage.getItem('theme');
 
       if (savedTheme === 'dark') {
-        // Usuario eligió dark manualmente
-        document.body.setAttribute('data-theme', 'dark');
-        DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
-      } else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // Primera vez y el sistema está en dark mode
-        document.body.setAttribute('data-theme', 'dark');
-        DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
-      }
+  // Usuario eligió dark manualmente
+  document.documentElement.setAttribute('data-theme', 'dark');
+  DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
+} else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  // Primera vez y el sistema está en dark mode
+  document.documentElement.setAttribute('data-theme', 'dark');
+  DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
+}
 
-      // Escucha cambios del sistema en tiempo real
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        // Solo reacciona si el usuario no eligió manualmente
-        if (!localStorage.getItem('theme')) {
-          if (e.matches) {
-            document.body.setAttribute('data-theme', 'dark');
-            DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
-          } else {
-            document.body.removeAttribute('data-theme');
-            DOM_CACHE.themeIcon.classList.replace('fa-sun', 'fa-moon');
-          }
-        }
-      });
+// Escucha cambios del sistema en tiempo real
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  // Solo reacciona si el usuario no eligió manualmente
+  if (!localStorage.getItem('theme')) {
+    if (e.matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      DOM_CACHE.themeIcon.classList.replace('fa-moon', 'fa-sun');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      DOM_CACHE.themeIcon.classList.replace('fa-sun', 'fa-moon');
+    }
+  }
+});
+
       updateNotificationBadge(); // FIX: se mueve fuera del if(dark) para que siempre se ejecute
 
       const savedLang = localStorage.getItem('language');
